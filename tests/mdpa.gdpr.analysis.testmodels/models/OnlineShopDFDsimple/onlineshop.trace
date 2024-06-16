@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="ASCII"?>
+<tracemodel:TraceModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dataflowdiagram="http://www.example.org/dataflowdiagram" xmlns:tracemodel="http://www.example.org/tracemodel">
+  <TracesList>
+    <processing href="onlineshop.gdpr#_TFmX876CEe6fAKdvyu1GEg"/>
+    <node xsi:type="dataflowdiagram:Process" href="onlineshop.dataflowdiagram#_TFmX876CEe6fAKdvyu1GEg"/>
+  </TracesList>
+  <TracesList>
+    <processing href="onlineshop.gdpr#_U27Lor6CEe6fAKdvyu1GEg"/>
+    <node xsi:type="dataflowdiagram:Store" href="onlineshop.dataflowdiagram#_U27Lor6CEe6fAKdvyu1GEg"/>
+  </TracesList>
+  <TracesList>
+    <processing href="onlineshop.gdpr#_t70R4sBCEe62ZOq30ePU7Q"/>
+    <node xsi:type="dataflowdiagram:Store" href="onlineshop.dataflowdiagram#_t70R4sBCEe62ZOq30ePU7Q"/>
+  </TracesList>
+  <TracesList>
+    <processing href="onlineshop.gdpr#_Y50ZU76CEe6fAKdvyu1GEg"/>
+    <node xsi:type="dataflowdiagram:Process" href="onlineshop.dataflowdiagram#_Y50ZU76CEe6fAKdvyu1GEg"/>
+  </TracesList>
+  <TracesList>
+    <processing href="onlineshop.gdpr#_basao76CEe6fAKdvyu1GEg"/>
+    <node xsi:type="dataflowdiagram:Process" href="onlineshop.dataflowdiagram#_basao76CEe6fAKdvyu1GEg"/>
+  </TracesList>
+  <TracesList>
+    <processing href="onlineshop.gdpr#_YRN4gb6TEe6fAKdvyu1GEg"/>
+    <node xsi:type="dataflowdiagram:External" href="onlineshop.dataflowdiagram#_YRN4gb6TEe6fAKdvyu1GEg"/>
+  </TracesList>
+  <TracesList>
+    <processing href="onlineshop.gdpr#_bmXPYb6TEe6fAKdvyu1GEg"/>
+    <node xsi:type="dataflowdiagram:External" href="onlineshop.dataflowdiagram#_bmXPYb6TEe6fAKdvyu1GEg"/>
+  </TracesList>
+  <TracesList>
+    <processing href="onlineshop.gdpr#_LX33QL6CEe6fAKdvyu1GEg"/>
+    <node xsi:type="dataflowdiagram:External" href="onlineshop.dataflowdiagram#_LX33QL6CEe6fAKdvyu1GEg"/>
+  </TracesList>
+  <TracesList>
+    <processing href="onlineshop.gdpr#_Q0i7U76CEe6fAKdvyu1GEg"/>
+    <node xsi:type="dataflowdiagram:Process" href="onlineshop.dataflowdiagram#_Q0i7U76CEe6fAKdvyu1GEg"/>
+  </TracesList>
+  <TracesList>
+    <processing href="onlineshop.gdpr#_aPLpw76CEe6fAKdvyu1GEg"/>
+    <node xsi:type="dataflowdiagram:Process" href="onlineshop.dataflowdiagram#_aPLpw76CEe6fAKdvyu1GEg"/>
+  </TracesList>
+  <FlowList sourceID="_LX33QL6CEe6fAKdvyu1GEg" destinationID="_Q0i7U76CEe6fAKdvyu1GEg">
+    <flow href="onlineshop.dataflowdiagram#_fFgfgL6CEe6fAKdvyu1GEg"/>
+  </FlowList>
+  <FlowList sourceID="_Q0i7U76CEe6fAKdvyu1GEg" destinationID="_U27Lor6CEe6fAKdvyu1GEg">
+    <flow href="onlineshop.dataflowdiagram#_lHxj8L6CEe6fAKdvyu1GEg"/>
+  </FlowList>
+  <FlowList sourceID="_t70R4sBCEe62ZOq30ePU7Q" destinationID="_TFmX876CEe6fAKdvyu1GEg">
+    <flow href="onlineshop.dataflowdiagram#_qKG1YL6CEe6fAKdvyu1GEg"/>
+  </FlowList>
+  <FlowList sourceID="_TFmX876CEe6fAKdvyu1GEg" destinationID="_YRN4gb6TEe6fAKdvyu1GEg">
+    <flow href="onlineshop.dataflowdiagram#_tpP1wL6CEe6fAKdvyu1GEg"/>
+  </FlowList>
+  <FlowList sourceID="_bmXPYb6TEe6fAKdvyu1GEg" destinationID="_Y50ZU76CEe6fAKdvyu1GEg">
+    <flow href="onlineshop.dataflowdiagram#_0m3IIL6CEe6fAKdvyu1GEg"/>
+  </FlowList>
+  <FlowList sourceID="_Y50ZU76CEe6fAKdvyu1GEg" destinationID="_aPLpw76CEe6fAKdvyu1GEg">
+    <flow href="onlineshop.dataflowdiagram#_29kg0L6CEe6fAKdvyu1GEg"/>
+  </FlowList>
+  <FlowList sourceID="_aPLpw76CEe6fAKdvyu1GEg" destinationID="_basao76CEe6fAKdvyu1GEg">
+    <flow href="onlineshop.dataflowdiagram#_5EUK4L6CEe6fAKdvyu1GEg"/>
+  </FlowList>
+  <FlowList sourceID="_basao76CEe6fAKdvyu1GEg" destinationID="_U27Lor6CEe6fAKdvyu1GEg">
+    <flow href="onlineshop.dataflowdiagram#_7b7igL6CEe6fAKdvyu1GEg"/>
+  </FlowList>
+</tracemodel:TraceModel>
