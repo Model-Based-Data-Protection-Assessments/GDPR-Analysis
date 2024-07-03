@@ -1,10 +1,12 @@
 package mdpa.gdpr.analysis.dfd;
 
-import mdpa.gdpr.analysis.core.ContextDependentAttribute;
+import mdpa.gdpr.analysis.core.ContextDependentAttributeScenario;
 import mdpa.gdpr.metamodel.GDPR.AbstractGDPRElement;
 import mdpa.gdpr.metamodel.GDPR.Data;
 import mdpa.gdpr.metamodel.GDPR.LegalBasis;
+import mdpa.gdpr.metamodel.GDPR.Processing;
 import mdpa.gdpr.metamodel.GDPR.Purpose;
+import mdpa.gdpr.metamodel.GDPR.Role;
 import org.dataflowanalysis.analysis.dfd.core.DFDVertex;
 import org.dataflowanalysis.dfd.datadictionary.Pin;
 import org.dataflowanalysis.dfd.dataflowdiagram.Flow;
@@ -17,7 +19,7 @@ import java.util.Map;
 
 public class DFDGDPRVertex extends DFDVertex {
 	private final List<AbstractGDPRElement> relatedElements;
-    private List<ContextDependentAttribute> contextDependentAttributes;
+    private List<ContextDependentAttributeScenario> contextDependentAttributes;
 
     /**
      * Creates a new vertex with the given referenced node and pin mappings
@@ -30,6 +32,7 @@ public class DFDGDPRVertex extends DFDVertex {
     public DFDGDPRVertex(Node node, Map<Pin, DFDVertex> pinDFDVertexMap, Map<Pin, Flow> pinFlowMap, List<AbstractGDPRElement> relatedElements) {
         super(node, pinDFDVertexMap, pinFlowMap);
         this.relatedElements = relatedElements;
+        this.contextDependentAttributes = new ArrayList<>();
     }
 
     /**
@@ -39,14 +42,18 @@ public class DFDGDPRVertex extends DFDVertex {
         Map<Pin, DFDVertex> copiedPinDFDVertexMap = new HashMap<>();
         this.pinDFDVertexMap.keySet()
                 .forEach(key -> copiedPinDFDVertexMap.put(key, mapping.getOrDefault(this.pinDFDVertexMap.get(key), this.pinDFDVertexMap.get(key).copy(mapping))));
-        return new DFDGDPRVertex(this.referencedElement, copiedPinDFDVertexMap, new HashMap<>(this.pinFlowMap), new ArrayList<>(this.relatedElements));
+        DFDGDPRVertex copy = new DFDGDPRVertex(this.referencedElement, copiedPinDFDVertexMap, new HashMap<>(this.pinFlowMap), new ArrayList<>(this.relatedElements));
+        if (!this.contextDependentAttributes.isEmpty()) {
+            copy.setContextDependentAttributes(this.contextDependentAttributes);
+        }
+        return copy;
     }
     
-    public void setContextDependentAttributes(List<ContextDependentAttribute> contextDependentAttributes) {
+    public void setContextDependentAttributes(List<ContextDependentAttributeScenario> contextDependentAttributes) {
 		this.contextDependentAttributes = contextDependentAttributes;
 	}
     
-    public List<ContextDependentAttribute> getContextDependentAttributes() {
+    public List<ContextDependentAttributeScenario> getContextDependentAttributes() {
 		return this.contextDependentAttributes;
 	}
     
@@ -80,5 +87,13 @@ public class DFDGDPRVertex extends DFDVertex {
     			.filter(LegalBasis.class::isInstance)
     			.map(LegalBasis.class::cast)
     			.toList();
+    }
+
+    public Role getResponsibilityRole() {
+        return this.relatedElements.stream()
+                .filter(Processing.class::isInstance)
+                .map(Processing.class::cast)
+                .map(it -> it.getResponsible())
+                .findAny().orElseThrow();
     }
 }

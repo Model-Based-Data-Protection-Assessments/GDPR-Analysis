@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="ASCII"?>
+<datadictionary:DataDictionary xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:datadictionary="http://www.example.org/datadictionary" id="_j_JzMDOrEe-mRMNqkRI68A">
+  <labelTypes id="_j_KaQDOrEe-mRMNqkRI68A" entityName="GDPRElement">
+    <label id="_j_NdkDOrEe-mRMNqkRI68A" entityName="GDPR::LegalBasis::ConsentImpl:StatisticsConsent:_kdCh2whMEe67tpwR5G7Ipg"/>
+    <label id="_j_NdkTOrEe-mRMNqkRI68A" entityName="GDPR::Purpose::PurposeImpl:CreateAccount:_DHrfpQhMEe67tpwR5G7Ipg"/>
+    <label id="_j_NdkjOrEe-mRMNqkRI68A" entityName="GDPR::Purpose::PurposeImpl:CreateStatistics:_JSxI5QhMEe67tpwR5G7Ipg"/>
+    <label id="_j_NdkzOrEe-mRMNqkRI68A" entityName="GDPR::OutputData::PersonalDataImpl:CustomerBankData:_txHKtwhLEe67tpwR5G7Ipg"/>
+    <label id="_j_OEoDOrEe-mRMNqkRI68A" entityName="GDPR::Responsible::ControllerImpl:Bank:_UvHiUQhKEe67tpwR5G7Ipg"/>
+    <label id="_j_OEpDOrEe-mRMNqkRI68A" entityName="GDPR::InputData::PersonalDataImpl:CustomerBankData:_txHKtwhLEe67tpwR5G7Ipg"/>
+    <label id="_j_OEpTOrEe-mRMNqkRI68A" entityName="GDPR::OutputData::PersonalDataImpl:PseudonymizedCustomerBankData:_4g-mtwhLEe67tpwR5G7Ipg"/>
+    <label id="_j_OEqTOrEe-mRMNqkRI68A" entityName="GDPR::InputData::PersonalDataImpl:PseudonymizedCustomerBankData:_4g-mtwhLEe67tpwR5G7Ipg"/>
+    <label id="_j_OrtjOrEe-mRMNqkRI68A" entityName="GDPR::Responsible::ThirdPartyImpl:StatisticsProvider:_tAgprghKEe67tpwR5G7Ipg"/>
+  </labelTypes>
+  <labelTypes id="_j_KaQTOrEe-mRMNqkRI68A" entityName="GDPRNode">
+    <label id="_j_M2gDOrEe-mRMNqkRI68A" entityName="GDPR::ofType:CollectingImpl"/>
+    <label id="_j_OEojOrEe-mRMNqkRI68A" entityName="GDPR::ofType:ProcessingImpl"/>
+    <label id="_j_OEpzOrEe-mRMNqkRI68A" entityName="GDPR::ofType:TransferringImpl"/>
+    <label id="_j_OrsTOrEe-mRMNqkRI68A" entityName="GDPR::ofType:StoringImpl"/>
+    <label id="_j_OrtDOrEe-mRMNqkRI68A" entityName="GDPR::ofType:UsageImpl"/>
+    <label id="_j_OruDOrEe-mRMNqkRI68A" entityName="GDPR::ofType:StoringImpl"/>
+  </labelTypes>
+  <labelTypes id="_j_KaQjOrEe-mRMNqkRI68A" entityName="GDPRLink">
+    <label id="_j_LBUDOrEe-mRMNqkRI68A" entityName="GDPR::PersonalDataImpl:CustomerBankData:_txHKtwhLEe67tpwR5G7Ipg::Reference::NaturalPersonImpl:Customer:_vnprDAhKEe67tpwR5G7Ipg"/>
+    <label id="_j_LBUTOrEe-mRMNqkRI68A" entityName="GDPR::PersonalDataImpl:PseudonymizedCustomerBankData:_4g-mtwhLEe67tpwR5G7Ipg::Reference::NaturalPersonImpl:Customer:_vnprDAhKEe67tpwR5G7Ipg"/>
+    <label id="_j_LoYDOrEe-mRMNqkRI68A" entityName="GDPR::PerformanceOfContractImpl:AccountContract:_Z2O7NAhMEe67tpwR5G7Ipg::ContractParty::NaturalPersonImpl:Customer:_vnprDAhKEe67tpwR5G7Ipg"/>
+    <label id="_j_LoYTOrEe-mRMNqkRI68A" entityName="GDPR::PerformanceOfContractImpl:AccountContract:_Z2O7NAhMEe67tpwR5G7Ipg::ContractParty::ControllerImpl:Bank:_UvHiUQhKEe67tpwR5G7Ipg"/>
+    <label id="_j_LoYjOrEe-mRMNqkRI68A" entityName="GDPR::PerformanceOfContractImpl:AccountContract:_Z2O7NAhMEe67tpwR5G7Ipg::ForPurpose::PurposeImpl:CreateAccount:_DHrfpQhMEe67tpwR5G7Ipg"/>
+    <label id="_j_LoYzOrEe-mRMNqkRI68A" entityName="GDPR::PerformanceOfContractImpl:AccountContract:_Z2O7NAhMEe67tpwR5G7Ipg::ForData::PersonalDataImpl:CustomerBankData:_txHKtwhLEe67tpwR5G7Ipg"/>
+    <label id="_j_LoZDOrEe-mRMNqkRI68A" entityName="GDPR::ConsentImpl:StatisticsConsent:_kdCh2whMEe67tpwR5G7Ipg::Consentee::NaturalPersonImpl:Customer:_vnprDAhKEe67tpwR5G7Ipg"/>
+    <label id="_j_MPcDOrEe-mRMNqkRI68A" entityName="GDPR::ConsentImpl:StatisticsConsent:_kdCh2whMEe67tpwR5G7Ipg::ForPurpose::PurposeImpl:CreateStatistics:_JSxI5QhMEe67tpwR5G7Ipg"/>
+    <label id="_j_MPcTOrEe-mRMNqkRI68A" entityName="GDPR::ConsentImpl:StatisticsConsent:_kdCh2whMEe67tpwR5G7Ipg::ForData::PersonalDataImpl:CustomerBankData:_txHKtwhLEe67tpwR5G7Ipg"/>
+  </labelTypes>
+  <behaviour id="_j_M2gTOrEe-mRMNqkRI68A" entityName="RegisterCustomer Behaviour">
+    <outPin id="_j_PSwjOrEe-mRMNqkRI68A"/>
+    <outPin id="_j_P50jOrEe-mRMNqkRI68A"/>
+  </behaviour>
+  <behaviour id="_j_OEozOrEe-mRMNqkRI68A" entityName="Pseudonymization Behaviour">
+    <inPin id="_j_PSwTOrEe-mRMNqkRI68A"/>
+    <outPin id="_j_P51TOrEe-mRMNqkRI68A"/>
+    <assignment xsi:type="datadictionary:ForwardingAssignment" id="_j_RH8DOrEe-mRMNqkRI68A" inputPins="_j_PSwTOrEe-mRMNqkRI68A" outputPin="_j_P51TOrEe-mRMNqkRI68A"/>
+  </behaviour>
+  <behaviour id="_j_OEqDOrEe-mRMNqkRI68A" entityName="TransferToStatisticsProvider Behaviour">
+    <inPin id="_j_P51DOrEe-mRMNqkRI68A"/>
+    <outPin id="_j_P52DOrEe-mRMNqkRI68A"/>
+    <assignment xsi:type="datadictionary:ForwardingAssignment" id="_j_RvADOrEe-mRMNqkRI68A" inputPins="_j_P51DOrEe-mRMNqkRI68A" outputPin="_j_P52DOrEe-mRMNqkRI68A"/>
+  </behaviour>
+  <behaviour id="_j_OrsjOrEe-mRMNqkRI68A" entityName="BankStoreCustomerData Behaviour">
+    <inPin id="_j_P50TOrEe-mRMNqkRI68A"/>
+  </behaviour>
+  <behaviour id="_j_OrtTOrEe-mRMNqkRI68A" entityName="StatisticsProviderCalculateStatistics Behaviour">
+    <inPin id="_j_P51zOrEe-mRMNqkRI68A"/>
+    <outPin id="_j_P52zOrEe-mRMNqkRI68A"/>
+    <assignment xsi:type="datadictionary:ForwardingAssignment" id="_j_RvATOrEe-mRMNqkRI68A" inputPins="_j_P51zOrEe-mRMNqkRI68A" outputPin="_j_P52zOrEe-mRMNqkRI68A"/>
+  </behaviour>
+  <behaviour id="_j_OruTOrEe-mRMNqkRI68A" entityName="StatisticsProviderStoreData Behaviour">
+    <inPin id="_j_P52jOrEe-mRMNqkRI68A"/>
+  </behaviour>
+</datadictionary:DataDictionary>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="ASCII"?>
+<dataflowdiagram:DataFlowDiagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dataflowdiagram="http://www.example.org/dataflowdiagram" id="_7DeNoP8AEe2kDemF2aGupQ">
+  <flows id="_j_PSwDOrEe-mRMNqkRI68A" sourceNode="_0854cQhKEe67tpwR5G7Ipg" destinationNode="_6JfSEAhKEe67tpwR5G7Ipg">
+    <destinationPin href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_PSwTOrEe-mRMNqkRI68A"/>
+    <sourcePin href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_PSwjOrEe-mRMNqkRI68A"/>
+  </flows>
+  <flows id="_j_P50DOrEe-mRMNqkRI68A" sourceNode="_0854cQhKEe67tpwR5G7Ipg" destinationNode="_XxG3NAhLEe67tpwR5G7Ipg">
+    <destinationPin href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_P50TOrEe-mRMNqkRI68A"/>
+    <sourcePin href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_P50jOrEe-mRMNqkRI68A"/>
+  </flows>
+  <flows id="_j_P50zOrEe-mRMNqkRI68A" sourceNode="_6JfSEAhKEe67tpwR5G7Ipg" destinationNode="_AJYX8ghLEe67tpwR5G7Ipg">
+    <destinationPin href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_P51DOrEe-mRMNqkRI68A"/>
+    <sourcePin href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_P51TOrEe-mRMNqkRI68A"/>
+  </flows>
+  <flows id="_j_P51jOrEe-mRMNqkRI68A" sourceNode="_AJYX8ghLEe67tpwR5G7Ipg" destinationNode="_cWKWwwhLEe67tpwR5G7Ipg">
+    <destinationPin href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_P51zOrEe-mRMNqkRI68A"/>
+    <sourcePin href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_P52DOrEe-mRMNqkRI68A"/>
+  </flows>
+  <flows id="_j_P52TOrEe-mRMNqkRI68A" sourceNode="_cWKWwwhLEe67tpwR5G7Ipg" destinationNode="_fQEjJAhLEe67tpwR5G7Ipg">
+    <destinationPin href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_P52jOrEe-mRMNqkRI68A"/>
+    <sourcePin href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_P52zOrEe-mRMNqkRI68A"/>
+  </flows>
+  <nodes xsi:type="dataflowdiagram:External" id="_0854cQhKEe67tpwR5G7Ipg" entityName="RegisterCustomer">
+    <behaviour href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_M2gTOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_M2gDOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_NdkDOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_LoZDOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_MPcDOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_MPcTOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_NdkTOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_NdkjOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_NdkzOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_LBUDOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_OEoDOrEe-mRMNqkRI68A"/>
+  </nodes>
+  <nodes xsi:type="dataflowdiagram:Process" id="_6JfSEAhKEe67tpwR5G7Ipg" entityName="Pseudonymization">
+    <behaviour href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_OEozOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_OEojOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_NdkDOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_LoZDOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_MPcDOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_MPcTOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_NdkjOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_OEpDOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_LBUDOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_OEpTOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_LBUTOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_OEoDOrEe-mRMNqkRI68A"/>
+  </nodes>
+  <nodes xsi:type="dataflowdiagram:Process" id="_AJYX8ghLEe67tpwR5G7Ipg" entityName="TransferToStatisticsProvider">
+    <behaviour href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_OEqDOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_OEpzOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_NdkDOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_LoZDOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_MPcDOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_MPcTOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_NdkjOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_OEqTOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_LBUTOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_OEpTOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_OEoDOrEe-mRMNqkRI68A"/>
+  </nodes>
+  <nodes xsi:type="dataflowdiagram:Store" id="_XxG3NAhLEe67tpwR5G7Ipg" entityName="BankStoreCustomerData">
+    <behaviour href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_OrsjOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_OrsTOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_NdkDOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_LoZDOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_MPcDOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_MPcTOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_NdkTOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_OEpDOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_LBUDOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_OEoDOrEe-mRMNqkRI68A"/>
+  </nodes>
+  <nodes xsi:type="dataflowdiagram:Process" id="_cWKWwwhLEe67tpwR5G7Ipg" entityName="StatisticsProviderCalculateStatistics">
+    <behaviour href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_OrtTOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_OrtDOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_NdkDOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_LoZDOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_MPcDOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_MPcTOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_NdkjOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_OEqTOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_LBUTOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_OEpTOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_OrtjOrEe-mRMNqkRI68A"/>
+  </nodes>
+  <nodes xsi:type="dataflowdiagram:Store" id="_fQEjJAhLEe67tpwR5G7Ipg" entityName="StatisticsProviderStoreData">
+    <behaviour href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_OruTOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_OruDOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_NdkDOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_LoZDOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_MPcDOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_MPcTOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_NdkjOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_OEqTOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_LBUTOrEe-mRMNqkRI68A"/>
+    <properties href="/home/felix/development/bachelors-workspace/GDPR-Analysis/tests/mdpa.gdpr.analysis.testmodels/models/Banking/test.datadictionary#_j_OrtjOrEe-mRMNqkRI68A"/>
+  </nodes>
+</dataflowdiagram:DataFlowDiagram>
