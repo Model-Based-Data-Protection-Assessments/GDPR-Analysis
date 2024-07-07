@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: GDPR Analysis Validation
+Bundle-SymbolicName: mdpa.gdpr.analysis.validation
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: mdpa.gdpr.dfdconverter;bundle-version="1.0.0",
+ mdpa.gdpr.dfdconverter.tracemodel;bundle-version="0.1.0",
+ org.dataflowanalysis.analysis;bundle-version="2.0.0",
+ mdpa.gdpr.metamodel.contextproperties;bundle-version="0.1.0",
+ org.dataflowanalysis.analysis.dfd;bundle-version="2.0.0"
+Automatic-Module-Name: mdpa.gdpr.analysis.validation
+Bundle-RequiredExecutionEnvironment: JavaSE-17
