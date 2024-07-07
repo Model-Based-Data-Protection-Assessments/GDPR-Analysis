@@ -1,5 +1,6 @@
 package mdpa.gdpr.analysis.dfd;
 
+import mdpa.gdpr.analysis.core.ContextAttributeState;
 import mdpa.gdpr.analysis.core.ContextDependentAttributeScenario;
 import mdpa.gdpr.analysis.core.ContextDependentAttributeSource;
 import mdpa.gdpr.metamodel.GDPR.Data;
@@ -31,7 +32,7 @@ public class DFDGDPRTransposeFlowGraph extends DFDTransposeFlowGraph {
 	private final Logger logger = Logger.getLogger(DFDGDPRTransposeFlowGraph.class);
 	private final List<ContextDependentAttributeSource> relevantContextDependentAttributes;
 	
-    private final List<ContextDependentAttributeScenario> contextDependentAttributes;
+    private final Optional<ContextAttributeState> contextAttributeState;
 
     /**
      * Creates a new dfd transpose flow graph with the given sink that induces the transpose flow graph
@@ -41,7 +42,7 @@ public class DFDGDPRTransposeFlowGraph extends DFDTransposeFlowGraph {
     public DFDGDPRTransposeFlowGraph(AbstractVertex<?> sink, List<ContextDependentAttributeSource> contextDependentAttributes) {
         super(sink);
         this.relevantContextDependentAttributes = contextDependentAttributes;
-		this.contextDependentAttributes = new ArrayList<>();
+		this.contextAttributeState = Optional.empty();
     }
 
 	/**
@@ -49,16 +50,19 @@ public class DFDGDPRTransposeFlowGraph extends DFDTransposeFlowGraph {
 	 *
 	 * @param sink Sink vertex that induces the transpose flow graph
 	 */
-	public DFDGDPRTransposeFlowGraph(AbstractVertex<?> sink, List<ContextDependentAttributeSource> contextDependentAttributes, List<ContextDependentAttributeScenario> contextDependentAttributeScenarios) {
+	public DFDGDPRTransposeFlowGraph(AbstractVertex<?> sink, List<ContextDependentAttributeSource> contextDependentAttributes, ContextAttributeState contextAttributeState) {
 		super(sink);
 		this.relevantContextDependentAttributes = contextDependentAttributes;
-		this.contextDependentAttributes = contextDependentAttributeScenarios;
+		this.contextAttributeState = Optional.of(contextAttributeState);
 	}
 
     public List<DFDGDPRTransposeFlowGraph> determineAlternateFlowGraphs() {
     	List<DFDGDPRTransposeFlowGraph> result = new ArrayList<>();
-    	for(ContextDependentAttributeSource source : this.relevantContextDependentAttributes) {
-			for (ContextDependentAttributeScenario scenario : source.getContextDependentAttributeScenarios()) {
+		List<ContextAttributeState> states = ContextAttributeState.createAllContextAttributeStates(this.relevantContextDependentAttributes);
+    	for(ContextAttributeState state : states) {
+			DFDGDPRTransposeFlowGraph currentTransposeFlowGraph = (DFDGDPRTransposeFlowGraph) this.copy(new IdentityHashMap<>(), state);
+			for (ContextDependentAttributeScenario scenario : state.getSelectedScenarios()) {
+				ContextDependentAttributeSource source = scenario.getContextDependentAttributeSource();
 				Optional<DFDGDPRVertex> matchingVertex = this.getVertices().stream()
 						.filter(DFDGDPRVertex.class::isInstance)
 						.map(DFDGDPRVertex.class::cast)
@@ -97,8 +101,7 @@ public class DFDGDPRTransposeFlowGraph extends DFDTransposeFlowGraph {
 					replacingVertex.setContextDependentAttributes(List.of(scenario));
 					Map<DFDVertex, DFDVertex> mapping = new IdentityHashMap<>();
 					mapping.put(targetVertex, replacingVertex);
-					// TODO: Copy add scenario to tfg
-					result.add((DFDGDPRTransposeFlowGraph) this.copy(mapping, List.of(scenario)));
+					currentTransposeFlowGraph = (DFDGDPRTransposeFlowGraph) currentTransposeFlowGraph.copy(mapping, state);
 				} else {
 					// Insert Node Characteristic
 					DFDGDPRVertex targetVertex = matchingVertex.get();
@@ -119,11 +122,10 @@ public class DFDGDPRTransposeFlowGraph extends DFDTransposeFlowGraph {
 					replacingVertex.setContextDependentAttributes(List.of(scenario));
 					Map<DFDVertex, DFDVertex> mapping = new IdentityHashMap<>();
 					mapping.put(targetVertex, replacingVertex);
-					// TODO: Copy add scenario to tfg
-					result.add((DFDGDPRTransposeFlowGraph) this.copy(mapping, List.of(scenario)));
-
+					currentTransposeFlowGraph = (DFDGDPRTransposeFlowGraph) currentTransposeFlowGraph.copy(mapping, state);
 				}
 			}
+			result.add(currentTransposeFlowGraph);
     	}
         return result;
     }
@@ -133,10 +135,14 @@ public class DFDGDPRTransposeFlowGraph extends DFDTransposeFlowGraph {
 			 logger.error("Stored sink of DFD Transpose flow graph is not a DFDVertex");
 			 throw new IllegalStateException("Stored sink of DFD Transpose flow graph is not a DFD Vertex");
 		 }
+		 if (this.contextAttributeState.isEmpty()) {
+			 logger.error("Before evaluating the data flow, alternative flow graphs need to be created!");
+			 throw new IllegalStateException();
+		 }
 		 DFDGDPRVertex newSink = dfdSink.copy(new IdentityHashMap<>());
 		 newSink.unify(new HashSet<>());
 		 newSink.evaluateDataFlow();
-		 return new DFDGDPRTransposeFlowGraph(newSink, this.relevantContextDependentAttributes, this.contextDependentAttributes);
+		 return new DFDGDPRTransposeFlowGraph(newSink, this.relevantContextDependentAttributes, this.contextAttributeState.get());
 	}
     
     public List<ContextDependentAttributeSource> getContextDependentAttributeSources() {
@@ -159,12 +165,12 @@ public class DFDGDPRTransposeFlowGraph extends DFDTransposeFlowGraph {
 	public AbstractTransposeFlowGraph copy(Map<DFDVertex, DFDVertex> mapping) {
 		DFDGDPRVertex copiedSink = (DFDGDPRVertex) mapping.getOrDefault((DFDVertex) sink, ((DFDGDPRVertex) sink).copy(mapping));
 		copiedSink.unify(new HashSet<>());
-		return new DFDGDPRTransposeFlowGraph(copiedSink, this.relevantContextDependentAttributes, this.contextDependentAttributes);
+        return this.contextAttributeState.map(attributeState -> new DFDGDPRTransposeFlowGraph(copiedSink, this.relevantContextDependentAttributes, attributeState)).orElseGet(() -> new DFDGDPRTransposeFlowGraph(copiedSink, this.relevantContextDependentAttributes));
 	}
 
-	public AbstractTransposeFlowGraph copy(Map<DFDVertex, DFDVertex> mapping, List<ContextDependentAttributeScenario> scenarios) {
+	public AbstractTransposeFlowGraph copy(Map<DFDVertex, DFDVertex> mapping, ContextAttributeState contextAttributeState) {
 		DFDGDPRVertex copiedSink = (DFDGDPRVertex) mapping.getOrDefault((DFDVertex) sink, ((DFDGDPRVertex) sink).copy(mapping));
 		copiedSink.unify(new HashSet<>());
-		return new DFDGDPRTransposeFlowGraph(copiedSink, this.relevantContextDependentAttributes, scenarios);
+		return new DFDGDPRTransposeFlowGraph(copiedSink, this.relevantContextDependentAttributes, contextAttributeState);
 	}
 }

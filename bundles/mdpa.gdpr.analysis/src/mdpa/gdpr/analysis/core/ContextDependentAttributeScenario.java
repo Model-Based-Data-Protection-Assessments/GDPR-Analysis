@@ -13,19 +13,22 @@ public class ContextDependentAttributeScenario {
 
     private final List<PropertyValue> propertyValues;
     private final List<ContextDefinition> context;
+    private final ContextDependentAttributeSource contextDependentAttributeSource;
     private final boolean resolvedUncertainty;
 
-    public ContextDependentAttributeScenario(ContextAnnotation contextAnnotation) {
+    public ContextDependentAttributeScenario(ContextAnnotation contextAnnotation, ContextDependentAttributeSource contextDependentAttributeSource) {
         this.transformationManager = new TransformationManager();
         this.propertyValues = contextAnnotation.getPropertyvalue();
         this.context = contextAnnotation.getContextdefinition();
+        this.contextDependentAttributeSource = contextDependentAttributeSource;
         this.resolvedUncertainty = true;
     }
 
-    public ContextDependentAttributeScenario(PropertyValue propertyValue) {
+    public ContextDependentAttributeScenario(PropertyValue propertyValue, ContextDependentAttributeSource contextDependentAttributeSource) {
         this.transformationManager = new TransformationManager();
         this.propertyValues = List.of(propertyValue);
         this.context = List.of();
+        this.contextDependentAttributeSource = contextDependentAttributeSource;
         this.resolvedUncertainty = false;
     }
 
@@ -42,5 +45,9 @@ public class ContextDependentAttributeScenario {
 
     public boolean resolvedByUncertainty() {
         return this.resolvedUncertainty;
+    }
+
+    public ContextDependentAttributeSource getContextDependentAttributeSource() {
+        return contextDependentAttributeSource;
     }
 }
