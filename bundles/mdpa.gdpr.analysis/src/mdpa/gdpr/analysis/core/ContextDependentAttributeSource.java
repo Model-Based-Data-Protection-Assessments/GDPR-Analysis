@@ -17,12 +17,12 @@ public class ContextDependentAttributeSource {
     public ContextDependentAttributeSource(PropertyAnnotation propertyAnnotation) {
         this.annotatedElement = propertyAnnotation.getAnnotatedElement();
         this.propertyType = propertyAnnotation.getProperty();
-        if (propertyAnnotation.getContextannotation().isEmpty()) {
-            this.contextDependentAttributeScenarios = propertyAnnotation.getProperty().getPropertyvalue().stream()
+        if (!propertyAnnotation.getContextannotation().isEmpty()) {
+            this.contextDependentAttributeScenarios = propertyAnnotation.getContextannotation().stream()
                     .map(it -> new ContextDependentAttributeScenario(it, this))
                     .toList();
         } else {
-            this.contextDependentAttributeScenarios = propertyAnnotation.getContextannotation().stream()
+            this.contextDependentAttributeScenarios = propertyAnnotation.getProperty().getPropertyvalue().stream()
                     .map(it -> new ContextDependentAttributeScenario(it, this))
                     .toList();
         }

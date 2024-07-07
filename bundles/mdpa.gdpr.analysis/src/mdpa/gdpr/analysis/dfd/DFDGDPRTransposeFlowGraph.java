@@ -60,6 +60,10 @@ public class DFDGDPRTransposeFlowGraph extends DFDTransposeFlowGraph {
     	List<DFDGDPRTransposeFlowGraph> result = new ArrayList<>();
 		List<ContextAttributeState> states = ContextAttributeState.createAllContextAttributeStates(this.relevantContextDependentAttributes);
     	for(ContextAttributeState state : states) {
+			if (state.getSelectedScenarios().stream().noneMatch(it -> it.applicable(this))) {
+				logger.warn("State not applicable to transpose flow graph, skipping");
+				continue;
+			}
 			DFDGDPRTransposeFlowGraph currentTransposeFlowGraph = (DFDGDPRTransposeFlowGraph) this.copy(new IdentityHashMap<>(), state);
 			for (ContextDependentAttributeScenario scenario : state.getSelectedScenarios()) {
 				ContextDependentAttributeSource source = scenario.getContextDependentAttributeSource();
@@ -70,6 +74,10 @@ public class DFDGDPRTransposeFlowGraph extends DFDTransposeFlowGraph {
 						.findAny();
 				if (matchingVertex.isEmpty()) {
 					logger.warn("Could not find matching vertex for context dependent attribute");
+					continue;
+				}
+				if (!scenario.applicable(matchingVertex.get())) {
+					logger.warn("Scenario not applicable to vertex!");
 					continue;
 				}
 
