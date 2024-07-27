@@ -78,6 +78,7 @@ public class DFDGDPRTransposeFlowGraph extends DFDTransposeFlowGraph {
 				}
 				if (!scenario.applicable(matchingVertex.get())) {
 					logger.warn("Scenario not applicable to vertex!");
+					// TODO: Modify state to include non-matched variations
 					continue;
 				}
 

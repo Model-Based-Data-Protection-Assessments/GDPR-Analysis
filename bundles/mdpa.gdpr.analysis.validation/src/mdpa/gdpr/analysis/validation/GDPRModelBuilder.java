@@ -18,6 +18,7 @@ public class GDPRModelBuilder {
     private final ContextDependentProperties contextDependentAttributes;
 
     private Processing lastElement;
+    private final Processing firstElement;
     private final Controller defaultController;
     private final Purpose defaultPurpose;
     private final LegalBasis defaultLegalBasis;
@@ -33,21 +34,57 @@ public class GDPRModelBuilder {
         this.defaultLegalBasis = this.createConsentLegalBasis("Default Legal Basis", this.defaultPurpose, this.defaultNaturalPerson);
         this.defaultPersonalData = this.createPersonalData("Default Personal Data", this.defaultNaturalPerson);
         Collecting element = GDPRFactory.eINSTANCE.createCollecting();
-        element.setEntityName("Start");
+        element.setEntityName("Collecting");
         element.setId(String.valueOf(UUID.randomUUID()));
         element.setResponsible(this.defaultController);
         element.getPurpose().add(this.defaultPurpose);
         element.getOnTheBasisOf().add(this.defaultLegalBasis);
         element.getOutputData().add(this.defaultPersonalData);
         gdprModel.getProcessing().add(element);
+        this.firstElement = element;
         this.lastElement = element;
     }
 
-    public void createFlowElement(String name) {
+    public Processing createProcessingElement(String name) {
         Processing element = GDPRFactory.eINSTANCE.createProcessing();
+        this.updateFlowElement(element, name, this.defaultController);
+        return element;
+    }
+    
+    public Collecting createCollectingElement(String name) {
+        Collecting element = GDPRFactory.eINSTANCE.createCollecting();
+        this.updateFlowElement(element, name, this.defaultController);
+        return element;
+    }
+    
+    public Storing createStoringElement(String name) {
+        Storing element = GDPRFactory.eINSTANCE.createStoring();
+        this.updateFlowElement(element, name, this.defaultController);
+        return element;
+    }
+    
+    public Processing createProcessingElement(String name, Role role) {
+        Processing element = GDPRFactory.eINSTANCE.createProcessing();
+        this.updateFlowElement(element, name, role);
+        return element;
+    }
+    
+    public Collecting createCollectingElement(String name, Role role) {
+        Collecting element = GDPRFactory.eINSTANCE.createCollecting();
+        this.updateFlowElement(element, name, role);
+        return element;
+    }
+    
+    public Storing createStoringElement(String name, Role role) {
+        Storing element = GDPRFactory.eINSTANCE.createStoring();
+        this.updateFlowElement(element, name, role);
+        return element;
+    }
+    
+    private void updateFlowElement(Processing element, String name, Role role) {
         element.setEntityName(name);
         element.setId(String.valueOf(UUID.randomUUID()));
-        element.setResponsible(this.defaultController);
+        element.setResponsible(role);
         element.getInputData().add(this.defaultPersonalData);
         element.getPurpose().add(this.defaultPurpose);
         element.getOnTheBasisOf().add(this.defaultLegalBasis);
@@ -145,4 +182,52 @@ public class GDPRModelBuilder {
         this.contextDependentAttributes.getContextdefinition().add(contextDefinition);
         return contextDefinition;
     }
+    
+    public ContextDefinition createContextDefinition(String name, List<? extends AbstractGDPRElement> requiredElements, ContextAnnotation contextAnnotation) {
+        ContextDefinition contextDefinition = ContextpropertiesFactory.eINSTANCE.createContextDefinition();
+        contextDefinition.setEntityName(name);
+        contextDefinition.setId(String.valueOf(UUID.randomUUID()));
+        
+        for(AbstractGDPRElement requiredElement : requiredElements) {
+            GDPRContextElement gdprContextElement = ContextpropertiesFactory.eINSTANCE.createGDPRContextElement();
+            gdprContextElement.setGdprElement(requiredElement);
+            contextDefinition.getGdprElements().add(gdprContextElement);
+        }
+
+        contextAnnotation.getContextdefinition().add(contextDefinition);
+        this.contextDependentAttributes.getContextdefinition().add(contextDefinition);
+        return contextDefinition;
+    }
+    
+    public Processing getFirstElement() {
+		return firstElement;
+	}
+    
+    public Controller getDefaultController() {
+		return defaultController;
+	}
+    
+    public LegalBasis getDefaultLegalBasis() {
+		return defaultLegalBasis;
+	}
+    
+    public NaturalPerson getDefaultNaturalPerson() {
+		return defaultNaturalPerson;
+	}
+    
+    public PersonalData getDefaultPersonalData() {
+		return defaultPersonalData;
+	}
+    
+    public Purpose getDefaultPurpose() {
+		return defaultPurpose;
+	}
+    
+    public ContextDependentProperties getContextDependentAttributes() {
+		return contextDependentAttributes;
+	}
+    
+    public LegalAssessmentFacts getGdprModel() {
+		return gdprModel;
+	}
 }

@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: GDPR Analysis Validation Testmodels
+Bundle-SymbolicName: mdpa.gdpr.analysis.validation.testmodels
+Bundle-Version: 1.0.0.qualifier
+Export-Package: mdpa.gdpr.analysis.validation.testmodels
+Require-Bundle: org.eclipse.core.runtime;bundle-version="3.26.100"
+Automatic-Module-Name: mdpa.gdpr.analysis.validation.testmodels
+Bundle-RequiredExecutionEnvironment: JavaSE-17

@@ -74,17 +74,20 @@ public class GDPRLegalAssessmentAnalysisBuilder extends DataFlowAnalysisBuilder 
      * Registers a custom resource provider for the analysis
      * @param resourceProvider Custom resource provider of the analysis
      */
-    public void useCustomResourceProvider(GDPRResourceProvider resourceProvider) {
+    public GDPRLegalAssessmentAnalysisBuilder useCustomResourceProvider(GDPRResourceProvider resourceProvider) {
         this.customResourceProvider = Optional.of(resourceProvider);
+        return this;
     }
 
     /**
      * Determines the effective resource provider that should be used by the analysis
      */
     private GDPRResourceProvider getEffectiveResourceProvider() {
-        return this.customResourceProvider
-                .orElse(new GDPRURIResourceProvider(ResourceUtils.createRelativePluginURI(this.gdprModelPath, this.modelProjectName),
-                        ResourceUtils.createRelativePluginURI(this.attributesPath, this.modelProjectName)));
+    	if (this.customResourceProvider.isPresent()) {
+    		return this.customResourceProvider.get();
+    	}
+        return new GDPRURIResourceProvider(ResourceUtils.createRelativePluginURI(this.gdprModelPath, this.modelProjectName),
+                        ResourceUtils.createRelativePluginURI(this.attributesPath, this.modelProjectName));
     }
 
     /**
@@ -92,11 +95,11 @@ public class GDPRLegalAssessmentAnalysisBuilder extends DataFlowAnalysisBuilder 
      */
     protected void validate() {
         super.validate();
-        if (this.gdprModelPath == null || this.gdprModelPath.isEmpty()) {
+        if (this.customResourceProvider.isEmpty() && (this.gdprModelPath == null || this.gdprModelPath.isEmpty())) {
             logger.error("A GDPR model is required to run the data flow analysis",
                     new IllegalStateException("The GDPR analysis requires a gdpr model"));
         }
-        if (this.attributesPath == null || this.attributesPath.isEmpty()) {
+        if (this.customResourceProvider.isEmpty() && (this.attributesPath == null || this.attributesPath.isEmpty())) {
             logger.error("A file with context dependent attributes is required to run the data flow analysis",
                     new IllegalStateException("The GDPR analysis requires a file with context dependent attributes"));
         }
