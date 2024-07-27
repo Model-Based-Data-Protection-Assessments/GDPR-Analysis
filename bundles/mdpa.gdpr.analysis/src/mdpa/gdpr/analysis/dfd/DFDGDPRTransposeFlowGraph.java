@@ -12,7 +12,6 @@ import org.dataflowanalysis.analysis.core.AbstractVertex;
 import org.dataflowanalysis.analysis.dfd.core.DFDTransposeFlowGraph;
 import org.dataflowanalysis.analysis.dfd.core.DFDVertex;
 import org.dataflowanalysis.dfd.datadictionary.Assignment;
-import org.dataflowanalysis.dfd.datadictionary.Behaviour;
 import org.dataflowanalysis.dfd.datadictionary.Label;
 import org.dataflowanalysis.dfd.datadictionary.LabelType;
 import org.dataflowanalysis.dfd.datadictionary.Pin;
@@ -27,6 +26,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class DFDGDPRTransposeFlowGraph extends DFDTransposeFlowGraph {
 	private final Logger logger = Logger.getLogger(DFDGDPRTransposeFlowGraph.class);
@@ -59,6 +59,7 @@ public class DFDGDPRTransposeFlowGraph extends DFDTransposeFlowGraph {
     public List<DFDGDPRTransposeFlowGraph> determineAlternateFlowGraphs() {
     	List<DFDGDPRTransposeFlowGraph> result = new ArrayList<>();
 		List<ContextAttributeState> states = ContextAttributeState.createAllContextAttributeStates(this.relevantContextDependentAttributes);
+		Map<List<ContextDependentAttributeScenario>, List<PropertyValue>> unmatchedStates = new HashMap<>();
     	for(ContextAttributeState state : states) {
 			if (state.getSelectedScenarios().stream().noneMatch(it -> it.applicable(this))) {
 				logger.warn("State not applicable to transpose flow graph, skipping");
@@ -77,10 +78,28 @@ public class DFDGDPRTransposeFlowGraph extends DFDTransposeFlowGraph {
 					continue;
 				}
 				if (!scenario.applicable(matchingVertex.get())) {
+					// Scenario must not be resolved by uncertainty
 					logger.warn("Scenario not applicable to vertex!");
-					// TODO: Modify state to include non-matched variations
+					List<ContextDependentAttributeScenario> key = state.getSelectedScenarios().stream()
+							.filter(it -> !it.equals(scenario))
+							.toList();
+					if (unmatchedStates.containsKey(key)) {
+						 List<PropertyValue> values = unmatchedStates.get(key).stream()
+								 .filter(it -> !scenario.getPropertyValues().contains(it))
+								 .toList();
+						 unmatchedStates.put(key, values);
+					} else {
+						 List<PropertyValue> values = source.getPropertyType().getPropertyvalue().stream()
+								 .filter(it -> !scenario.getPropertyValues().contains(it))
+								 .toList();
+						unmatchedStates.put(key, values);
+					}
 					continue;
 				}
+				List<ContextDependentAttributeScenario> key = state.getSelectedScenarios().stream()
+						.filter(it -> !it.equals(scenario))
+						.toList();
+				unmatchedStates.put(key, List.of());
 
 				if (source.getAnnotatedElement() instanceof Role || source.getAnnotatedElement() instanceof Data) {
 					// Insert Data Characteristic
@@ -136,8 +155,114 @@ public class DFDGDPRTransposeFlowGraph extends DFDTransposeFlowGraph {
 			}
 			result.add(currentTransposeFlowGraph);
     	}
+    	
+    	List<ContextAttributeState> additionalStates = new ArrayList<>();
+    	for (var entry : unmatchedStates.entrySet()) {
+    		if (entry.getValue().isEmpty()) {
+    			continue;
+    		}
+    		List<ContextDependentAttributeSource> sources = entry.getKey().stream()
+    				.map(it -> it.getContextDependentAttributeSource())
+    				.toList();
+    		var source = this.relevantContextDependentAttributes.stream()
+    				.filter(it -> !sources.contains(it))
+    				.findAny().orElseThrow();
+    		for (var typeValue : entry.getValue()) {
+    			ContextDependentAttributeScenario scenario = new ContextDependentAttributeScenario(typeValue, source);
+    			additionalStates.add(new ContextAttributeState(Stream.concat(Stream.of(scenario), entry.getKey().stream()).toList()));
+    		}
+    	}
+    	
+    	if (!additionalStates.isEmpty()) {
+    		logger.warn("Processing additional states caused by not matching a source in the set of states at all!");
+    		result.addAll(this.processStates(additionalStates));
+    	}
+    	
         return result;
     }
+    
+    private List<DFDGDPRTransposeFlowGraph> processStates(List<ContextAttributeState> states) {
+    	List<DFDGDPRTransposeFlowGraph> results = new ArrayList<>();
+    	for(ContextAttributeState state : states) {
+			if (state.getSelectedScenarios().stream().noneMatch(it -> it.applicable(this))) {
+				logger.warn("State not applicable to transpose flow graph, skipping");
+				continue;
+			}
+			DFDGDPRTransposeFlowGraph currentTransposeFlowGraph = (DFDGDPRTransposeFlowGraph) this.copy(new IdentityHashMap<>(), state);
+			for (ContextDependentAttributeScenario scenario : state.getSelectedScenarios()) {
+				ContextDependentAttributeSource source = scenario.getContextDependentAttributeSource();
+				Optional<DFDGDPRVertex> matchingVertex = this.getVertices().stream()
+						.filter(DFDGDPRVertex.class::isInstance)
+						.map(DFDGDPRVertex.class::cast)
+						.filter(source::applicable)
+						.findAny();
+				if (matchingVertex.isEmpty()) {
+					logger.warn("Could not find matching vertex for context dependent attribute");
+					continue;
+				}
+				if (!scenario.applicable(matchingVertex.get())) {
+					// Scenario must not be resolved by uncertainty
+					logger.warn("Scenario not applicable to vertex!");
+					continue;
+				}
+
+				if (source.getAnnotatedElement() instanceof Role || source.getAnnotatedElement() instanceof Data) {
+					// Insert Data Characteristic
+					DFDGDPRVertex targetVertex = matchingVertex.get();
+					Node replacingNode = EcoreUtil.copy(targetVertex.getReferencedElement());
+					Optional<Assignment> assignment = Optional.empty();
+					if (!targetVertex.getReferencedElement().getBehaviour().getOutPin().isEmpty()) {
+						assignment = Optional.of(datadictionaryFactory.eINSTANCE.createAssignment());
+						assignment.get().setTerm(datadictionaryFactory.eINSTANCE.createTRUE());
+						assignment.get().getInputPins().addAll(targetVertex.getReferencedElement().getBehaviour().getInPin());
+						assignment.get().setOutputPin(targetVertex.getReferencedElement().getBehaviour().getOutPin().get(0));
+					}
+
+					LabelType type = datadictionaryFactory.eINSTANCE.createLabelType();
+					type.setEntityName(source.getPropertyType().getEntityName());
+					type.setId(source.getPropertyType().getId());
+					for(PropertyValue propertyValue : scenario.getPropertyValues()) {
+						Label value = datadictionaryFactory.eINSTANCE.createLabel();
+						value.setEntityName(propertyValue.getEntityName());
+						value.setId(propertyValue.getId());
+						type.getLabel().add(value);
+						assignment.ifPresent(assignment1 -> assignment1.getOutputLabels().add(value));
+					}
+
+					assignment.ifPresent(assignment1 -> replacingNode.getBehaviour().getAssignment().add(assignment1));
+					DFDGDPRVertex replacingVertex = this.copyVertex(targetVertex, replacingNode);
+					replacingVertex.setContextDependentAttributes(List.of(scenario));
+					Map<DFDVertex, DFDVertex> mapping = new IdentityHashMap<>();
+					mapping.put(targetVertex, replacingVertex);
+					currentTransposeFlowGraph = (DFDGDPRTransposeFlowGraph) currentTransposeFlowGraph.copy(mapping, state);
+				} else {
+					// Insert Node Characteristic
+					DFDGDPRVertex targetVertex = matchingVertex.get();
+					Node replacingNode = EcoreUtil.copy(targetVertex.getReferencedElement());
+
+					LabelType type = datadictionaryFactory.eINSTANCE.createLabelType();
+					type.setEntityName(source.getPropertyType().getEntityName());
+					type.setId(source.getPropertyType().getId());
+					for(PropertyValue propertyValue : scenario.getPropertyValues()) {
+						Label value = datadictionaryFactory.eINSTANCE.createLabel();
+						value.setEntityName(propertyValue.getEntityName());
+						value.setId(propertyValue.getId());
+						type.getLabel().add(value);
+						replacingNode.getProperties().add(value);
+					}
+
+					DFDGDPRVertex replacingVertex = this.copyVertex(targetVertex, replacingNode);
+					replacingVertex.setContextDependentAttributes(List.of(scenario));
+					Map<DFDVertex, DFDVertex> mapping = new IdentityHashMap<>();
+					mapping.put(targetVertex, replacingVertex);
+					currentTransposeFlowGraph = (DFDGDPRTransposeFlowGraph) currentTransposeFlowGraph.copy(mapping, state);
+				}
+			}
+			results.add(currentTransposeFlowGraph);
+    	}
+    	return results;
+    }
+    
 	@Override
   	public AbstractTransposeFlowGraph evaluate() {
 		 if (!(this.sink instanceof DFDGDPRVertex dfdSink)) {
