@@ -7,6 +7,9 @@ Require-Bundle: mdpa.gdpr.analysis;bundle-version="1.0.0",
  junit-jupiter-api;bundle-version="5.9.2",
  org.eclipse.core.runtime;bundle-version="3.26.100",
  org.dataflowanalysis.analysis;bundle-version="2.0.0",
- mdpa.gdpr.analysis.testmodels;bundle-version="1.0.0"
+ mdpa.gdpr.analysis.testmodels;bundle-version="1.0.0",
+ org.dataflowanalysis.analysis.dfd;bundle-version="2.0.0",
+ mdpa.gdpr.metamodel,
+ org.dataflowanalysis.dfd.dataflowdiagram;bundle-version="2.0.0"
 Automatic-Module-Name: mdpa.gdpr.analysis.tests
 Bundle-RequiredExecutionEnvironment: JavaSE-17

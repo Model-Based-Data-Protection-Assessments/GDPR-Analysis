@@ -17,11 +17,13 @@ import org.dataflowanalysis.analysis.dfd.core.DFDTransposeFlowGraph;
 import org.dataflowanalysis.analysis.dfd.core.DFDTransposeFlowGraphFinder;
 import org.dataflowanalysis.analysis.dfd.core.DFDVertex;
 import org.dataflowanalysis.analysis.resource.ResourceProvider;
+import org.dataflowanalysis.dfd.datadictionary.DataDictionary;
 import org.dataflowanalysis.dfd.datadictionary.Pin;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,22 +49,27 @@ public class DFDGDPRFlowGraphCollection extends FlowGraphCollection {
         dfd.save();
         DFDTransposeFlowGraphFinder finder = new DFDTransposeFlowGraphFinder(dfd.dataDictionary(), dfd.dataFlowDiagram());
         List<DFDGDPRTransposeFlowGraph> completeFlowGraphs = finder.findTransposeFlowGraphs().stream()
-                .map(it -> this.transformFlowGraph((DFDTransposeFlowGraph) it))
+                .map(it -> this.transformFlowGraph((DFDTransposeFlowGraph) it, dfd.dataDictionary()))
                 .toList();
         List<DFDGDPRTransposeFlowGraph> result = new ArrayList<>(completeFlowGraphs);
-        result.addAll(completeFlowGraphs.stream().map(this::getPartialTransposeFlowGraphs).flatMap(List::stream).toList());
+        /*
+        result.addAll(completeFlowGraphs.stream()
+        		.map(it -> this.getPartialTransposeFlowGraphs(it, dfd.dataDictionary()))
+        		.flatMap(List::stream)
+        		.toList());
+        	*/	
         return result;
     }
     
-    private DFDGDPRTransposeFlowGraph transformFlowGraph(DFDTransposeFlowGraph transposeFlowGraph) {
+    private DFDGDPRTransposeFlowGraph transformFlowGraph(DFDTransposeFlowGraph transposeFlowGraph, DataDictionary dd) {
     	Map<DFDVertex, DFDGDPRVertex> mapping = new IdentityHashMap<>();
     	transposeFlowGraph.getVertices().stream()
     		.map(DFDVertex.class::cast)
     		.forEach(vertex -> mapping.put(vertex, this.getDFDGDPRVertex(vertex, new IdentityHashMap<>())));
-    	return new DFDGDPRTransposeFlowGraph(mapping.get((DFDVertex) transposeFlowGraph.getSink()), this.determineContextDependentAttributes(transposeFlowGraph, mapping.values()));
+    	return new DFDGDPRTransposeFlowGraph(mapping.get((DFDVertex) transposeFlowGraph.getSink()), this.determineContextDependentAttributes(transposeFlowGraph, mapping.values()), dd);
     }
 
-    private List<DFDGDPRTransposeFlowGraph> getPartialTransposeFlowGraphs(DFDGDPRTransposeFlowGraph transposeFlowGraph) {
+    private List<DFDGDPRTransposeFlowGraph> getPartialTransposeFlowGraphs(DFDGDPRTransposeFlowGraph transposeFlowGraph, DataDictionary dd) {
         List<DFDGDPRTransposeFlowGraph> result = new ArrayList<>();
         Map<Role, List<DFDGDPRVertex>> roleMap = new HashMap<>();
         transposeFlowGraph.getVertices().stream()
@@ -91,7 +98,7 @@ public class DFDGDPRFlowGraphCollection extends FlowGraphCollection {
             		.toList();
             for (DFDGDPRVertex sink : sinks) {
             	Map<DFDVertex, DFDVertex> mapping = new HashMap<>();
-            	result.add(new DFDGDPRTransposeFlowGraph(this.getMappingForSink(sink, roleVertices, mapping), new ArrayList<>(transposeFlowGraph.getContextDependentAttributeSources())));
+            	result.add(new DFDGDPRTransposeFlowGraph(this.getMappingForSink(sink, roleVertices, mapping), new ArrayList<>(transposeFlowGraph.getContextDependentAttributeSources()), dd));
             }
         }
         return result;
@@ -132,7 +139,7 @@ public class DFDGDPRFlowGraphCollection extends FlowGraphCollection {
                     .flatMap(List::stream)
                     .toList());
             result.addAll(collecting.getOutputData());
-            result.addAll(collecting.getInputData().stream()
+            result.addAll(collecting.getOutputData().stream()
                     .filter(PersonalData.class::isInstance)
                     .map(PersonalData.class::cast)
                     .map(PersonalData::getDataReferences)
@@ -150,7 +157,7 @@ public class DFDGDPRFlowGraphCollection extends FlowGraphCollection {
                     .flatMap(List::stream)
                     .toList());
             result.addAll(usage.getOutputData());
-            result.addAll(usage.getInputData().stream()
+            result.addAll(usage.getOutputData().stream()
                     .filter(PersonalData.class::isInstance)
                     .map(PersonalData.class::cast)
                     .map(PersonalData::getDataReferences)
@@ -168,7 +175,7 @@ public class DFDGDPRFlowGraphCollection extends FlowGraphCollection {
                     .flatMap(List::stream)
                     .toList());
             result.addAll(transferring.getOutputData());
-            result.addAll(transferring.getInputData().stream()
+            result.addAll(transferring.getOutputData().stream()
                     .filter(PersonalData.class::isInstance)
                     .map(PersonalData.class::cast)
                     .map(PersonalData::getDataReferences)
@@ -187,7 +194,7 @@ public class DFDGDPRFlowGraphCollection extends FlowGraphCollection {
                     .flatMap(List::stream)
                     .toList());
             result.addAll(storing.getOutputData());
-            result.addAll(storing.getInputData().stream()
+            result.addAll(storing.getOutputData().stream()
                     .filter(PersonalData.class::isInstance)
                     .map(PersonalData.class::cast)
                     .map(PersonalData::getDataReferences)

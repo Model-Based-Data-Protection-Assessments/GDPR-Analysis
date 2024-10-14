@@ -3,6 +3,7 @@ package mdpa.gdpr.analysis.core;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ContextAttributeState {
     private final List<ContextDependentAttributeScenario> selectedScenarios;
@@ -54,5 +55,13 @@ public class ContextAttributeState {
         }
 
         return result;
+    }
+    
+    @Override
+    public String toString() {
+    	String scenarios = this.selectedScenarios.stream()
+    			.map(it -> it.getName())
+    			.collect(Collectors.joining(","));
+    	return "[" + scenarios + "]";
     }
 }

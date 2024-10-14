@@ -24,11 +24,12 @@ public class RoleScalibilityCase extends AbstractScalibilityCase {
 		builder.createStoringElement("Storing", roles[parameter.getModelSize() % 2]);
 
 		//-------- Context Dependent Attribute -------------------
+		/*
 		Property property = builder.createProperty("Type", List.of("True", "False"));
 		PropertyAnnotation propertyAnnotation = builder.createPropertyAnnotation(builder.getDefaultPersonalData(), property);
 		ContextAnnotation contextAnnotation = builder.createContextAnnotation("Annotation", List.of(property.getPropertyvalue().get(0)), propertyAnnotation);
 		builder.createContextDefinition("Definition", builder.getDefaultController(), contextAnnotation);
-		
+		*/
 		// ------------ Analysis Execution ------------------
 		analysisExecutor.executeAnalysis(parameter, builder);
 	}

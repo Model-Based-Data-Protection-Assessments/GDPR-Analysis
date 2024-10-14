@@ -34,7 +34,7 @@ public class DataDefinedContextDependentAttributeScalibilityCase extends Abstrac
 
 	@Override
 	public int getScalibilityStep(int index) {
-		return 10 * index;
+		return (int) Math.floor(Math.pow(2, index));
 	}
 
 	@Override

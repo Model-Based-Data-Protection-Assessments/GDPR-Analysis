@@ -49,7 +49,9 @@ public class GraphExporter {
 				}
 			}
 			TreeMap<String, List<ScalibilityParameter>> sortedData = new TreeMap<>(indexedData);
-			for(List<ScalibilityParameter> parameters : sortedData.values()) {
+			var parametersSorted = new ArrayList<>(sortedData.values());
+			parametersSorted.sort((List<ScalibilityParameter> list1, List<ScalibilityParameter> list2) -> list1.get(0).compareTo(list2.get(0)));
+			for(List<ScalibilityParameter> parameters : parametersSorted) {
 				if(parameters.size() != 10) {
 					continue;
 				}

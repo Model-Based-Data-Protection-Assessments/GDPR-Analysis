@@ -47,7 +47,7 @@ public class PurposeScalibilityCase extends AbstractScalibilityCase {
 
 	@Override
 	public String getTestName() {
-		return "Purpose";
+		return "NodeContextSize";
 	}
 
 }
