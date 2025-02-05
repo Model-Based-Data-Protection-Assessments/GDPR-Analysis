@@ -43,7 +43,7 @@ public class ScalibilityCaseRunner {
 	}
 
 	private static final int RUNS_PER_STAGE = 10;	
-	private static final int ITERATIONS = 200;
+	private static final int ITERATIONS = 5;
 	private final Logger logger = Logger.getLogger(ScalibilityCaseRunner.class);
 	
 	private List<AbstractScalibilityCase> tests;

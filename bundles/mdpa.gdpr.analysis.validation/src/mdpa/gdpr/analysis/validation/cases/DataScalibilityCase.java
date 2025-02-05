@@ -43,11 +43,6 @@ public class DataScalibilityCase extends AbstractScalibilityCase {
 	}
 
 	@Override
-	public int getScalibilityStep(int index) {
-		return 10 * index;
-	}
-
-	@Override
 	public String getTestName() {
 		return "Data";
 	}

@@ -41,11 +41,6 @@ public class PurposeScalibilityCase extends AbstractScalibilityCase {
 	}
 
 	@Override
-	public int getScalibilityStep(int index) {
-		return 10 * index;
-	}
-
-	@Override
 	public String getTestName() {
 		return "NodeContextSize";
 	}

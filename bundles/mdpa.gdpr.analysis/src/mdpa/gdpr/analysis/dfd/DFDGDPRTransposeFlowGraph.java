@@ -17,7 +17,7 @@ import org.dataflowanalysis.analysis.dfd.core.DFDVertex;
 import org.dataflowanalysis.analysis.dfd.resource.DFDResourceProvider;
 import org.dataflowanalysis.dfd.datadictionary.AbstractAssignment;
 import org.dataflowanalysis.dfd.datadictionary.Assignment;
-import org.dataflowanalysis.dfd.datadictionary.Behaviour;
+import org.dataflowanalysis.dfd.datadictionary.Behavior;
 import org.dataflowanalysis.dfd.datadictionary.DataDictionary;
 import org.dataflowanalysis.dfd.datadictionary.ForwardingAssignment;
 import org.dataflowanalysis.dfd.datadictionary.Label;
@@ -26,7 +26,6 @@ import org.dataflowanalysis.dfd.datadictionary.Pin;
 import org.dataflowanalysis.dfd.datadictionary.datadictionaryFactory;
 import org.dataflowanalysis.dfd.dataflowdiagram.Node;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.ocl.pivot.Behavior;
 import org.palladiosimulator.pcm.core.entity.ResourceProvidedRole;
 
 import java.util.ArrayList;
@@ -134,9 +133,9 @@ public class DFDGDPRTransposeFlowGraph extends DFDTransposeFlowGraph {
 											.anyMatch(data -> data.getDataReferences().contains(person));
 								})
 								.findAny().orElse(currentTargetVertex);
-						Behaviour replacingBehaviour = UncertaintyUtils.createBehaviour(impactedElement, dd, source, scenario, person);
+						Behavior replacingBehavior = UncertaintyUtils.createBehavior(impactedElement, dd, source, scenario, person);
 						Node replacingNode = EcoreUtil.copy(impactedElement.getReferencedElement());
-						replacingNode.setBehaviour(replacingBehaviour);
+						replacingNode.setBehavior(replacingBehavior);
 						DFDGDPRVertex replacingVertex = this.copyVertex(impactedElement, replacingNode);
 						List<ContextDependentAttributeScenario> scenarios = new ArrayList<>(impactedElement.getContextDependentAttributes());
 						scenarios.add(scenario);
@@ -178,9 +177,9 @@ public class DFDGDPRTransposeFlowGraph extends DFDTransposeFlowGraph {
 								.map(DFDGDPRVertex.class::cast)
 								.filter(it -> it.getOutgoingData().contains(data))
 								.findAny().orElse(currentTargetVertex);
-						Behaviour replacingBehaviour = UncertaintyUtils.createBehaviour(impactedElement, dd, source, scenario, data);
+						Behavior replacingBehavior = UncertaintyUtils.createBehavior(impactedElement, dd, source, scenario, data);
 						Node replacingNode = EcoreUtil.copy(impactedElement.getReferencedElement());
-						replacingNode.setBehaviour(replacingBehaviour);
+						replacingNode.setBehavior(replacingBehavior);
 						DFDGDPRVertex replacingVertex = this.copyVertex(impactedElement, replacingNode);
 						List<ContextDependentAttributeScenario> scenarios = new ArrayList<>(impactedElement.getContextDependentAttributes());
 						scenarios.add(scenario);

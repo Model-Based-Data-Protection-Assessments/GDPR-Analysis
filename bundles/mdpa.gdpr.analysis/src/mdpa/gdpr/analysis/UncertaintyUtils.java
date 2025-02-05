@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.dataflowanalysis.dfd.datadictionary.Assignment;
-import org.dataflowanalysis.dfd.datadictionary.Behaviour;
+import org.dataflowanalysis.dfd.datadictionary.Behavior;
 import org.dataflowanalysis.dfd.datadictionary.DataDictionary;
 import org.dataflowanalysis.dfd.datadictionary.Label;
 import org.dataflowanalysis.dfd.datadictionary.LabelType;
@@ -29,27 +29,27 @@ import mdpa.gdpr.metamodel.contextproperties.PropertyValue;
 public class UncertaintyUtils {
 	private static final Logger logger = Logger.getLogger(UncertaintyUtils.class);
 	
-	public static Behaviour createBehaviour(DFDGDPRVertex impactedElement, DataDictionary dd, ContextDependentAttributeSource source, ContextDependentAttributeScenario scenario, Data targetedData) {
+	public static Behavior createBehavior(DFDGDPRVertex impactedElement, DataDictionary dd, ContextDependentAttributeSource source, ContextDependentAttributeScenario scenario, Data targetedData) {
 		logger.setLevel(Level.INFO);
 		
-		if (impactedElement.getReferencedElement().getBehaviour().getOutPin().stream()
+		if (impactedElement.getReferencedElement().getBehavior().getOutPin().stream()
 				.noneMatch(it -> it.getEntityName().equals(targetedData.getEntityName()))) {
 			logger.info("Scenario" + scenario.getName() + " does not impact " + impactedElement.getName());
-			return impactedElement.getReferencedElement().getBehaviour();
+			return impactedElement.getReferencedElement().getBehavior();
 		}
 		
 		logger.debug("Impacting element " + impactedElement.getReferencedElement().getEntityName());
-		Behaviour behaviour = datadictionaryFactory.eINSTANCE.createBehaviour();
-		dd.getBehaviour().add(behaviour);
+		Behavior behaviour = datadictionaryFactory.eINSTANCE.createBehavior();
+		dd.getBehavior().add(behaviour);
 		
-		if (impactedElement.getReferencedElement().getBehaviour().getOutPin().isEmpty()) {
+		if (impactedElement.getReferencedElement().getBehavior().getOutPin().isEmpty()) {
 			return behaviour;
 		}
 		
-		behaviour.getInPin().addAll(impactedElement.getReferencedElement().getBehaviour().getInPin().stream()
+		behaviour.getInPin().addAll(impactedElement.getReferencedElement().getBehavior().getInPin().stream()
 				.map(it -> EcoreUtil.copy(it))
 				.toList());
-		behaviour.getOutPin().addAll(impactedElement.getReferencedElement().getBehaviour().getOutPin().stream()
+		behaviour.getOutPin().addAll(impactedElement.getReferencedElement().getBehavior().getOutPin().stream()
 				.map(it -> EcoreUtil.copy(it))
 				.toList());
 
@@ -85,7 +85,7 @@ public class UncertaintyUtils {
 			}
 			Assignment assignment = datadictionaryFactory.eINSTANCE.createAssignment();
 			assignment.getInputPins().addAll(inputPins);
-			Pin dataOutputPin = impactedElement.getReferencedElement().getBehaviour().getOutPin().stream()
+			Pin dataOutputPin = impactedElement.getReferencedElement().getBehavior().getOutPin().stream()
 					.filter(pin -> pin.getEntityName().equals(personalData.getEntityName()))
 					.findAny().orElseThrow();
 			assignment.setOutputPin(dataOutputPin);
@@ -106,20 +106,20 @@ public class UncertaintyUtils {
 		return behaviour;
 	}
 
-	public static Behaviour createBehaviour(DFDGDPRVertex impactedElement, DataDictionary dd, ContextDependentAttributeSource source, ContextDependentAttributeScenario scenario, NaturalPerson targetedPerson) {
+	public static Behavior createBehavior(DFDGDPRVertex impactedElement, DataDictionary dd, ContextDependentAttributeSource source, ContextDependentAttributeScenario scenario, NaturalPerson targetedPerson) {
 		logger.setLevel(Level.WARN);
 		logger.debug("Impacting element " + impactedElement.getReferencedElement().getEntityName());
-		Behaviour behaviour = datadictionaryFactory.eINSTANCE.createBehaviour();
-		dd.getBehaviour().add(behaviour);
+		Behavior behaviour = datadictionaryFactory.eINSTANCE.createBehavior();
+		dd.getBehavior().add(behaviour);
 		
-		if (impactedElement.getReferencedElement().getBehaviour().getOutPin().isEmpty()) {
+		if (impactedElement.getReferencedElement().getBehavior().getOutPin().isEmpty()) {
 			return behaviour;
 		}
 
-		behaviour.getInPin().addAll(impactedElement.getReferencedElement().getBehaviour().getInPin().stream()
+		behaviour.getInPin().addAll(impactedElement.getReferencedElement().getBehavior().getInPin().stream()
 				.map(it -> EcoreUtil.copy(it))
 				.toList());
-		behaviour.getOutPin().addAll(impactedElement.getReferencedElement().getBehaviour().getOutPin().stream()
+		behaviour.getOutPin().addAll(impactedElement.getReferencedElement().getBehavior().getOutPin().stream()
 				.map(it -> EcoreUtil.copy(it))
 				.toList());
 		
@@ -159,7 +159,7 @@ public class UncertaintyUtils {
 				}
 				Assignment assignment = datadictionaryFactory.eINSTANCE.createAssignment();
 				assignment.getInputPins().addAll(inputPins);
-				Pin dataOutputPin = impactedElement.getReferencedElement().getBehaviour().getOutPin().stream()
+				Pin dataOutputPin = impactedElement.getReferencedElement().getBehavior().getOutPin().stream()
 						.filter(pin -> pin.getEntityName().equals(personalData.getEntityName()))
 						.findAny().orElseThrow();
 				assignment.setOutputPin(dataOutputPin);
