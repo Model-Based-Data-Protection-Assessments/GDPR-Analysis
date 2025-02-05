@@ -37,11 +37,6 @@ public class ContextDefinitionSizeScalibilityCase extends AbstractScalibilityCas
 	}
 
 	@Override
-	public int getScalibilityStep(int index) {
-		return 10 * index;
-	}
-
-	@Override
 	public String getTestName() {
 		return "ContextDefinitionSize";
 	}

@@ -101,11 +101,11 @@ public class TransformationManager {
             Processing gdprElement = this.getElement(node).orElseThrow();
             if (!(gdprElement instanceof Storing) && !(gdprElement instanceof Collecting)) {
                 ForwardingAssignment assignment = datadictionaryFactory.eINSTANCE.createForwardingAssignment();
-                assignment.getInputPins().addAll(node.getBehaviour().getInPin());
-                if (!node.getBehaviour().getOutPin().isEmpty()) {
-                    assignment.setOutputPin(node.getBehaviour().getOutPin().get(0));
+                assignment.getInputPins().addAll(node.getBehavior().getInPin());
+                if (!node.getBehavior().getOutPin().isEmpty()) {
+                    assignment.setOutputPin(node.getBehavior().getOutPin().get(0));
                 }
-                node.getBehaviour().getAssignment().add(assignment);
+                node.getBehavior().getAssignment().add(assignment);
             }
         }
     }

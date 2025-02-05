@@ -7,6 +7,11 @@ import mdpa.gdpr.metamodel.contextproperties.ContextDependentProperties;
 import org.dataflowanalysis.analysis.resource.ResourceProvider;
 
 public abstract class GDPRResourceProvider extends ResourceProvider {
+    @Override
+    public void setupResources() {
+
+    }
+
     public abstract LegalAssessmentFacts getModel();
     public abstract ContextDependentProperties getContextDependentProperties();
 

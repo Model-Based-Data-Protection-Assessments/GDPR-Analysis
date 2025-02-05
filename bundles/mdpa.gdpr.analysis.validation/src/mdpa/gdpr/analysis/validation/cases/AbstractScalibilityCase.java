@@ -7,7 +7,9 @@ public abstract class AbstractScalibilityCase {
 	
 	public abstract void runScalibilityCase(ScalibilityParameter parameter, AnalysisExecutor analysisExecutor);
 	
-	public abstract int getScalibilityStep(int index);
+	public int getScalibilityStep(int index) {
+		return (int) Math.floor(Math.pow(10, index));
+	};
 	
 	public abstract String getTestName();
 }

@@ -12,8 +12,6 @@
     <orderEntry type="module" module-name="mdpa.gdpr.metamodel.contextproperties" />
     <orderEntry type="module" module-name="mdpa.gdpr.dfdconverter" />
     <orderEntry type="module" module-name="mdpa.gdpr.dfdconverter.tracemodel" />
-    <orderEntry type="module" module-name="org.dataflowanalysis.analysis.dfd" />
-    <orderEntry type="module" module-name="org.dataflowanalysis.analysis" />
     <orderEntry type="library" name="ECLIPSE" level="project" />
   </component>
 </module>
