@@ -1,12 +1,17 @@
 package mdpa.gdpr.analysis.core.resource;
 
 import mdpa.gdpr.analysis.core.TransformationManager;
+import mdpa.gdpr.metamodel.GDPR.GDPRPackage;
 import mdpa.gdpr.metamodel.GDPR.LegalAssessmentFacts;
 import mdpa.gdpr.metamodel.contextproperties.ContextDependentProperties;
 
+import mdpa.gdpr.metamodel.contextproperties.ContextpropertiesPackage;
+import org.dataflowanalysis.dfd.datadictionary.datadictionaryPackage;
+import org.dataflowanalysis.dfd.dataflowdiagram.dataflowdiagramPackage;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +27,20 @@ public class GDPRURIResourceProvider extends GDPRResourceProvider {
         this.modelURI = modelURI;
         this.propertyURI = propertyURI;
         this.transformationManager = new TransformationManager();
+    }
+
+    @Override
+    public void setupResources() {
+        this.resources.getPackageRegistry()
+                .put(GDPRPackage.eNS_URI, GDPRPackage.eINSTANCE);
+        this.resources.getResourceFactoryRegistry()
+                .getExtensionToFactoryMap()
+                .put(GDPRPackage.eNAME, new XMIResourceFactoryImpl());
+        this.resources.getPackageRegistry()
+                .put(ContextpropertiesPackage.eNS_URI, ContextpropertiesPackage.eINSTANCE);
+        this.resources.getResourceFactoryRegistry()
+                .getExtensionToFactoryMap()
+                .put(ContextpropertiesPackage.eNAME, new XMIResourceFactoryImpl());
     }
 
     @Override

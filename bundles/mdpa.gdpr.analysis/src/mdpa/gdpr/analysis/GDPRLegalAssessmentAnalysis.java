@@ -33,17 +33,14 @@ public class GDPRLegalAssessmentAnalysis extends DataFlowConfidentialityAnalysis
 
 	@Override
 	public void initializeAnalysis() {
-		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap()
-				.put("gdpr", new XMIResourceFactoryImpl());
-		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap()
-				.put("contextproperties", new XMIResourceFactoryImpl());
-		
+		this.resourceProvider.setupResources();
+
 		EcorePlugin.ExtensionProcessor.process(null);
 
 		try {
 			super.setupLoggers();
 			var initializationBuilder = StandaloneInitializerBuilder.builder()
-					.registerProjectURI(GDPRLegalAssessmentAnalysis.class, GDPRLegalAssessmentAnalysis.PLUGIN_PATH);
+					.registerProjectURI(GDPRLegalAssessmentAnalysis.class, PLUGIN_PATH);
 
 			this.modelProjectActivator
 					.ifPresent(projectActivator -> initializationBuilder.registerProjectURI(projectActivator, this.modelProjectName));
@@ -51,13 +48,14 @@ public class GDPRLegalAssessmentAnalysis extends DataFlowConfidentialityAnalysis
 			initializationBuilder.build()
 					.init();
 
-			logger.info("Successfully initialized standalone environment for the legal assessment analysis.");
+			logger.info("Successfully initialized standalone environment for the data flow analysis.");
 
 		} catch (StandaloneInitializationException e) {
 			logger.error("Could not initialize analysis", e);
 			throw new IllegalStateException("Could not initialize analysis");
 		}
 		this.resourceProvider.loadRequiredResources();
+		this.resourceProvider.validate();
 		if (!this.resourceProvider.sufficientResourcesLoaded()) {
 			logger.error("Insufficient amount of resources loaded");
 			throw new IllegalStateException("Could not initialize analysis");
