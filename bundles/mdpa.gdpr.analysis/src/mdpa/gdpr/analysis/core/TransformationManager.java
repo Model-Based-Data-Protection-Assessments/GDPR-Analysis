@@ -49,7 +49,7 @@ public class TransformationManager {
      * @return
      */
     public DataFlowDiagramAndDataDictionary transform(LegalAssessmentFacts gdprModel, ContextDependentProperties contextDependentProperties) {
-        GDPR2DFD converter = new GDPR2DFD(gdprModel, TracemodelFactory.eINSTANCE.createTraceModel());
+        GDPR2DFD converter = new GDPR2DFD(gdprModel);
         converter.transform();
         processTransformation(converter.getDataFlowDiagram(), converter.getDataDictionary(), gdprModel);
         processContextDependentAttributes(contextDependentProperties, converter.getDataDictionary());
