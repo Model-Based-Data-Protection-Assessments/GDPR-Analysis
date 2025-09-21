@@ -102,19 +102,12 @@ public class DFDGDPRTransposeFlowGraph extends DFDTransposeFlowGraph {
 							.filter(DFDGDPRVertex.class::isInstance)
 							.map(DFDGDPRVertex.class::cast)
 							.filter(scenario::applicable)
-							.filter(vertex -> {
-								var previousVertices = vertex.getPreviousElements();
-								boolean reappeared = previousVertices.stream()
-										.filter(DFDGDPRVertex.class::isInstance)
-										.map(DFDGDPRVertex.class::cast)
-										.noneMatch(scenario::applicable);
-								boolean contextChanged = previousVertices.stream()
-										.filter(DFDGDPRVertex.class::isInstance)
-										.map(DFDGDPRVertex.class::cast)
-										.noneMatch(it -> it.getResponsibilityRole().equals(vertex.getResponsibilityRole()));
-								return reappeared || contextChanged;
-							})
 							.toList();
+					List<DFDGDPRVertex> finalTargetedVertices = targetedVertices;
+					targetedVertices = targetedVertices.stream()
+							.filter(it -> UncertaintyUtils.shouldReapply(finalTargetedVertices, it))
+							.toList();
+					logger.info("Applying state to vertices: " + targetedVertices.toString());
 					
 					for (DFDGDPRVertex targetVertex : targetedVertices) {
 						DFDGDPRVertex currentTargetVertex = currentTransposeFlowGraph.getVertices().stream()
@@ -151,19 +144,12 @@ public class DFDGDPRTransposeFlowGraph extends DFDTransposeFlowGraph {
 							.filter(DFDGDPRVertex.class::isInstance)
 							.map(DFDGDPRVertex.class::cast)
 							.filter(scenario::applicable)
-							.filter(vertex -> {
-								var previousVertices = vertex.getPreviousElements();
-								boolean reappeared = previousVertices.stream()
-										.filter(DFDGDPRVertex.class::isInstance)
-										.map(DFDGDPRVertex.class::cast)
-										.noneMatch(scenario::applicable);
-								boolean contextChanged = previousVertices.stream()
-										.filter(DFDGDPRVertex.class::isInstance)
-										.map(DFDGDPRVertex.class::cast)
-										.noneMatch(it -> it.getResponsibilityRole().equals(vertex.getResponsibilityRole()));
-								return reappeared || contextChanged;
-							})
 							.toList();
+					List<DFDGDPRVertex> finalTargetedVertices = targetedVertices;
+					targetedVertices = targetedVertices.stream()
+							.filter(it -> UncertaintyUtils.shouldReapply(finalTargetedVertices, it))
+							.toList();
+					logger.info("Applying state to vertices: " + targetedVertices.toString());
 					
 					for (DFDGDPRVertex targetVertex : targetedVertices) {
 						DFDGDPRVertex currentTargetVertex = currentTransposeFlowGraph.getVertices().stream()

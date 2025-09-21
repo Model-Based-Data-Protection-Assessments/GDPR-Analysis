@@ -1,7 +1,9 @@
 package mdpa.gdpr.analysis.tests.validation;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
+import mdpa.gdpr.analysis.core.ContextDependentAttributeScenario;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.dataflowanalysis.dfd.dataflowdiagram.Node;
@@ -45,7 +47,10 @@ public class TravelPlannerEvaluation extends ValidationBase {
 				.filter(DFDGDPRTransposeFlowGraph.class::isInstance)
 				.map(DFDGDPRTransposeFlowGraph.class::cast)
 				.toList()) {
-			var impactedElements = this.getImpactedElements(transposeFlowGraph);
+			List<ContextDependentAttributeScenario> impactScenarios = transposeFlowGraph.getContextAttributeState().getSelectedScenarios().stream()
+					.filter(it -> !it.getName().equals("UserNecessity"))
+					.toList();
+			var impactedElements = this.getImpactedElements(transposeFlowGraph, impactScenarios);
 			System.out.println("---- State: " + transposeFlowGraph.getContextAttributeState() + " -----------");
 			System.out.println("---- Impacted Elements: -----");
 			for (var vertex : impactedElements) {

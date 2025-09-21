@@ -3,6 +3,7 @@ package mdpa.gdpr.analysis.tests.validation;
 import java.util.ArrayList;
 import java.util.List;
 
+import mdpa.gdpr.analysis.core.ContextDependentAttributeScenario;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInstance;
@@ -39,17 +40,20 @@ public class ValidationBase {
 		analysis.initializeAnalysis();
 	}
 	
-	private boolean isImpacted(DFDGDPRVertex vertex) {
-		if (!vertex.getContextDependentAttributes().isEmpty()) {
+	private boolean isImpacted(DFDGDPRVertex vertex, List<ContextDependentAttributeScenario> impactScenarios) {
+		List<ContextDependentAttributeScenario> vertexImpactedScenarios = vertex.getContextDependentAttributes().stream()
+				.filter(impactScenarios::contains)
+				.toList();
+		if (!vertexImpactedScenarios.isEmpty()) {
 			return true;
 		}
-		return vertex.getPreviousElements().stream().anyMatch(it -> this.isImpacted((DFDGDPRVertex) it));
+		return vertex.getPreviousElements().stream().anyMatch(it -> this.isImpacted((DFDGDPRVertex) it, impactScenarios));
 	}
 	
-	protected List<DFDGDPRVertex> getImpactedElements(DFDGDPRTransposeFlowGraph transposeFlowGraph) {
+	protected List<DFDGDPRVertex> getImpactedElements(DFDGDPRTransposeFlowGraph transposeFlowGraph, List<ContextDependentAttributeScenario> impactScenarios) {
 		List<DFDGDPRVertex> impactedElements = new ArrayList<>();
 			for (DFDGDPRVertex vertex : transposeFlowGraph.getVertices().stream().filter(DFDGDPRVertex.class::isInstance).map(DFDGDPRVertex.class::cast).toList()) {
-				if (this.isImpacted(vertex)) {
+				if (this.isImpacted(vertex, impactScenarios)) {
 					impactedElements.add(vertex);
 				}
 			}
