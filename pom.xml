@@ -6,7 +6,7 @@
  <packaging>pom</packaging>
 
  <properties>
-	<tycho.version>2.7.5</tycho.version>
+	<tycho.version>4.0.9</tycho.version>
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
  </properties>
 
@@ -50,7 +50,7 @@
 				<!-- Optional set the Java version you are using-->
 				<executionEnvironment>JavaSE-17</executionEnvironment>
 				<target>
-				  <file>../../releng/mdpa.gdpr.analysis.targetplatform/mdpa.gdpr.analysis.targetplatform.target</file>
+            <file>../../releng/mdpa.gdpr.analysis.targetplatform/mdpa.gdpr.metamodel.targetplatform.target</file>
 				</target>
 				<environments>
 					<environment>
@@ -86,7 +86,30 @@
 					</configuration>
 				</execution>
 			</executions>
+      </plugin>
+      <plugin>
+			<groupId>com.diffplug.spotless</groupId>
+			<artifactId>spotless-maven-plugin</artifactId>
+			<version>2.43.0</version>
+			<configuration>
+				<lineEndings>UNIX</lineEndings>
+				<java>
+					<includes>
+						<include>bundles/**/*.java</include>
+						<include>tests/**/*.java</include>
+					</includes>
+				    <excludes>
+						<exclude>**/src-gen/</exclude>
+					</excludes>
+					<eclipse>
+						<file>${maven.multiModuleProjectDirectory}/formatter.xml</file>
+					</eclipse>
+					<importOrder/>
+					<removeUnusedImports/>
+				</java>
+			</configuration>
 		</plugin>
+
 	</plugins>
  </build>
  <profiles>
@@ -161,8 +184,8 @@
 							</configuration>
 						</execution>
 					</executions>
-				</plugin>
-			</plugins>
+          </plugin>
+ 			</plugins>
 		</build>
 	</profile>
  </profiles>
@@ -170,6 +193,7 @@
  <modules>
 	<module>releng</module>
 	<module>bundles</module>
-	<module>features</module>
+  <module>features</module>
+  <module>tests</module>
  </modules>
 </project>

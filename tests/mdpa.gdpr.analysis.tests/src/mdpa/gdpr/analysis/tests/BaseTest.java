@@ -1,25 +1,24 @@
 package mdpa.gdpr.analysis.tests;
 
 import java.nio.file.Paths;
-
-import org.junit.jupiter.api.BeforeEach;
-
 import mdpa.gdpr.analysis.GDPRLegalAssessmentAnalysis;
 import mdpa.gdpr.analysis.GDPRLegalAssessmentAnalysisBuilder;
 import mdpa.gdpr.analysis.testmodels.Activator;
+import org.junit.jupiter.api.BeforeEach;
 
 public abstract class BaseTest {
-	public static final String TEST_MODEL_PROJECT_NAME = "mdpa.gdpr.analysis.testmodels";
-	protected GDPRLegalAssessmentAnalysis analysis = null;
+    public static final String TEST_MODEL_PROJECT_NAME = "mdpa.gdpr.analysis.testmodels";
+    protected GDPRLegalAssessmentAnalysis analysis = null;
 
-	abstract String getFolderName();
-	abstract String getFilesName();
-	
-	protected String getBaseFolder() {
-		return "models";
-	}
-	
-	@BeforeEach
+    abstract String getFolderName();
+
+    abstract String getFilesName();
+
+    protected String getBaseFolder() {
+        return "models";
+    }
+
+    @BeforeEach
     public void setup() {
         final var gdprModelPath = Paths.get(getBaseFolder(), getFolderName(), getFilesName() + ".gdpr")
                 .toString();

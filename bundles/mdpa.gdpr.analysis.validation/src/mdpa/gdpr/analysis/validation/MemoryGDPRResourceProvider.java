@@ -6,31 +6,31 @@ import mdpa.gdpr.metamodel.GDPR.LegalAssessmentFacts;
 import mdpa.gdpr.metamodel.contextproperties.ContextDependentProperties;
 
 public class MemoryGDPRResourceProvider extends GDPRResourceProvider {
-	private GDPRModelBuilder modelBuilder;
-	private final TransformationManager transformationManager = new TransformationManager();
-	
-	public MemoryGDPRResourceProvider(GDPRModelBuilder modelBuilder) {
-		this.modelBuilder = modelBuilder;
-	}
+    private GDPRModelBuilder modelBuilder;
+    private final TransformationManager transformationManager = new TransformationManager();
 
-	@Override
-	public LegalAssessmentFacts getModel() {
-		return modelBuilder.getGdprModel();
-	}
+    public MemoryGDPRResourceProvider(GDPRModelBuilder modelBuilder) {
+        this.modelBuilder = modelBuilder;
+    }
 
-	@Override
-	public ContextDependentProperties getContextDependentProperties() {
-		return modelBuilder.getContextDependentAttributes();
-	}
+    @Override
+    public LegalAssessmentFacts getModel() {
+        return modelBuilder.getGdprModel();
+    }
 
-	@Override
-	public TransformationManager getTransformationManager() {
-		return this.transformationManager;
-	}
+    @Override
+    public ContextDependentProperties getContextDependentProperties() {
+        return modelBuilder.getContextDependentAttributes();
+    }
 
-	@Override
-	public void loadRequiredResources() {
-		
-	}
+    @Override
+    public TransformationManager getTransformationManager() {
+        return this.transformationManager;
+    }
+
+    @Override
+    public void loadRequiredResources() {
+
+    }
 
 }

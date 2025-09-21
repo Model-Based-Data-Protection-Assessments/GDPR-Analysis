@@ -26,13 +26,16 @@ public class ContextAttributeState {
         return Collections.unmodifiableList(this.selectedScenarios);
     }
 
-    public static List<ContextAttributeState> createAllContextAttributeStates(List<ContextDependentAttributeSource> contextDependentAttributeSources) {
+    public static List<ContextAttributeState> createAllContextAttributeStates(
+            List<ContextDependentAttributeSource> contextDependentAttributeSources) {
         List<List<ContextDependentAttributeScenario>> scenarios = new ArrayList<>();
         for (ContextDependentAttributeSource source : contextDependentAttributeSources) {
             scenarios.add(new ArrayList<>(source.getContextDependentAttributeScenarios()));
         }
         List<List<ContextDependentAttributeScenario>> cartesianProduct = cartesianProduct(scenarios);
-        return cartesianProduct.stream().map(ContextAttributeState::new).toList();
+        return cartesianProduct.stream()
+                .map(ContextAttributeState::new)
+                .toList();
     }
 
     private static <T> List<List<T>> cartesianProduct(List<List<T>> lists) {
@@ -56,12 +59,12 @@ public class ContextAttributeState {
 
         return result;
     }
-    
+
     @Override
     public String toString() {
-    	String scenarios = this.selectedScenarios.stream()
-    			.map(it -> it.getName())
-    			.collect(Collectors.joining(","));
-    	return "[" + scenarios + "]";
+        String scenarios = this.selectedScenarios.stream()
+                .map(it -> it.getName())
+                .collect(Collectors.joining(","));
+        return "[" + scenarios + "]";
     }
 }

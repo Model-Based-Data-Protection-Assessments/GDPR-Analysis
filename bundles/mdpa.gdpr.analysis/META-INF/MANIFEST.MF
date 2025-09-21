@@ -11,6 +11,11 @@ Require-Bundle: mdpa.gdpr.dfdconverter;bundle-version="1.0.0",
  mdpa.gdpr.dfdconverter.tracemodel;bundle-version="0.1.0",
  org.dataflowanalysis.analysis;bundle-version="2.0.0",
  mdpa.gdpr.metamodel.contextproperties;bundle-version="0.1.0",
- org.dataflowanalysis.analysis.dfd;bundle-version="2.0.0"
+ org.dataflowanalysis.analysis.dfd;bundle-version="2.0.0",
+ org.apache.log4j;bundle-version="1.2.24",
+ org.eclipse.core.runtime;bundle-version="3.26.100",
+ tools.mdsd.library.standalone.initialization;bundle-version="0.3.0",
+ tools.mdsd.library.standalone.initialization.log4j;bundle-version="0.3.0",
+ org.eclipse.emf.ecore.xmi;bundle-version="2.18.0"
 Automatic-Module-Name: mdpa.gdpr.analysis
 Bundle-RequiredExecutionEnvironment: JavaSE-17
