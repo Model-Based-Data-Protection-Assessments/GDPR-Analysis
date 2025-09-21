@@ -1,20 +1,18 @@
 package mdpa.gdpr.analysis;
 
 import java.util.Optional;
-
+import mdpa.gdpr.analysis.core.resource.GDPRResourceProvider;
+import mdpa.gdpr.analysis.core.resource.GDPRURIResourceProvider;
 import org.apache.log4j.Logger;
 import org.dataflowanalysis.analysis.DataFlowAnalysisBuilder;
 import org.dataflowanalysis.analysis.utils.ResourceUtils;
 import org.eclipse.core.runtime.Plugin;
 
-import mdpa.gdpr.analysis.core.resource.GDPRResourceProvider;
-import mdpa.gdpr.analysis.core.resource.GDPRURIResourceProvider;
-
 public class GDPRLegalAssessmentAnalysisBuilder extends DataFlowAnalysisBuilder {
-	private final Logger logger = Logger.getLogger(GDPRLegalAssessmentAnalysisBuilder.class);
-	
-	protected String gdprModelPath;
-	protected String attributesPath;
+    private final Logger logger = Logger.getLogger(GDPRLegalAssessmentAnalysisBuilder.class);
+
+    protected String gdprModelPath;
+    protected String attributesPath;
     protected Optional<GDPRResourceProvider> customResourceProvider;
 
     /**
@@ -83,11 +81,11 @@ public class GDPRLegalAssessmentAnalysisBuilder extends DataFlowAnalysisBuilder 
      * Determines the effective resource provider that should be used by the analysis
      */
     private GDPRResourceProvider getEffectiveResourceProvider() {
-    	if (this.customResourceProvider.isPresent()) {
-    		return this.customResourceProvider.get();
-    	}
+        if (this.customResourceProvider.isPresent()) {
+            return this.customResourceProvider.get();
+        }
         return new GDPRURIResourceProvider(ResourceUtils.createRelativePluginURI(this.gdprModelPath, this.modelProjectName),
-                        ResourceUtils.createRelativePluginURI(this.attributesPath, this.modelProjectName));
+                ResourceUtils.createRelativePluginURI(this.attributesPath, this.modelProjectName));
     }
 
     /**

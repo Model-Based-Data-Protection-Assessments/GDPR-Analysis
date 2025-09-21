@@ -1,5 +1,7 @@
 package mdpa.gdpr.analysis.validation;
 
+import java.util.List;
+import java.util.UUID;
 import mdpa.gdpr.metamodel.GDPR.*;
 import mdpa.gdpr.metamodel.contextproperties.ContextAnnotation;
 import mdpa.gdpr.metamodel.contextproperties.ContextDefinition;
@@ -9,9 +11,6 @@ import mdpa.gdpr.metamodel.contextproperties.GDPRContextElement;
 import mdpa.gdpr.metamodel.contextproperties.Property;
 import mdpa.gdpr.metamodel.contextproperties.PropertyAnnotation;
 import mdpa.gdpr.metamodel.contextproperties.PropertyValue;
-
-import java.util.List;
-import java.util.UUID;
 
 public class GDPRModelBuilder {
     private final LegalAssessmentFacts gdprModel;
@@ -37,10 +36,14 @@ public class GDPRModelBuilder {
         element.setEntityName("Collecting");
         element.setId(String.valueOf(UUID.randomUUID()));
         element.setResponsible(this.defaultController);
-        element.getPurpose().add(this.defaultPurpose);
-        element.getOnTheBasisOf().add(this.defaultLegalBasis);
-        element.getOutputData().add(this.defaultPersonalData);
-        gdprModel.getProcessing().add(element);
+        element.getPurpose()
+                .add(this.defaultPurpose);
+        element.getOnTheBasisOf()
+                .add(this.defaultLegalBasis);
+        element.getOutputData()
+                .add(this.defaultPersonalData);
+        gdprModel.getProcessing()
+                .add(element);
         this.firstElement = element;
         this.lastElement = element;
     }
@@ -50,46 +53,51 @@ public class GDPRModelBuilder {
         this.updateFlowElement(element, name, this.defaultController);
         return element;
     }
-    
+
     public Collecting createCollectingElement(String name) {
         Collecting element = GDPRFactory.eINSTANCE.createCollecting();
         this.updateFlowElement(element, name, this.defaultController);
         return element;
     }
-    
+
     public Storing createStoringElement(String name) {
         Storing element = GDPRFactory.eINSTANCE.createStoring();
         this.updateFlowElement(element, name, this.defaultController);
         return element;
     }
-    
+
     public Processing createProcessingElement(String name, Role role) {
         Processing element = GDPRFactory.eINSTANCE.createProcessing();
         this.updateFlowElement(element, name, role);
         return element;
     }
-    
+
     public Collecting createCollectingElement(String name, Role role) {
         Collecting element = GDPRFactory.eINSTANCE.createCollecting();
         this.updateFlowElement(element, name, role);
         return element;
     }
-    
+
     public Storing createStoringElement(String name, Role role) {
         Storing element = GDPRFactory.eINSTANCE.createStoring();
         this.updateFlowElement(element, name, role);
         return element;
     }
-    
+
     private void updateFlowElement(Processing element, String name, Role role) {
         element.setEntityName(name);
         element.setId(String.valueOf(UUID.randomUUID()));
         element.setResponsible(role);
-        element.getInputData().add(this.defaultPersonalData);
-        element.getPurpose().add(this.defaultPurpose);
-        element.getOnTheBasisOf().add(this.defaultLegalBasis);
-        this.lastElement.getFollowingProcessing().add(element);
-        this.gdprModel.getProcessing().add(element);
+        element.getInputData()
+                .add(this.defaultPersonalData);
+        element.getPurpose()
+                .add(this.defaultPurpose);
+        element.getOnTheBasisOf()
+                .add(this.defaultLegalBasis);
+        this.lastElement.getFollowingProcessing()
+                .add(element);
+        this.gdprModel.getProcessing()
+                .add(element);
         this.lastElement = element;
     }
 
@@ -98,7 +106,8 @@ public class GDPRModelBuilder {
         role.setName(name);
         role.setEntityName(name);
         role.setId(String.valueOf(UUID.randomUUID()));
-        this.gdprModel.getInvolvedParties().add(role);
+        this.gdprModel.getInvolvedParties()
+                .add(role);
         return role;
     }
 
@@ -106,7 +115,8 @@ public class GDPRModelBuilder {
         Purpose purpose = GDPRFactory.eINSTANCE.createPurpose();
         purpose.setEntityName(name);
         purpose.setId(String.valueOf(UUID.randomUUID()));
-        this.gdprModel.getPurposes().add(purpose);
+        this.gdprModel.getPurposes()
+                .add(purpose);
         return purpose;
     }
 
@@ -114,9 +124,11 @@ public class GDPRModelBuilder {
         Consent legalBasis = GDPRFactory.eINSTANCE.createConsent();
         legalBasis.setEntityName(name);
         legalBasis.setId(String.valueOf(UUID.randomUUID()));
-        legalBasis.getForPurpose().add(purpose);
+        legalBasis.getForPurpose()
+                .add(purpose);
         legalBasis.setConsentee(consentee);
-        this.gdprModel.getLegalBases().add(legalBasis);
+        this.gdprModel.getLegalBases()
+                .add(legalBasis);
         return legalBasis;
     }
 
@@ -125,7 +137,8 @@ public class GDPRModelBuilder {
         naturalPerson.setName(name);
         naturalPerson.setEntityName(name);
         naturalPerson.setId(String.valueOf(UUID.randomUUID()));
-        this.gdprModel.getInvolvedParties().add(naturalPerson);
+        this.gdprModel.getInvolvedParties()
+                .add(naturalPerson);
         return naturalPerson;
     }
 
@@ -133,8 +146,10 @@ public class GDPRModelBuilder {
         PersonalData personalData = GDPRFactory.eINSTANCE.createPersonalData();
         personalData.setEntityName(name);
         personalData.setId(String.valueOf(UUID.randomUUID()));
-        personalData.getDataReferences().add(naturalPerson);
-        this.gdprModel.getData().add(personalData);
+        personalData.getDataReferences()
+                .add(naturalPerson);
+        this.gdprModel.getData()
+                .add(personalData);
         return personalData;
     }
 
@@ -142,13 +157,14 @@ public class GDPRModelBuilder {
         Property property = ContextpropertiesFactory.eINSTANCE.createProperty();
         property.setEntityName(name);
         property.setId(String.valueOf(UUID.randomUUID()));
-        for(String value : values) {
+        for (String value : values) {
             PropertyValue propertyValue = ContextpropertiesFactory.eINSTANCE.createPropertyValue();
             propertyValue.setParentProperty(property);
             propertyValue.setEntityName(value);
             propertyValue.setId(String.valueOf(UUID.randomUUID()));
         }
-        this.contextDependentAttributes.getProperty().add(property);
+        this.contextDependentAttributes.getProperty()
+                .add(property);
         return property;
     }
 
@@ -156,7 +172,8 @@ public class GDPRModelBuilder {
         PropertyAnnotation propertyAnnotation = ContextpropertiesFactory.eINSTANCE.createPropertyAnnotation();
         propertyAnnotation.setAnnotatedElement(annotatedElement);
         propertyAnnotation.setProperty(property);
-        this.contextDependentAttributes.getPropertyannotation().add(propertyAnnotation);
+        this.contextDependentAttributes.getPropertyannotation()
+                .add(propertyAnnotation);
         return propertyAnnotation;
     }
 
@@ -164,8 +181,10 @@ public class GDPRModelBuilder {
         ContextAnnotation contextAnnotation = ContextpropertiesFactory.eINSTANCE.createContextAnnotation();
         contextAnnotation.setEntityName(name);
         contextAnnotation.setId(String.valueOf(UUID.randomUUID()));
-        contextAnnotation.getPropertyvalue().addAll(propertyValues);
-        propertyAnnotation.getContextannotation().add(contextAnnotation);
+        contextAnnotation.getPropertyvalue()
+                .addAll(propertyValues);
+        propertyAnnotation.getContextannotation()
+                .add(contextAnnotation);
         return contextAnnotation;
     }
 
@@ -176,58 +195,65 @@ public class GDPRModelBuilder {
 
         GDPRContextElement gdprContextElement = ContextpropertiesFactory.eINSTANCE.createGDPRContextElement();
         gdprContextElement.setGdprElement(requiredElement);
-        contextDefinition.getGdprElements().add(gdprContextElement);
+        contextDefinition.getGdprElements()
+                .add(gdprContextElement);
 
-        contextAnnotation.getContextdefinition().add(contextDefinition);
-        this.contextDependentAttributes.getContextdefinition().add(contextDefinition);
+        contextAnnotation.getContextdefinition()
+                .add(contextDefinition);
+        this.contextDependentAttributes.getContextdefinition()
+                .add(contextDefinition);
         return contextDefinition;
     }
-    
-    public ContextDefinition createContextDefinition(String name, List<? extends AbstractGDPRElement> requiredElements, ContextAnnotation contextAnnotation) {
+
+    public ContextDefinition createContextDefinition(String name, List<? extends AbstractGDPRElement> requiredElements,
+            ContextAnnotation contextAnnotation) {
         ContextDefinition contextDefinition = ContextpropertiesFactory.eINSTANCE.createContextDefinition();
         contextDefinition.setEntityName(name);
         contextDefinition.setId(String.valueOf(UUID.randomUUID()));
-        
-        for(AbstractGDPRElement requiredElement : requiredElements) {
+
+        for (AbstractGDPRElement requiredElement : requiredElements) {
             GDPRContextElement gdprContextElement = ContextpropertiesFactory.eINSTANCE.createGDPRContextElement();
             gdprContextElement.setGdprElement(requiredElement);
-            contextDefinition.getGdprElements().add(gdprContextElement);
+            contextDefinition.getGdprElements()
+                    .add(gdprContextElement);
         }
 
-        contextAnnotation.getContextdefinition().add(contextDefinition);
-        this.contextDependentAttributes.getContextdefinition().add(contextDefinition);
+        contextAnnotation.getContextdefinition()
+                .add(contextDefinition);
+        this.contextDependentAttributes.getContextdefinition()
+                .add(contextDefinition);
         return contextDefinition;
     }
-    
+
     public Processing getFirstElement() {
-		return firstElement;
-	}
-    
+        return firstElement;
+    }
+
     public Controller getDefaultController() {
-		return defaultController;
-	}
-    
+        return defaultController;
+    }
+
     public LegalBasis getDefaultLegalBasis() {
-		return defaultLegalBasis;
-	}
-    
+        return defaultLegalBasis;
+    }
+
     public NaturalPerson getDefaultNaturalPerson() {
-		return defaultNaturalPerson;
-	}
-    
+        return defaultNaturalPerson;
+    }
+
     public PersonalData getDefaultPersonalData() {
-		return defaultPersonalData;
-	}
-    
+        return defaultPersonalData;
+    }
+
     public Purpose getDefaultPurpose() {
-		return defaultPurpose;
-	}
-    
+        return defaultPurpose;
+    }
+
     public ContextDependentProperties getContextDependentAttributes() {
-		return contextDependentAttributes;
-	}
-    
+        return contextDependentAttributes;
+    }
+
     public LegalAssessmentFacts getGdprModel() {
-		return gdprModel;
-	}
+        return gdprModel;
+    }
 }

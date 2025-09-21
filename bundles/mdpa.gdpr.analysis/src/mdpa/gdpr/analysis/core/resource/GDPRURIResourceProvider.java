@@ -1,20 +1,16 @@
 package mdpa.gdpr.analysis.core.resource;
 
+import java.util.ArrayList;
+import java.util.List;
 import mdpa.gdpr.analysis.core.TransformationManager;
 import mdpa.gdpr.metamodel.GDPR.GDPRPackage;
 import mdpa.gdpr.metamodel.GDPR.LegalAssessmentFacts;
 import mdpa.gdpr.metamodel.contextproperties.ContextDependentProperties;
-
 import mdpa.gdpr.metamodel.contextproperties.ContextpropertiesPackage;
-import org.dataflowanalysis.dfd.datadictionary.datadictionaryPackage;
-import org.dataflowanalysis.dfd.dataflowdiagram.dataflowdiagramPackage;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class GDPRURIResourceProvider extends GDPRResourceProvider {
     private final URI modelURI;
@@ -51,17 +47,18 @@ public class GDPRURIResourceProvider extends GDPRResourceProvider {
         do {
             loadedResources = new ArrayList<>(this.resources.getResources());
             loadedResources.forEach(EcoreUtil::resolveAll);
-        } while (loadedResources.size() != this.resources.getResources().size());
+        } while (loadedResources.size() != this.resources.getResources()
+                .size());
     }
 
     @Override
     public LegalAssessmentFacts getModel() {
         return this.model;
     }
-    
+
     @Override
     public ContextDependentProperties getContextDependentProperties() {
-    	return this.contextDependentProperties;
+        return this.contextDependentProperties;
     }
 
     @Override

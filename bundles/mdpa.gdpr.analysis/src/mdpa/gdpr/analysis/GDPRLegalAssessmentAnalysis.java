@@ -1,5 +1,6 @@
 package mdpa.gdpr.analysis;
 
+import java.util.Optional;
 import mdpa.gdpr.analysis.core.resource.GDPRResourceProvider;
 import mdpa.gdpr.analysis.dfd.DFDGDPRFlowGraphCollection;
 import org.apache.log4j.Level;
@@ -8,67 +9,63 @@ import org.dataflowanalysis.analysis.DataFlowConfidentialityAnalysis;
 import org.dataflowanalysis.analysis.core.FlowGraphCollection;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import tools.mdsd.library.standalone.initialization.StandaloneInitializationException;
 import tools.mdsd.library.standalone.initialization.StandaloneInitializerBuilder;
 
-import java.util.Optional;
-
 public class GDPRLegalAssessmentAnalysis extends DataFlowConfidentialityAnalysis {
-	public static final String PLUGIN_PATH = "mdpa.gdpr.analysis";
-	
-	private final Logger logger = Logger.getLogger(GDPRLegalAssessmentAnalysis.class);
+    public static final String PLUGIN_PATH = "mdpa.gdpr.analysis";
 
-	private final GDPRResourceProvider resourceProvider;
-	private final Optional<Class<? extends Plugin>> modelProjectActivator;
-	private final String modelProjectName;
+    private final Logger logger = Logger.getLogger(GDPRLegalAssessmentAnalysis.class);
 
-	public GDPRLegalAssessmentAnalysis(GDPRResourceProvider resourceProvider, Optional<Class<? extends Plugin>> modelProjectActivator,
-										String modelProjectName) {
-		this.resourceProvider = resourceProvider;
-		this.modelProjectActivator = modelProjectActivator;
-		this.modelProjectName = modelProjectName;
-	}
+    private final GDPRResourceProvider resourceProvider;
+    private final Optional<Class<? extends Plugin>> modelProjectActivator;
+    private final String modelProjectName;
 
-	@Override
-	public void initializeAnalysis() {
-		this.resourceProvider.setupResources();
+    public GDPRLegalAssessmentAnalysis(GDPRResourceProvider resourceProvider, Optional<Class<? extends Plugin>> modelProjectActivator,
+            String modelProjectName) {
+        this.resourceProvider = resourceProvider;
+        this.modelProjectActivator = modelProjectActivator;
+        this.modelProjectName = modelProjectName;
+    }
 
-		EcorePlugin.ExtensionProcessor.process(null);
+    @Override
+    public void initializeAnalysis() {
+        this.resourceProvider.setupResources();
 
-		try {
-			super.setupLoggers();
-			var initializationBuilder = StandaloneInitializerBuilder.builder()
-					.registerProjectURI(GDPRLegalAssessmentAnalysis.class, PLUGIN_PATH);
+        EcorePlugin.ExtensionProcessor.process(null);
 
-			this.modelProjectActivator
-					.ifPresent(projectActivator -> initializationBuilder.registerProjectURI(projectActivator, this.modelProjectName));
+        try {
+            super.setupLoggers();
+            var initializationBuilder = StandaloneInitializerBuilder.builder()
+                    .registerProjectURI(GDPRLegalAssessmentAnalysis.class, PLUGIN_PATH);
 
-			initializationBuilder.build()
-					.init();
+            this.modelProjectActivator
+                    .ifPresent(projectActivator -> initializationBuilder.registerProjectURI(projectActivator, this.modelProjectName));
 
-			logger.info("Successfully initialized standalone environment for the data flow analysis.");
+            initializationBuilder.build()
+                    .init();
 
-		} catch (StandaloneInitializationException e) {
-			logger.error("Could not initialize analysis", e);
-			throw new IllegalStateException("Could not initialize analysis");
-		}
-		this.resourceProvider.loadRequiredResources();
-		this.resourceProvider.validate();
-		if (!this.resourceProvider.sufficientResourcesLoaded()) {
-			logger.error("Insufficient amount of resources loaded");
-			throw new IllegalStateException("Could not initialize analysis");
-		}
-	}
+            logger.info("Successfully initialized standalone environment for the data flow analysis.");
 
-	@Override
-	public FlowGraphCollection findFlowGraphs() {
-		return new DFDGDPRFlowGraphCollection(this.resourceProvider);
-	}
+        } catch (StandaloneInitializationException e) {
+            logger.error("Could not initialize analysis", e);
+            throw new IllegalStateException("Could not initialize analysis");
+        }
+        this.resourceProvider.loadRequiredResources();
+        this.resourceProvider.validate();
+        if (!this.resourceProvider.sufficientResourcesLoaded()) {
+            logger.error("Insufficient amount of resources loaded");
+            throw new IllegalStateException("Could not initialize analysis");
+        }
+    }
 
-	@Override
-	public void setLoggerLevel(Level level) {
-		logger.setLevel(level);
-	}
+    @Override
+    public FlowGraphCollection findFlowGraphs() {
+        return new DFDGDPRFlowGraphCollection(this.resourceProvider);
+    }
+
+    @Override
+    public void setLoggerLevel(Level level) {
+        logger.setLevel(level);
+    }
 }
