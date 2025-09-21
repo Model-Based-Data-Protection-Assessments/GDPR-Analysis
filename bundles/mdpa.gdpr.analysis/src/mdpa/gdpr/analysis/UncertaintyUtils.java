@@ -182,7 +182,8 @@ public class UncertaintyUtils {
 	}
 	
 	public static boolean matchesContextDefinition(DFDGDPRVertex vertex, ContextDefinition contextDefinition) {
-		return contextDefinition.getGdprElements().stream().allMatch(it -> UncertaintyUtils.matchesContextElement(vertex, it));
+		return contextDefinition.getGdprElements().stream()
+				.allMatch(it -> UncertaintyUtils.matchesContextElement(vertex, it));
 	}
 	
 	public static boolean matchesContextElement(DFDGDPRVertex vertex, GDPRContextElement contextElement) {
@@ -192,5 +193,26 @@ public class UncertaintyUtils {
 		} else {
 			return matches;
 		}
+	}
+
+	/**
+	 * Determines when a CDA should be reapplied at a vertex
+	 * This happens in the following cases>
+	 * - Initial match of the CDA
+	 * - Context change
+	 * @param vertex
+	 * @return
+	 */
+	public static boolean shouldReapply(List<DFDGDPRVertex> matchingVertices, DFDGDPRVertex vertex) {
+		if (vertex.getPreviousElements().stream().noneMatch(matchingVertices::contains)) {
+			return true;
+		}
+		if(vertex.getPreviousElements().stream()
+				.filter(DFDGDPRVertex.class::isInstance)
+				.map(DFDGDPRVertex.class::cast)
+				.noneMatch(it -> it.getResponsibilityRole().equals(vertex.getResponsibilityRole()))) {
+			return true;
+		}
+		return false;
 	}
 }

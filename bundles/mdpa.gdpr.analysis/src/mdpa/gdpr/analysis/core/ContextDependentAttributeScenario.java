@@ -8,10 +8,13 @@ import mdpa.gdpr.metamodel.contextproperties.ContextAnnotation;
 import mdpa.gdpr.metamodel.contextproperties.ContextDefinition;
 import mdpa.gdpr.metamodel.contextproperties.GDPRContextElement;
 import mdpa.gdpr.metamodel.contextproperties.PropertyValue;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 
 public class ContextDependentAttributeScenario {
+    private final Logger logger = Logger.getLogger(ContextDependentAttributeScenario.class);
+
 	private final String name;
     private final TransformationManager transformationManager;
 
@@ -42,9 +45,16 @@ public class ContextDependentAttributeScenario {
     }
 
     public boolean applicable(DFDGDPRVertex vertex) {
+        logger.info("Determining whether " + this.name + " can be applied to " + vertex);
     	if (this.resolvedUncertainty) {
+            if (!this.contextDependentAttributeSource.applicable(vertex)) {
+                return false;
+            }
+            logger.info("Context Depdendent Attribute Scenario is resolved with uncertainties!");
     		return this.sources.stream().noneMatch(it -> {
+                logger.info("Should not match: " + it.getContextDependentAttributeScenarios().get(0).getName());
     			var scenario = it.getContextDependentAttributeScenarios().get(0);
+                logger.info("Result: " + scenario.applicable(vertex));
     			return scenario.applicable(vertex);
     		});
     	}

@@ -2,7 +2,6 @@
 <contextproperties:ContextDependentProperties xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:GDPR="http://www.example.org/GDPR" xmlns:contextproperties="http://www.example.org/contextproperties" id="_BpGsUIFYEe-Da6upBYblLw">
   <propertyannotation id="_GhcF4IGoEe-as-PKi6C5xQ" entityName="DataNecessity" property="__s5P8IGnEe-as-PKi6C5xQ">
     <contextannotation id="_gUaUsIGoEe-as-PKi6C5xQ" entityName="UserNecessity" propertyvalue="_EdcN0IGoEe-as-PKi6C5xQ" contextdefinition="_TNoEooGoEe-as-PKi6C5xQ"/>
-    <contextannotation id="_kODfwIGoEe-as-PKi6C5xQ" entityName="AirlineNecessity" propertyvalue="_EdcN0IGoEe-as-PKi6C5xQ" contextdefinition="_X2iJcoGoEe-as-PKi6C5xQ"/>
     <annotatedElement xsi:type="GDPR:PersonalData" href="default.gdpr#_dUUSt4GmEe-as-PKi6C5xQ"/>
   </propertyannotation>
   <property id="__s5P8IGnEe-as-PKi6C5xQ" entityName="Necessary">
@@ -10,16 +9,8 @@
     <propertyvalue id="_Fc6GwIGoEe-as-PKi6C5xQ" entityName="False"/>
   </property>
   <contextdefinition id="_TNoEooGoEe-as-PKi6C5xQ" entityName="UserNecessity">
-    <gdprElements id="_ZmJs8YGoEe-as-PKi6C5xQ" entityName="UserContext">
-      <gdprElement xsi:type="GDPR:NaturalPerson" href="default.gdpr#_qGk5vYGlEe-as-PKi6C5xQ"/>
-    </gdprElements>
     <gdprElements id="_Ly8gkYO9Ee-2Pr3C-PuC6g" entityName="TravelAgencyContext" negated="true">
       <gdprElement xsi:type="GDPR:Controller" href="default.gdpr#_waOCDoGlEe-as-PKi6C5xQ"/>
-    </gdprElements>
-  </contextdefinition>
-  <contextdefinition id="_X2iJcoGoEe-as-PKi6C5xQ" entityName="AirlineNecessity">
-    <gdprElements id="_bltw8YGoEe-as-PKi6C5xQ" entityName="AirlineContext">
-      <gdprElement xsi:type="GDPR:ThirdParty" href="default.gdpr#_62wSX4GlEe-as-PKi6C5xQ"/>
     </gdprElements>
   </contextdefinition>
 </contextproperties:ContextDependentProperties>
