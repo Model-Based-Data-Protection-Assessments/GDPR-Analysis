@@ -30,10 +30,12 @@ public class GDPRLegalAssessmentAnalysis extends DataFlowConfidentialityAnalysis
     private final String modelProjectName;
 
     /**
-     * Create a new {@link GDPRLegalAssessmentAnalysis} with the given resource provider and optionally a modelling project with a plugin activator
+     * Create a new {@link GDPRLegalAssessmentAnalysis} with the given resource provider and optionally a modelling project
+     * with a plugin activator
      * <p/>
      * Note: Do not create an instance of this class manually, use the {@link GDPRLegalAssessmentAnalysisBuilder} instead
-     * @param resourceProvider {@link GDPRResourceProvider} providing a metamodel instance of the GDPR and Context Property model
+     * @param resourceProvider {@link GDPRResourceProvider} providing a metamodel instance of the GDPR and Context Property
+     * model
      * @param modelProjectActivator Optional model project activator
      * @param modelProjectName Optional model project name
      */

@@ -9,7 +9,8 @@ import org.dataflowanalysis.analysis.resource.ResourceProvider;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 /**
- * A {@link ResourceProvider} providing the necessary resources to run a {@link mdpa.gdpr.analysis.GDPRLegalAssessmentAnalysis}
+ * A {@link ResourceProvider} providing the necessary resources to run a
+ * {@link mdpa.gdpr.analysis.GDPRLegalAssessmentAnalysis}
  */
 public abstract class GDPRResourceProvider extends ResourceProvider {
     @Override
@@ -28,13 +29,13 @@ public abstract class GDPRResourceProvider extends ResourceProvider {
 
     /**
      * Returns the loaded GDPR model
-     *
      * @return Returns the GDPR model that is loaded by the resource provider
      */
     public abstract LegalAssessmentFacts getGDPRModel();
 
     /**
-     * Returns the {@link ContextDependentProperties} metamodel that is required to run a {@link mdpa.gdpr.analysis.GDPRLegalAssessmentAnalysis}
+     * Returns the {@link ContextDependentProperties} metamodel that is required to run a
+     * {@link mdpa.gdpr.analysis.GDPRLegalAssessmentAnalysis}
      * @return Returns the loaded Context Property model
      */
     public abstract ContextDependentProperties getContextDependentProperties();

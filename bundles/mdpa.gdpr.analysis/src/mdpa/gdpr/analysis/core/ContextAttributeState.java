@@ -1,19 +1,18 @@
 package mdpa.gdpr.analysis.core;
 
-import org.eclipse.jdt.annotation.NonNull;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * This class models a state for a {@link mdpa.gdpr.analysis.dfd.DFDGDPRTransposeFlowGraph} that has selected the stored {@link ContextDependentAttributeScenario}
+ * This class models a state for a {@link mdpa.gdpr.analysis.dfd.DFDGDPRTransposeFlowGraph} that has selected the stored
+ * {@link ContextDependentAttributeScenario}
  */
 public record ContextAttributeState(List<ContextDependentAttributeScenario> selectedScenarios) {
     /**
-     * Creates a new {@link ContextAttributeState} using the given list of selected {@link ContextDependentAttributeScenario}
-     *
+     * Creates a new {@link ContextAttributeState} using the given list of selected
+     * {@link ContextDependentAttributeScenario}
      * @param selectedScenarios List of selected {@link ContextDependentAttributeScenario}
      */
     public ContextAttributeState(List<ContextDependentAttributeScenario> selectedScenarios) {
@@ -22,7 +21,6 @@ public record ContextAttributeState(List<ContextDependentAttributeScenario> sele
 
     /**
      * Returns the selected {@link ContextDependentAttributeScenario} that are selected by the {@link ContextAttributeState}
-     *
      * @return Returns selected {@link ContextDependentAttributeScenario}
      */
     @Override
@@ -31,9 +29,10 @@ public record ContextAttributeState(List<ContextDependentAttributeScenario> sele
     }
 
     /**
-     * Create all possible {@link ContextAttributeState} that are possible to create from the given list of {@link ContextDependentAttributeSource}
-     *
-     * @param contextDependentAttributeSources Given list of {@link ContextDependentAttributeSource} that are used in finding all {@link ContextAttributeState}
+     * Create all possible {@link ContextAttributeState} that are possible to create from the given list of
+     * {@link ContextDependentAttributeSource}
+     * @param contextDependentAttributeSources Given list of {@link ContextDependentAttributeSource} that are used in
+     * finding all {@link ContextAttributeState}
      * @return Returns a list of all possible {@link ContextAttributeState}
      */
     public static List<ContextAttributeState> createAllContextAttributeStates(
@@ -50,9 +49,8 @@ public record ContextAttributeState(List<ContextDependentAttributeScenario> sele
 
     /**
      * Calculates the cartesian product between the given lists
-     *
      * @param lists List of lists that should be used when calculating the cartesian product
-     * @param <T>   Type of the list elements
+     * @param <T> Type of the list elements
      * @return Returns the cartesian product of the provided lists
      */
     private static <T> List<List<T>> cartesianProduct(List<List<T>> lists) {
@@ -78,7 +76,6 @@ public record ContextAttributeState(List<ContextDependentAttributeScenario> sele
     }
 
     @Override
-    @NonNull
     public String toString() {
         String scenarios = this.selectedScenarios.stream()
                 .map(ContextDependentAttributeScenario::getName)

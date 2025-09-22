@@ -23,7 +23,8 @@ import org.dataflowanalysis.dfd.datadictionary.DataDictionary;
 import org.dataflowanalysis.dfd.datadictionary.Pin;
 
 /**
- * Models a collection of {@link DFDGDPRTransposeFlowGraph}s for use with the {@link mdpa.gdpr.analysis.GDPRLegalAssessmentAnalysis}
+ * Models a collection of {@link DFDGDPRTransposeFlowGraph}s for use with the
+ * {@link mdpa.gdpr.analysis.GDPRLegalAssessmentAnalysis}
  */
 public class DFDGDPRFlowGraphCollection extends FlowGraphCollection {
     private final Logger logger = Logger.getLogger(DFDGDPRFlowGraphCollection.class);
@@ -38,7 +39,8 @@ public class DFDGDPRFlowGraphCollection extends FlowGraphCollection {
     }
 
     /**
-     * Creates a new {@link DFDGDPRFlowGraphCollection} with the given list of transpose flow graphs and a given resource provider
+     * Creates a new {@link DFDGDPRFlowGraphCollection} with the given list of transpose flow graphs and a given resource
+     * provider
      * @param transposeFlowGraphs List of {@link DFDGDPRTransposeFlowGraph}s that are stored in the flow graph collection
      * @param resourceProvider {@link ResourceProvider} that has the relevant model elements loaded
      */
@@ -64,8 +66,9 @@ public class DFDGDPRFlowGraphCollection extends FlowGraphCollection {
     }
 
     /**
-     * Finds the partial responsibility flow graphs for the contained flow graphs and creates a new {@link DFDGDPRFlowGraphCollection}
-     * containing the previous {@link DFDGDPRTransposeFlowGraph} with the additional partial responsibility flow graphs
+     * Finds the partial responsibility flow graphs for the contained flow graphs and creates a new
+     * {@link DFDGDPRFlowGraphCollection} containing the previous {@link DFDGDPRTransposeFlowGraph} with the additional
+     * partial responsibility flow graphs
      * @return Returns a new {@link DFDGDPRFlowGraphCollection} containing additional partial responsibility flow graphs
      */
     public DFDGDPRFlowGraphCollection findResponsibilityFlowGraphs() {
@@ -75,11 +78,11 @@ public class DFDGDPRFlowGraphCollection extends FlowGraphCollection {
                 .map(DFDGDPRTransposeFlowGraph.class::cast)
                 .toList();
         List<DFDGDPRTransposeFlowGraph> flowGraphs = new ArrayList<>(completeFlowGraphs);
-         flowGraphs.addAll(completeFlowGraphs.stream()
-                 .map(this::getPartialTransposeFlowGraphs)
-                 .flatMap(List::stream)
-                 .toList());
-         return new DFDGDPRFlowGraphCollection(flowGraphs, this.resourceProvider);
+        flowGraphs.addAll(completeFlowGraphs.stream()
+                .map(this::getPartialTransposeFlowGraphs)
+                .flatMap(List::stream)
+                .toList());
+        return new DFDGDPRFlowGraphCollection(flowGraphs, this.resourceProvider);
     }
 
     /**
@@ -215,7 +218,8 @@ public class DFDGDPRFlowGraphCollection extends FlowGraphCollection {
     }
 
     /**
-     * Determines the context dependent attribute sources for the given collection of vertices using the {@link mdpa.gdpr.analysis.core.TransformationManager}
+     * Determines the context dependent attribute sources for the given collection of vertices using the
+     * {@link mdpa.gdpr.analysis.core.TransformationManager}
      * @param vertices List of vertices of which the {@link ContextDependentAttributeSource}s should be determined
      * @return List of {@link ContextDependentAttributeSource} that are applicable to the given list of vertices
      */

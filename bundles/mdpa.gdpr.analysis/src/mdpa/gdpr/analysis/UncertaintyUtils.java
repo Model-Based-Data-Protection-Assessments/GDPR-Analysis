@@ -2,9 +2,9 @@ package mdpa.gdpr.analysis;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import mdpa.gdpr.analysis.core.ContextDependentAttributeScenario;
 import mdpa.gdpr.analysis.core.ContextDependentAttributeSource;
-import mdpa.gdpr.analysis.dfd.DFDGDPRTransposeFlowGraph;
 import mdpa.gdpr.analysis.dfd.DFDGDPRVertex;
 import mdpa.gdpr.metamodel.GDPR.Data;
 import mdpa.gdpr.metamodel.GDPR.NaturalPerson;
@@ -181,17 +181,19 @@ public class UncertaintyUtils {
             List<Label> values = UncertaintyUtils.getAppliedLabel(scenario, source, dd);
 
             List<Pin> inputPins = behaviour.getInPin();
-            Pin outputPin = behaviour.getOutPin()
+            Optional<Pin> outputPin = behaviour.getOutPin()
                     .stream()
                     .filter(it -> it.getEntityName()
                             .equals(targetData.getEntityName()))
-                    .findAny()
-                    .orElseThrow();
+                    .findAny();
+            if (outputPin.isEmpty()) {
+                return behaviour;
+            }
             Assignment attributeAssignment = datadictionaryFactory.eINSTANCE.createAssignment();
             attributeAssignment.setTerm(datadictionaryFactory.eINSTANCE.createTRUE());
             attributeAssignment.getInputPins()
                     .addAll(inputPins);
-            attributeAssignment.setOutputPin(outputPin);
+            attributeAssignment.setOutputPin(outputPin.get());
             attributeAssignment.getOutputLabels()
                     .addAll(values);
             assignments.add(attributeAssignment);

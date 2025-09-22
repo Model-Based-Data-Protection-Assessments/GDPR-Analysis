@@ -12,8 +12,8 @@ import mdpa.gdpr.metamodel.contextproperties.PropertyAnnotation;
 import mdpa.gdpr.metamodel.contextproperties.PropertyValue;
 
 /**
- * This class models an application of a context dependent attribute on an element in the GDPR model.
- * The different values it can take are saved in one or multiple child {@link ContextDependentAttributeScenario}.
+ * This class models an application of a context dependent attribute on an element in the GDPR model. The different
+ * values it can take are saved in one or multiple child {@link ContextDependentAttributeScenario}.
  */
 public class ContextDependentAttributeSource {
     private final String name;
@@ -26,8 +26,9 @@ public class ContextDependentAttributeSource {
     private final boolean resolvedUncertainty;
 
     /**
-     * Creates a new {@link ContextDependentAttributeSource} with the given property annotation containing the information about the annotated element and value
-     * and the context annotation describing the context of the {@link ContextDependentAttributeSource}
+     * Creates a new {@link ContextDependentAttributeSource} with the given property annotation containing the information
+     * about the annotated element and value and the context annotation describing the context of the
+     * {@link ContextDependentAttributeSource}
      * @param propertyAnnotation {@link PropertyAnnotation} describing where the CDA is applied
      * @param contextAnnotation {@link ContextAnnotation} describing which scenarios the source has
      */
@@ -42,10 +43,10 @@ public class ContextDependentAttributeSource {
     }
 
     /**
-     * Creates a new {@link ContextDependentAttributeSource} that needs to be resolved with uncertain CDAs.
-     * Resolves an uncertainty regarding the value of an {@link ContextDependentAttributeSource} by creating a scenario for each
-     * passed {@link PropertyValue}.
-     * Additionally, the given list of other {@link ContextDependentAttributeSource} denotes where this source cannot apply
+     * Creates a new {@link ContextDependentAttributeSource} that needs to be resolved with uncertain CDAs. Resolves an
+     * uncertainty regarding the value of an {@link ContextDependentAttributeSource} by creating a scenario for each passed
+     * {@link PropertyValue}. Additionally, the given list of other {@link ContextDependentAttributeSource} denotes where
+     * this source cannot apply
      * @param propertyAnnotation {@link PropertyAnnotation} containing information about the annotated element and value
      * @param values Different {@link PropertyValue} that are resolved by the uncertainty
      * @param sources List of {@link ContextDependentAttributeSource} that cannot be applied at the same time
@@ -67,7 +68,7 @@ public class ContextDependentAttributeSource {
      * Determines whether this {@link ContextDependentAttributeSource} is applicable to the given list of vertices
      * @param vertices Given list of vertices
      * @return Returns true, if this {@link ContextDependentAttributeSource} is applicable at least one of the vertices
-     *          Otherwise, the method returns false.
+     * Otherwise, the method returns false.
      */
     public boolean applicable(Collection<DFDGDPRVertex> vertices) {
         if (!vertices.stream()
@@ -84,12 +85,11 @@ public class ContextDependentAttributeSource {
     /**
      * Determines whether the {@link ContextDependentAttributeSource} is applicable at the given vertex.
      * <p/>
-     * This is the case, it the vertex has the annotated element in its context.
-     * If this {@link ContextDependentAttributeSource} is resolving an uncertainty, the other saved sources must not match.
-     * If this source is not resolving an uncertainty, it must match at least one context definition
+     * This is the case, it the vertex has the annotated element in its context. If this
+     * {@link ContextDependentAttributeSource} is resolving an uncertainty, the other saved sources must not match. If this
+     * source is not resolving an uncertainty, it must match at least one context definition
      * @param vertex Given {@link DFDGDPRVertex} that is checked
-     * @return Returns true, if the source is applicable to the vertex.
-     *          Otherwise, the method returns false
+     * @return Returns true, if the source is applicable to the vertex. Otherwise, the method returns false
      */
     public boolean applicable(DFDGDPRVertex vertex) {
         if (!vertex.getRelatedElements()

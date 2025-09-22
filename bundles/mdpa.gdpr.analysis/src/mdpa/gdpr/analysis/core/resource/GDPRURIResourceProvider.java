@@ -22,7 +22,8 @@ public class GDPRURIResourceProvider extends GDPRResourceProvider {
     /**
      * Creates a new {@link GDPRURIResourceProvider} using the provided URIs to the models
      * <p/>
-     * Usually, the resource provider will be created automatically when using {@link mdpa.gdpr.analysis.GDPRLegalAssessmentAnalysisBuilder}
+     * Usually, the resource provider will be created automatically when using
+     * {@link mdpa.gdpr.analysis.GDPRLegalAssessmentAnalysisBuilder}
      * @param modelURI URI path to the GDPR model
      * @param propertyURI URI path to the context property model
      */

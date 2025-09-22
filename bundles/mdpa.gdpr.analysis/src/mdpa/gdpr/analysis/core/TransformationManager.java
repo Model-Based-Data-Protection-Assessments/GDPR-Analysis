@@ -22,7 +22,8 @@ import org.dataflowanalysis.dfd.dataflowdiagram.DataFlowDiagram;
 import org.dataflowanalysis.dfd.dataflowdiagram.Node;
 
 /**
- * Manages the transformation from GDPR to DFD that is required to find {@link org.dataflowanalysis.analysis.core.AbstractTransposeFlowGraph} for the analysis.
+ * Manages the transformation from GDPR to DFD that is required to find
+ * {@link org.dataflowanalysis.analysis.core.AbstractTransposeFlowGraph} for the analysis.
  */
 public class TransformationManager {
     private final Logger logger = Logger.getLogger(TransformationManager.class);
@@ -53,8 +54,8 @@ public class TransformationManager {
     }
 
     /**
-     * Runs some postprocessing on the resulting DFD model for keeping track of the trace between nodes and processing elements
-     * TODO: This can be replaced with the tracemodel
+     * Runs some postprocessing on the resulting DFD model for keeping track of the trace between nodes and processing
+     * elements TODO: This can be replaced with the tracemodel
      * @param dataFlowDiagram Data flow diagram of the Transformation
      * @param gdprModel GDPR model of the transformation
      */
@@ -72,8 +73,8 @@ public class TransformationManager {
     }
 
     /**
-     * Creates the {@link ContextDependentAttributeSource}s and {@link ContextDependentAttributeScenario} for the context property model.
-     * Additionally, it creates the required labels in the data dictionary.
+     * Creates the {@link ContextDependentAttributeSource}s and {@link ContextDependentAttributeScenario} for the context
+     * property model. Additionally, it creates the required labels in the data dictionary.
      * @param propertyModel Context Property Model of the transformation
      * @param dataDictionary Data Dictionary of the transformation
      */

@@ -13,7 +13,6 @@ import org.apache.log4j.Logger;
  * Models a Context Dependent Attribute Scenario that applies the given list of property values.
  * <p/>
  * As a Context Dependent Attribute Scenario can occur in two scenarios we differentiate:
- *
  */
 public class ContextDependentAttributeScenario {
     private final Logger logger = Logger.getLogger(ContextDependentAttributeScenario.class);
@@ -27,8 +26,8 @@ public class ContextDependentAttributeScenario {
     private final boolean resolvedUncertainty;
 
     /**
-     * Creates a new context dependent attribute scenario that matches a specific context.
-     * Therefore, it does not resolve an uncertain CDA
+     * Creates a new context dependent attribute scenario that matches a specific context. Therefore, it does not resolve an
+     * uncertain CDA
      * @param contextAnnotation {@link ContextAnnotation} the Scenario requires
      * @param contextDependentAttributeSource Corresponding {@link ContextDependentAttributeSource}
      */
@@ -42,9 +41,9 @@ public class ContextDependentAttributeScenario {
     }
 
     /**
-     * Creates a new {@link ContextDependentAttributeScenario} that is resolving an uncertainty.
-     * Therefore, it requires a property value that is applied, the corresponding {@link ContextDependentAttributeSource}
-     * and a list of other {@link ContextDependentAttributeSource} that contradict the uncertain CDA
+     * Creates a new {@link ContextDependentAttributeScenario} that is resolving an uncertainty. Therefore, it requires a
+     * property value that is applied, the corresponding {@link ContextDependentAttributeSource} and a list of other
+     * {@link ContextDependentAttributeSource} that contradict the uncertain CDA
      * @param propertyValue Property value that is applied, when this scenario is applied
      * @param contextDependentAttributeSource Corresponding {@link ContextDependentAttributeSource}
      * @param sources Other {@link ContextDependentAttributeSource} that must not be true
@@ -62,8 +61,7 @@ public class ContextDependentAttributeScenario {
     /**
      * Returns whether the {@link ContextDependentAttributeScenario} is applicable to the given vertex
      * @param vertex {@link DFDGDPRVertex} that is checked
-     * @return Returns true, if the scenario should be applied to the vertex.
-     *          Otherwise, the method returns false
+     * @return Returns true, if the scenario should be applied to the vertex. Otherwise, the method returns false
      */
     public boolean applicable(DFDGDPRVertex vertex) {
         logger.trace("Determining whether " + this.name + " can be applied to " + vertex);
@@ -88,10 +86,11 @@ public class ContextDependentAttributeScenario {
     }
 
     /**
-     * Determines whether the {@link ContextDependentAttributeScenario} is applicable to any of the nodes in the given transpose flow graph
+     * Determines whether the {@link ContextDependentAttributeScenario} is applicable to any of the nodes in the given
+     * transpose flow graph
      * @param transposeFlowGraph {@link DFDGDPRTransposeFlowGraph} that is checked
-     * @return Returns true, if the {@link ContextDependentAttributeScenario} can be applied to any of the vertices in the TFG.
-     *          Otherwise, the method returns false
+     * @return Returns true, if the {@link ContextDependentAttributeScenario} can be applied to any of the vertices in the
+     * TFG. Otherwise, the method returns false
      */
     public boolean applicable(DFDGDPRTransposeFlowGraph transposeFlowGraph) {
         if (this.resolvedUncertainty) {
