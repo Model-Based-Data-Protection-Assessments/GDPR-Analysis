@@ -8,6 +8,12 @@ import org.dataflowanalysis.analysis.DataFlowAnalysisBuilder;
 import org.dataflowanalysis.analysis.utils.ResourceUtils;
 import org.eclipse.core.runtime.Plugin;
 
+/**
+ * Extension of the {@link DataFlowAnalysisBuilder} responsible for creating a valid {@link GDPRLegalAssessmentAnalysis}
+ * from the following:
+ * - A valid path to a .gdpr metamodel instance
+ * - A valid path to a .contextproperties metamodel instance
+ */
 public class GDPRLegalAssessmentAnalysisBuilder extends DataFlowAnalysisBuilder {
     private final Logger logger = Logger.getLogger(GDPRLegalAssessmentAnalysisBuilder.class);
 

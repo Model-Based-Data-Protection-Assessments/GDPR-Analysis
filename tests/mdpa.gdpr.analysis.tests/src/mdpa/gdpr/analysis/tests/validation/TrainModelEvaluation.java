@@ -46,7 +46,7 @@ public class TrainModelEvaluation extends ValidationBase {
                 .map(DFDGDPRTransposeFlowGraph.class::cast)
                 .toList()) {
             List<ContextDependentAttributeScenario> impactScenarios = transposeFlowGraph.getContextAttributeState()
-                    .getSelectedScenarios()
+                    .selectedScenarios()
                     .stream()
                     .toList();
             var impactedElements = this.getImpactedElements(transposeFlowGraph, impactScenarios);

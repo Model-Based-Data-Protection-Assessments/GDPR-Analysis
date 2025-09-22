@@ -3,14 +3,11 @@ package mdpa.gdpr.analysis.core.resource;
 import java.util.ArrayList;
 import java.util.List;
 import mdpa.gdpr.analysis.core.TransformationManager;
-import mdpa.gdpr.metamodel.GDPR.GDPRPackage;
 import mdpa.gdpr.metamodel.GDPR.LegalAssessmentFacts;
 import mdpa.gdpr.metamodel.contextproperties.ContextDependentProperties;
-import mdpa.gdpr.metamodel.contextproperties.ContextpropertiesPackage;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 /**
  * Implementation of an {@link GDPRResourceProvider} using modelling project URIs to load the required models

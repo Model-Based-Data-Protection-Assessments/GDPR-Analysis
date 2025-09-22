@@ -12,6 +12,14 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import tools.mdsd.library.standalone.initialization.StandaloneInitializationException;
 import tools.mdsd.library.standalone.initialization.StandaloneInitializerBuilder;
 
+/**
+ * Extension of the {@link DataFlowConfidentialityAnalysis} for usage with the GDPR metamodel that is able to resolve
+ * uncertain context dependent attributes.
+ * <p/>
+ * Inputs to the analysis are a metamodel instance of the GDPR model and the context properties model
+ * <p/>
+ * Note: Do not create an instance of this class manually, use the {@link GDPRLegalAssessmentAnalysisBuilder} instead
+ */
 public class GDPRLegalAssessmentAnalysis extends DataFlowConfidentialityAnalysis {
     public static final String PLUGIN_PATH = "mdpa.gdpr.analysis";
 
@@ -21,6 +29,14 @@ public class GDPRLegalAssessmentAnalysis extends DataFlowConfidentialityAnalysis
     private final Optional<Class<? extends Plugin>> modelProjectActivator;
     private final String modelProjectName;
 
+    /**
+     * Create a new {@link GDPRLegalAssessmentAnalysis} with the given resource provider and optionally a modelling project with a plugin activator
+     * <p/>
+     * Note: Do not create an instance of this class manually, use the {@link GDPRLegalAssessmentAnalysisBuilder} instead
+     * @param resourceProvider {@link GDPRResourceProvider} providing a metamodel instance of the GDPR and Context Property model
+     * @param modelProjectActivator Optional model project activator
+     * @param modelProjectName Optional model project name
+     */
     public GDPRLegalAssessmentAnalysis(GDPRResourceProvider resourceProvider, Optional<Class<? extends Plugin>> modelProjectActivator,
             String modelProjectName) {
         this.resourceProvider = resourceProvider;

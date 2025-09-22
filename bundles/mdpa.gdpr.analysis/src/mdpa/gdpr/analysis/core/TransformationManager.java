@@ -7,54 +7,59 @@ import java.util.Map;
 import java.util.Optional;
 import mdpa.gdpr.analysis.dfd.DataFlowDiagramAndDataDictionary;
 import mdpa.gdpr.dfdconverter.GDPR2DFD;
-import mdpa.gdpr.metamodel.GDPR.AbstractGDPRElement;
-import mdpa.gdpr.metamodel.GDPR.Collecting;
 import mdpa.gdpr.metamodel.GDPR.LegalAssessmentFacts;
 import mdpa.gdpr.metamodel.GDPR.Processing;
-import mdpa.gdpr.metamodel.GDPR.Storing;
 import mdpa.gdpr.metamodel.contextproperties.ContextDependentProperties;
 import mdpa.gdpr.metamodel.contextproperties.Property;
 import mdpa.gdpr.metamodel.contextproperties.PropertyAnnotation;
 import mdpa.gdpr.metamodel.contextproperties.PropertyValue;
 import org.apache.log4j.Logger;
 import org.dataflowanalysis.dfd.datadictionary.DataDictionary;
-import org.dataflowanalysis.dfd.datadictionary.ForwardingAssignment;
 import org.dataflowanalysis.dfd.datadictionary.Label;
 import org.dataflowanalysis.dfd.datadictionary.LabelType;
 import org.dataflowanalysis.dfd.datadictionary.datadictionaryFactory;
 import org.dataflowanalysis.dfd.dataflowdiagram.DataFlowDiagram;
 import org.dataflowanalysis.dfd.dataflowdiagram.Node;
 
+/**
+ * Manages the transformation from GDPR to DFD that is required to find {@link org.dataflowanalysis.analysis.core.AbstractTransposeFlowGraph} for the analysis.
+ */
 public class TransformationManager {
     private final Logger logger = Logger.getLogger(TransformationManager.class);
 
-    private final Map<Node, List<AbstractGDPRElement>> relatedElementMapping;
-    private final Map<Processing, Node> gdprToDFDMapping;
     private final Map<Node, Processing> dfdToGDPRMapping;
     private final List<ContextDependentAttributeSource> contextDependentAttributes;
 
+    /**
+     * Creates a new empty {@link TransformationManager}
+     */
     public TransformationManager() {
-        this.relatedElementMapping = new HashMap<>();
-        this.gdprToDFDMapping = new HashMap<>();
         this.dfdToGDPRMapping = new HashMap<>();
         this.contextDependentAttributes = new ArrayList<>();
     }
 
     /**
      * Converts model to DFD and saves tracemodel
-     * @param gdprModel
-     * @return
+     * @param gdprModel Input GDPR Model
+     * @param contextDependentProperties Input context property model
+     * @return Returns the data flow diagram and data dictionary of the converted model
      */
     public DataFlowDiagramAndDataDictionary transform(LegalAssessmentFacts gdprModel, ContextDependentProperties contextDependentProperties) {
         GDPR2DFD converter = new GDPR2DFD(gdprModel);
         converter.transform();
-        processTransformation(converter.getDataFlowDiagram(), converter.getDataDictionary(), gdprModel);
+        processTransformation(converter.getDataFlowDiagram(), gdprModel);
         processContextDependentAttributes(contextDependentProperties, converter.getDataDictionary());
         return new DataFlowDiagramAndDataDictionary(converter.getDataFlowDiagram(), converter.getDataDictionary());
     }
 
-    private void processTransformation(DataFlowDiagram dfd, DataDictionary dd, LegalAssessmentFacts gdprModel) {
-        List<Node> nodes = dfd.getNodes();
+    /**
+     * Runs some postprocessing on the resulting DFD model for keeping track of the trace between nodes and processing elements
+     * TODO: This can be replaced with the tracemodel
+     * @param dataFlowDiagram Data flow diagram of the Transformation
+     * @param gdprModel GDPR model of the transformation
+     */
+    private void processTransformation(DataFlowDiagram dataFlowDiagram, LegalAssessmentFacts gdprModel) {
+        List<Node> nodes = dataFlowDiagram.getNodes();
         for (Node node : nodes) {
             Processing gdprElement = gdprModel.getProcessing()
                     .stream()
@@ -66,12 +71,18 @@ public class TransformationManager {
         }
     }
 
-    private void processContextDependentAttributes(ContextDependentProperties propertyModel, DataDictionary dd) {
+    /**
+     * Creates the {@link ContextDependentAttributeSource}s and {@link ContextDependentAttributeScenario} for the context property model.
+     * Additionally, it creates the required labels in the data dictionary.
+     * @param propertyModel Context Property Model of the transformation
+     * @param dataDictionary Data Dictionary of the transformation
+     */
+    private void processContextDependentAttributes(ContextDependentProperties propertyModel, DataDictionary dataDictionary) {
         for (Property property : propertyModel.getProperty()) {
             LabelType type = datadictionaryFactory.eINSTANCE.createLabelType();
             type.setEntityName(property.getEntityName());
             type.setId(property.getId());
-            dd.getLabelTypes()
+            dataDictionary.getLabelTypes()
                     .add(type);
             for (PropertyValue propertyValue : property.getPropertyvalue()) {
                 Label label = datadictionaryFactory.eINSTANCE.createLabel();
@@ -89,7 +100,6 @@ public class TransformationManager {
             } else {
                 List<ContextDependentAttributeSource> sources = new ArrayList<>();
                 propertyAnnotation.getContextannotation()
-                        .stream()
                         .forEach(it -> {
                             var source = new ContextDependentAttributeSource(propertyAnnotation, it);
                             sources.add(source);
@@ -102,42 +112,28 @@ public class TransformationManager {
         logger.info("Parsed " + this.contextDependentAttributes.size() + " CDA!");
     }
 
-    private void addAssignments(DataFlowDiagram dfd, DataDictionary dd) {
-        for (Node node : dfd.getNodes()) {
-            Processing gdprElement = this.getElement(node)
-                    .orElseThrow();
-            if (!(gdprElement instanceof Storing) && !(gdprElement instanceof Collecting)) {
-                ForwardingAssignment assignment = datadictionaryFactory.eINSTANCE.createForwardingAssignment();
-                assignment.getInputPins()
-                        .addAll(node.getBehavior()
-                                .getInPin());
-                if (!node.getBehavior()
-                        .getOutPin()
-                        .isEmpty()) {
-                    assignment.setOutputPin(node.getBehavior()
-                            .getOutPin()
-                            .get(0));
-                }
-                node.getBehavior()
-                        .getAssignment()
-                        .add(assignment);
-            }
-        }
-    }
-
+    /**
+     * Adds a new mapping between the given GDPR {@link Processing} element an the DFD {@link Node}
+     * @param gdprElement Given {@link Processing} element
+     * @param dfdElement Given {@link Node} element
+     */
     private void addMapping(Processing gdprElement, Node dfdElement) {
-        this.gdprToDFDMapping.put(gdprElement, dfdElement);
         this.dfdToGDPRMapping.put(dfdElement, gdprElement);
     }
 
+    /**
+     * Returns the GDPR {@link Processing} element that corresponds to the given node
+     * @param node Given DFD {@link Node}
+     * @return Returns the {@link Processing} element, if one exits
+     */
     public Optional<Processing> getElement(Node node) {
         return Optional.ofNullable(this.dfdToGDPRMapping.get(node));
     }
 
-    public Optional<Node> getElement(Processing gdprElement) {
-        return Optional.ofNullable(this.gdprToDFDMapping.get(gdprElement));
-    }
-
+    /**
+     * Returns the list of {@link ContextDependentAttributeSource} that were parsed by the transformation
+     * @return Returns the list of parsed context dependent attributes from the metamodel instance
+     */
     public List<ContextDependentAttributeSource> getContextDependentAttributes() {
         return this.contextDependentAttributes;
     }

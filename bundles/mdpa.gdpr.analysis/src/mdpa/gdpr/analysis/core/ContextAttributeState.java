@@ -1,5 +1,7 @@
 package mdpa.gdpr.analysis.core;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -8,11 +10,10 @@ import java.util.stream.Collectors;
 /**
  * This class models a state for a {@link mdpa.gdpr.analysis.dfd.DFDGDPRTransposeFlowGraph} that has selected the stored {@link ContextDependentAttributeScenario}
  */
-public class ContextAttributeState {
-    private final List<ContextDependentAttributeScenario> selectedScenarios;
-
+public record ContextAttributeState(List<ContextDependentAttributeScenario> selectedScenarios) {
     /**
      * Creates a new {@link ContextAttributeState} using the given list of selected {@link ContextDependentAttributeScenario}
+     *
      * @param selectedScenarios List of selected {@link ContextDependentAttributeScenario}
      */
     public ContextAttributeState(List<ContextDependentAttributeScenario> selectedScenarios) {
@@ -20,33 +21,18 @@ public class ContextAttributeState {
     }
 
     /**
-     * Creates a new {@link ContextAttributeState} using the given list of selected {@link ContextDependentAttributeScenario}
-     * @param selectedScenarios List of selected {@link ContextDependentAttributeScenario}
-     */
-    public ContextAttributeState(ContextDependentAttributeScenario... selectedScenarios) {
-        this(List.of(selectedScenarios));
-    }
-
-    /**
-     * Returns the list of {@link ContextDependentAttributeSource} that the selected {@link ContextDependentAttributeScenario} use
-     * @return Returns the {@link ContextDependentAttributeSource} of the selected scenarios
-     */
-    public List<ContextDependentAttributeSource> getContextAttributeSources() {
-        return this.selectedScenarios.stream()
-                .map(ContextDependentAttributeScenario::getContextDependentAttributeSource)
-                .toList();
-    }
-
-    /**
      * Returns the selected {@link ContextDependentAttributeScenario} that are selected by the {@link ContextAttributeState}
+     *
      * @return Returns selected {@link ContextDependentAttributeScenario}
      */
-    public List<ContextDependentAttributeScenario> getSelectedScenarios() {
+    @Override
+    public List<ContextDependentAttributeScenario> selectedScenarios() {
         return Collections.unmodifiableList(this.selectedScenarios);
     }
 
     /**
      * Create all possible {@link ContextAttributeState} that are possible to create from the given list of {@link ContextDependentAttributeSource}
+     *
      * @param contextDependentAttributeSources Given list of {@link ContextDependentAttributeSource} that are used in finding all {@link ContextAttributeState}
      * @return Returns a list of all possible {@link ContextAttributeState}
      */
@@ -64,9 +50,10 @@ public class ContextAttributeState {
 
     /**
      * Calculates the cartesian product between the given lists
+     *
      * @param lists List of lists that should be used when calculating the cartesian product
+     * @param <T>   Type of the list elements
      * @return Returns the cartesian product of the provided lists
-     * @param <T> Type of the list elements
      */
     private static <T> List<List<T>> cartesianProduct(List<List<T>> lists) {
         List<List<T>> result = new ArrayList<>();
@@ -91,9 +78,10 @@ public class ContextAttributeState {
     }
 
     @Override
+    @NonNull
     public String toString() {
         String scenarios = this.selectedScenarios.stream()
-                .map(it -> it.getName())
+                .map(ContextDependentAttributeScenario::getName)
                 .collect(Collectors.joining(","));
         return "[" + scenarios + "]";
     }
