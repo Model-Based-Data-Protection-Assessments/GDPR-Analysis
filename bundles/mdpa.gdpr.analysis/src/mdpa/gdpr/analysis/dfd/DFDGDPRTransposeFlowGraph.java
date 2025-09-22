@@ -91,17 +91,7 @@ public class DFDGDPRTransposeFlowGraph extends DFDTransposeFlowGraph {
 
                 if (source.getAnnotatedElement() instanceof NaturalPerson person) {
                     // Insert Data Characteristic
-                    List<DFDGDPRVertex> targetedVertices = currentTransposeFlowGraph.getVertices()
-                            .stream()
-                            .filter(DFDGDPRVertex.class::isInstance)
-                            .map(DFDGDPRVertex.class::cast)
-                            .filter(scenario::applicable)
-                            .toList();
-                    List<DFDGDPRVertex> finalTargetedVertices = targetedVertices;
-                    targetedVertices = targetedVertices.stream()
-                            .filter(it -> UncertaintyUtils.shouldReapply(finalTargetedVertices, it))
-                            .toList();
-                    logger.info("Applying state to vertices: " + targetedVertices.toString());
+                    List<DFDGDPRVertex> targetedVertices = this.determineTargetedVertices(currentTransposeFlowGraph, scenario);;
 
                     for (DFDGDPRVertex targetVertex : targetedVertices) {
                         DFDGDPRVertex currentTargetVertex = currentTransposeFlowGraph.getVertices()
@@ -146,18 +136,7 @@ public class DFDGDPRTransposeFlowGraph extends DFDTransposeFlowGraph {
 
                 } else if (source.getAnnotatedElement() instanceof Data data) {
                     // Insert Data Characteristic
-                    List<DFDGDPRVertex> targetedVertices = currentTransposeFlowGraph.getVertices()
-                            .stream()
-                            .filter(DFDGDPRVertex.class::isInstance)
-                            .map(DFDGDPRVertex.class::cast)
-                            .filter(scenario::applicable)
-                            .toList();
-                    List<DFDGDPRVertex> finalTargetedVertices = targetedVertices;
-                    targetedVertices = targetedVertices.stream()
-                            .filter(it -> UncertaintyUtils.shouldReapply(finalTargetedVertices, it))
-                            .toList();
-                    logger.info("Applying state to vertices: " + targetedVertices.toString());
-
+                    List<DFDGDPRVertex> targetedVertices = this.determineTargetedVertices(currentTransposeFlowGraph, scenario);;
                     for (DFDGDPRVertex targetVertex : targetedVertices) {
                         DFDGDPRVertex currentTargetVertex = currentTransposeFlowGraph.getVertices()
                                 .stream()
@@ -198,8 +177,8 @@ public class DFDGDPRTransposeFlowGraph extends DFDTransposeFlowGraph {
                             .stream()
                             .filter(DFDGDPRVertex.class::isInstance)
                             .map(DFDGDPRVertex.class::cast)
-                            .filter(it -> source.applicable(it))
-                            .filter(it -> scenario.applicable(it))
+                            .filter(source::applicable)
+                            .filter(scenario::applicable)
                             .map(it -> it.getReferencedElement()
                                     .getId())
                             .toList();
@@ -215,23 +194,7 @@ public class DFDGDPRTransposeFlowGraph extends DFDTransposeFlowGraph {
                                 .orElseThrow();
                         Node replacingNode = EcoreUtil.copy(targetVertex.getReferencedElement());
 
-                        LabelType labelType = dd.getLabelTypes()
-                                .stream()
-                                .filter(it -> it.getEntityName()
-                                        .equals(source.getPropertyType()
-                                                .getEntityName()))
-                                .findAny()
-                                .orElseThrow();
-                        List<Label> labels = new ArrayList<>();
-                        for (PropertyValue propertyValue : scenario.getPropertyValues()) {
-                            Label label = labelType.getLabel()
-                                    .stream()
-                                    .filter(it -> it.getEntityName()
-                                            .equals(propertyValue.getEntityName()))
-                                    .findAny()
-                                    .orElseThrow();
-                            labels.add(label);
-                        }
+                        List<Label> labels = UncertaintyUtils.getAppliedLabel(scenario, source, dd);
                         replacingNode.getProperties()
                                 .addAll(labels);
 
@@ -248,6 +211,20 @@ public class DFDGDPRTransposeFlowGraph extends DFDTransposeFlowGraph {
             result.add(currentTransposeFlowGraph);
         }
         return result;
+    }
+
+    private List<DFDGDPRVertex> determineTargetedVertices(DFDGDPRTransposeFlowGraph currentTransposeFlowGraph, ContextDependentAttributeScenario scenario) {
+        List<DFDGDPRVertex> targetedVertices = currentTransposeFlowGraph.getVertices()
+                .stream()
+                .filter(DFDGDPRVertex.class::isInstance)
+                .map(DFDGDPRVertex.class::cast)
+                .filter(scenario::applicable)
+                .toList();
+        List<DFDGDPRVertex> finalTargetedVertices = targetedVertices;
+        targetedVertices = targetedVertices.stream()
+                .filter(it -> UncertaintyUtils.shouldReapply(finalTargetedVertices, it))
+                .toList();
+        return targetedVertices;
     }
 
     @Override
