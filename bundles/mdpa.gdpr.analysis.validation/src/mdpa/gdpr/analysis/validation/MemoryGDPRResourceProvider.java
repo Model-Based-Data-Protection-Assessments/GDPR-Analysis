@@ -14,7 +14,7 @@ public class MemoryGDPRResourceProvider extends GDPRResourceProvider {
     }
 
     @Override
-    public LegalAssessmentFacts getModel() {
+    public LegalAssessmentFacts getGDPRModel() {
         return modelBuilder.getGdprModel();
     }
 
