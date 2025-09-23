@@ -46,7 +46,7 @@ public class TravelPlannerEvaluation extends ValidationBase {
                 .map(DFDGDPRTransposeFlowGraph.class::cast)
                 .toList()) {
             List<ContextDependentAttributeScenario> impactScenarios = transposeFlowGraph.getContextAttributeState()
-                    .getSelectedScenarios()
+                    .selectedScenarios()
                     .stream()
                     .filter(it -> !it.getName()
                             .equals("UserNecessity"))
@@ -104,7 +104,7 @@ public class TravelPlannerEvaluation extends ValidationBase {
                 continue;
             }
             var sourcesString = flowGraph.getContextAttributeState()
-                    .getSelectedScenarios()
+                    .selectedScenarios()
                     .stream()
                     .map(it -> it.getName())
                     .collect(Collectors.joining(","));

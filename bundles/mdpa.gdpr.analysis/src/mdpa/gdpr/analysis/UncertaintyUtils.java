@@ -2,6 +2,7 @@ package mdpa.gdpr.analysis;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import mdpa.gdpr.analysis.core.ContextDependentAttributeScenario;
 import mdpa.gdpr.analysis.core.ContextDependentAttributeSource;
 import mdpa.gdpr.analysis.dfd.DFDGDPRVertex;
@@ -68,23 +69,7 @@ public class UncertaintyUtils {
                         .map(it -> EcoreUtil.copy(it))
                         .toList());
 
-        LabelType type = dd.getLabelTypes()
-                .stream()
-                .filter(it -> it.getEntityName()
-                        .equals(source.getPropertyType()
-                                .getEntityName()))
-                .findAny()
-                .orElseThrow();
-        List<Label> values = new ArrayList<>();
-        for (PropertyValue propertyValue : scenario.getPropertyValues()) {
-            Label value = type.getLabel()
-                    .stream()
-                    .filter(it -> it.getEntityName()
-                            .equals(propertyValue.getEntityName()))
-                    .findAny()
-                    .orElseThrow();
-            values.add(value);
-        }
+        List<Label> values = UncertaintyUtils.getAppliedLabel(scenario, source, dd);
 
         List<Pin> inputPins = behaviour.getInPin()
                 .stream()
@@ -193,36 +178,22 @@ public class UncertaintyUtils {
                 .toList();
 
         for (PersonalData targetData : targetedData) {
-            LabelType type = dd.getLabelTypes()
-                    .stream()
-                    .filter(it -> it.getEntityName()
-                            .equals(source.getPropertyType()
-                                    .getEntityName()))
-                    .findAny()
-                    .orElseThrow();
-            List<Label> values = new ArrayList<>();
-            for (PropertyValue propertyValue : scenario.getPropertyValues()) {
-                Label value = type.getLabel()
-                        .stream()
-                        .filter(it -> it.getEntityName()
-                                .equals(propertyValue.getEntityName()))
-                        .findAny()
-                        .orElseThrow();
-                values.add(value);
-            }
+            List<Label> values = UncertaintyUtils.getAppliedLabel(scenario, source, dd);
 
             List<Pin> inputPins = behaviour.getInPin();
-            Pin outputPin = behaviour.getOutPin()
+            Optional<Pin> outputPin = behaviour.getOutPin()
                     .stream()
                     .filter(it -> it.getEntityName()
                             .equals(targetData.getEntityName()))
-                    .findAny()
-                    .orElseThrow();
+                    .findAny();
+            if (outputPin.isEmpty()) {
+                return behaviour;
+            }
             Assignment attributeAssignment = datadictionaryFactory.eINSTANCE.createAssignment();
             attributeAssignment.setTerm(datadictionaryFactory.eINSTANCE.createTRUE());
             attributeAssignment.getInputPins()
                     .addAll(inputPins);
-            attributeAssignment.setOutputPin(outputPin);
+            attributeAssignment.setOutputPin(outputPin.get());
             attributeAssignment.getOutputLabels()
                     .addAll(values);
             assignments.add(attributeAssignment);
@@ -308,5 +279,26 @@ public class UncertaintyUtils {
             return true;
         }
         return false;
+    }
+
+    public static List<Label> getAppliedLabel(ContextDependentAttributeScenario scenario, ContextDependentAttributeSource source, DataDictionary dd) {
+        LabelType labelType = dd.getLabelTypes()
+                .stream()
+                .filter(it -> it.getEntityName()
+                        .equals(source.getPropertyType()
+                                .getEntityName()))
+                .findAny()
+                .orElseThrow();
+        List<Label> labels = new ArrayList<>();
+        for (PropertyValue propertyValue : scenario.getPropertyValues()) {
+            Label label = labelType.getLabel()
+                    .stream()
+                    .filter(it -> it.getEntityName()
+                            .equals(propertyValue.getEntityName()))
+                    .findAny()
+                    .orElseThrow();
+            labels.add(label);
+        }
+        return labels;
     }
 }
