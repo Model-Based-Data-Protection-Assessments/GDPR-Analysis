@@ -4,9 +4,9 @@ import java.util.List;
 import mdpa.gdpr.analysis.UncertaintyUtils;
 import mdpa.gdpr.analysis.dfd.DFDGDPRTransposeFlowGraph;
 import mdpa.gdpr.analysis.dfd.DFDGDPRVertex;
-import mdpa.gdpr.metamodel.contextproperties.ContextAnnotation;
-import mdpa.gdpr.metamodel.contextproperties.ContextDefinition;
-import mdpa.gdpr.metamodel.contextproperties.PropertyValue;
+import mdpa.gdpr.metamodel.contextproperties.Expression;
+import mdpa.gdpr.metamodel.contextproperties.Scope;
+import mdpa.gdpr.metamodel.contextproperties.ScopeSet;
 import org.apache.log4j.Logger;
 
 /**
@@ -19,8 +19,8 @@ public class ContextDependentAttributeScenario {
 
     private final String name;
 
-    private final List<PropertyValue> propertyValues;
-    private final List<ContextDefinition> context;
+    private final List<Expression> expressions;
+    private final List<Scope> scopes;
     private final List<ContextDependentAttributeSource> sources;
     private final ContextDependentAttributeSource contextDependentAttributeSource;
     private final boolean resolvedUncertainty;
@@ -28,13 +28,13 @@ public class ContextDependentAttributeScenario {
     /**
      * Creates a new context dependent attribute scenario that matches a specific context. Therefore, it does not resolve an
      * uncertain CDA
-     * @param contextAnnotation {@link ContextAnnotation} the Scenario requires
+     * @param scopeSet {@link ScopeSet} the Scenario requires
      * @param contextDependentAttributeSource Corresponding {@link ContextDependentAttributeSource}
      */
-    public ContextDependentAttributeScenario(ContextAnnotation contextAnnotation, ContextDependentAttributeSource contextDependentAttributeSource) {
-        this.name = contextAnnotation.getEntityName();
-        this.propertyValues = contextAnnotation.getPropertyvalue();
-        this.context = contextAnnotation.getContextdefinition();
+    public ContextDependentAttributeScenario(ScopeSet scopeSet, ContextDependentAttributeSource contextDependentAttributeSource) {
+        this.name = scopeSet.getEntityName();
+        this.expressions = scopeSet.getExpression();
+        this.scopes = scopeSet.getScope();
         this.sources = List.of();
         this.contextDependentAttributeSource = contextDependentAttributeSource;
         this.resolvedUncertainty = false;
@@ -42,17 +42,17 @@ public class ContextDependentAttributeScenario {
 
     /**
      * Creates a new {@link ContextDependentAttributeScenario} that is resolving an uncertainty. Therefore, it requires a
-     * property value that is applied, the corresponding {@link ContextDependentAttributeSource} and a list of other
+     * expression that is applied, the corresponding {@link ContextDependentAttributeSource} and a list of other
      * {@link ContextDependentAttributeSource} that contradict the uncertain CDA
-     * @param propertyValue Property value that is applied, when this scenario is applied
+     * @param expression Expression that is applied, when this scenario is applied
      * @param contextDependentAttributeSource Corresponding {@link ContextDependentAttributeSource}
      * @param sources Other {@link ContextDependentAttributeSource} that must not be true
      */
-    public ContextDependentAttributeScenario(PropertyValue propertyValue, ContextDependentAttributeSource contextDependentAttributeSource,
+    public ContextDependentAttributeScenario(Expression expression, ContextDependentAttributeSource contextDependentAttributeSource,
             List<ContextDependentAttributeSource> sources) {
-        this.name = propertyValue.getEntityName() + "@" + contextDependentAttributeSource.getName();
-        this.propertyValues = List.of(propertyValue);
-        this.context = List.of();
+        this.name = expression.getEntityName() + "@" + contextDependentAttributeSource.getName();
+        this.expressions = List.of(expression);
+        this.scopes = List.of();
         this.sources = sources;
         this.contextDependentAttributeSource = contextDependentAttributeSource;
         this.resolvedUncertainty = true;
@@ -81,7 +81,7 @@ public class ContextDependentAttributeScenario {
                         return scenario.applicable(vertex);
                     });
         }
-        return this.context.stream()
+        return this.scopes.stream()
                 .anyMatch(it -> UncertaintyUtils.matchesContextDefinition(vertex, it));
     }
 
@@ -110,10 +110,10 @@ public class ContextDependentAttributeScenario {
 
     /**
      * Returns the property values that are applied, when this scenario is fulfilled
-     * @return Returns a list of {@link PropertyValue} that are applied in the case the scenario is true
+     * @return Returns a list of {@link Expression} that are applied in the case the scenario is true
      */
-    public List<PropertyValue> getPropertyValues() {
-        return this.propertyValues;
+    public List<Expression> getExpressions() {
+        return this.expressions;
     }
 
     /**

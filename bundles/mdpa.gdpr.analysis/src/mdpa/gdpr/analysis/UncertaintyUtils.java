@@ -9,9 +9,10 @@ import mdpa.gdpr.analysis.dfd.DFDGDPRVertex;
 import mdpa.gdpr.metamodel.GDPR.Data;
 import mdpa.gdpr.metamodel.GDPR.NaturalPerson;
 import mdpa.gdpr.metamodel.GDPR.PersonalData;
-import mdpa.gdpr.metamodel.contextproperties.ContextDefinition;
-import mdpa.gdpr.metamodel.contextproperties.GDPRContextElement;
-import mdpa.gdpr.metamodel.contextproperties.PropertyValue;
+import mdpa.gdpr.metamodel.contextproperties.Expression;
+import mdpa.gdpr.metamodel.contextproperties.LAFScopeElement;
+import mdpa.gdpr.metamodel.contextproperties.Scope;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.dataflowanalysis.dfd.datadictionary.Assignment;
@@ -242,16 +243,16 @@ public class UncertaintyUtils {
         return behaviour;
     }
 
-    public static boolean matchesContextDefinition(DFDGDPRVertex vertex, ContextDefinition contextDefinition) {
-        return contextDefinition.getGdprElements()
+    public static boolean matchesContextDefinition(DFDGDPRVertex vertex, Scope scope) {
+        return scope.getLafScopeElements()
                 .stream()
                 .allMatch(it -> UncertaintyUtils.matchesContextElement(vertex, it));
     }
 
-    public static boolean matchesContextElement(DFDGDPRVertex vertex, GDPRContextElement contextElement) {
+    public static boolean matchesContextElement(DFDGDPRVertex vertex, LAFScopeElement scopeElement) {
         boolean matches = vertex.getRelatedElements()
-                .contains(contextElement.getGdprElement());
-        if (contextElement.isNegated()) {
+                .contains(scopeElement.getLafElement());
+        if (scopeElement.isNegated()) {
             return !matches;
         } else {
             return matches;
@@ -285,16 +286,16 @@ public class UncertaintyUtils {
         LabelType labelType = dd.getLabelTypes()
                 .stream()
                 .filter(it -> it.getEntityName()
-                        .equals(source.getPropertyType()
+                        .equals(source.getScopeDependentAssessmentFact()
                                 .getEntityName()))
                 .findAny()
                 .orElseThrow();
         List<Label> labels = new ArrayList<>();
-        for (PropertyValue propertyValue : scenario.getPropertyValues()) {
+        for (Expression expression : scenario.getExpressions()) {
             Label label = labelType.getLabel()
                     .stream()
                     .filter(it -> it.getEntityName()
-                            .equals(propertyValue.getEntityName()))
+                            .equals(expression.getEntityName()))
                     .findAny()
                     .orElseThrow();
             labels.add(label);

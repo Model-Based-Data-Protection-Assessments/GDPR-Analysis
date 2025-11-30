@@ -3,8 +3,8 @@ package mdpa.gdpr.analysis.core.resource;
 import mdpa.gdpr.analysis.core.TransformationManager;
 import mdpa.gdpr.metamodel.GDPR.GDPRPackage;
 import mdpa.gdpr.metamodel.GDPR.LegalAssessmentFacts;
-import mdpa.gdpr.metamodel.contextproperties.ContextDependentProperties;
 import mdpa.gdpr.metamodel.contextproperties.ContextpropertiesPackage;
+import mdpa.gdpr.metamodel.contextproperties.ScopeDependentAssessmentFacts;
 import org.dataflowanalysis.analysis.resource.ResourceProvider;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
@@ -34,11 +34,11 @@ public abstract class GDPRResourceProvider extends ResourceProvider {
     public abstract LegalAssessmentFacts getGDPRModel();
 
     /**
-     * Returns the {@link ContextDependentProperties} metamodel that is required to run a
+     * Returns the {@link ScopeDependentAssessmentFacts} metamodel that is required to run a
      * {@link mdpa.gdpr.analysis.GDPRLegalAssessmentAnalysis}
      * @return Returns the loaded Context Property model
      */
-    public abstract ContextDependentProperties getContextDependentProperties();
+    public abstract ScopeDependentAssessmentFacts getScopeDependentAssessmentFacts();
 
     /**
      * Returns the transformation manager that should be used for the transformation from gdpr to dfd

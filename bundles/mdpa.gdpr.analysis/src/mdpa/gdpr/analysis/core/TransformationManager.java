@@ -9,10 +9,10 @@ import mdpa.gdpr.analysis.dfd.DataFlowDiagramAndDataDictionary;
 import mdpa.gdpr.dfdconverter.GDPR2DFD;
 import mdpa.gdpr.metamodel.GDPR.LegalAssessmentFacts;
 import mdpa.gdpr.metamodel.GDPR.Processing;
-import mdpa.gdpr.metamodel.contextproperties.ContextDependentProperties;
-import mdpa.gdpr.metamodel.contextproperties.Property;
-import mdpa.gdpr.metamodel.contextproperties.PropertyAnnotation;
-import mdpa.gdpr.metamodel.contextproperties.PropertyValue;
+import mdpa.gdpr.metamodel.contextproperties.Expression;
+import mdpa.gdpr.metamodel.contextproperties.SAFAnnotation;
+import mdpa.gdpr.metamodel.contextproperties.ScopeDependentAssessmentFact;
+import mdpa.gdpr.metamodel.contextproperties.ScopeDependentAssessmentFacts;
 import org.apache.log4j.Logger;
 import org.dataflowanalysis.dfd.datadictionary.DataDictionary;
 import org.dataflowanalysis.dfd.datadictionary.Label;
@@ -42,14 +42,14 @@ public class TransformationManager {
     /**
      * Converts model to DFD and saves tracemodel
      * @param gdprModel Input GDPR Model
-     * @param contextDependentProperties Input context property model
+     * @param scopeDependentAssessmentFacts Input context property model
      * @return Returns the data flow diagram and data dictionary of the converted model
      */
-    public DataFlowDiagramAndDataDictionary transform(LegalAssessmentFacts gdprModel, ContextDependentProperties contextDependentProperties) {
+    public DataFlowDiagramAndDataDictionary transform(LegalAssessmentFacts gdprModel, ScopeDependentAssessmentFacts scopeDependentAssessmentFacts) {
         GDPR2DFD converter = new GDPR2DFD(gdprModel);
         converter.transform();
         processTransformation(converter.getDataFlowDiagram(), gdprModel);
-        processContextDependentAttributes(contextDependentProperties, converter.getDataDictionary());
+        processContextDependentAttributes(scopeDependentAssessmentFacts, converter.getDataDictionary());
         return new DataFlowDiagramAndDataDictionary(converter.getDataFlowDiagram(), converter.getDataDictionary());
     }
 
@@ -75,39 +75,39 @@ public class TransformationManager {
     /**
      * Creates the {@link ContextDependentAttributeSource}s and {@link ContextDependentAttributeScenario} for the context
      * property model. Additionally, it creates the required labels in the data dictionary.
-     * @param propertyModel Context Property Model of the transformation
+     * @param scopeDependentAssessmentFacts Context Property Model of the transformation
      * @param dataDictionary Data Dictionary of the transformation
      */
-    private void processContextDependentAttributes(ContextDependentProperties propertyModel, DataDictionary dataDictionary) {
-        for (Property property : propertyModel.getProperty()) {
+    private void processContextDependentAttributes(ScopeDependentAssessmentFacts scopeDependentAssessmentFacts, DataDictionary dataDictionary) {
+        for (ScopeDependentAssessmentFact scopeDependentAssessmentFact : scopeDependentAssessmentFacts.getScopeDependentAssessmentFact()) {
             LabelType type = datadictionaryFactory.eINSTANCE.createLabelType();
-            type.setEntityName(property.getEntityName());
-            type.setId(property.getId());
+            type.setEntityName(scopeDependentAssessmentFact.getEntityName());
+            type.setId(scopeDependentAssessmentFact.getId());
             dataDictionary.getLabelTypes()
                     .add(type);
-            for (PropertyValue propertyValue : property.getPropertyvalue()) {
+            for (Expression expression : scopeDependentAssessmentFact.getExpression()) {
                 Label label = datadictionaryFactory.eINSTANCE.createLabel();
-                label.setEntityName(propertyValue.getEntityName());
-                label.setId(propertyValue.getId());
+                label.setEntityName(expression.getEntityName());
+                label.setId(expression.getId());
                 type.getLabel()
                         .add(label);
             }
         }
-        for (PropertyAnnotation propertyAnnotation : propertyModel.getPropertyannotation()) {
-            if (propertyAnnotation.getContextannotation()
+        for (SAFAnnotation safAnnotation : scopeDependentAssessmentFacts.getSafAnnotation()) {
+            if (safAnnotation.getScopeSet()
                     .isEmpty()) {
-                this.contextDependentAttributes.add(new ContextDependentAttributeSource(propertyAnnotation, propertyAnnotation.getProperty()
-                        .getPropertyvalue(), List.of()));
+                this.contextDependentAttributes.add(new ContextDependentAttributeSource(safAnnotation, safAnnotation.getScopeDependentAssessmentFact()
+                        .getExpression(), List.of()));
             } else {
                 List<ContextDependentAttributeSource> sources = new ArrayList<>();
-                propertyAnnotation.getContextannotation()
+                safAnnotation.getScopeSet()
                         .forEach(it -> {
-                            var source = new ContextDependentAttributeSource(propertyAnnotation, it);
+                            var source = new ContextDependentAttributeSource(safAnnotation, it);
                             sources.add(source);
                             this.contextDependentAttributes.add(source);
                         });
-                this.contextDependentAttributes.add(new ContextDependentAttributeSource(propertyAnnotation, propertyAnnotation.getProperty()
-                        .getPropertyvalue(), sources));
+                this.contextDependentAttributes.add(new ContextDependentAttributeSource(safAnnotation, safAnnotation.getScopeDependentAssessmentFact()
+                        .getExpression(), sources));
             }
         }
         logger.info("Parsed " + this.contextDependentAttributes.size() + " CDA!");

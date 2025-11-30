@@ -55,7 +55,7 @@ public class DFDGDPRFlowGraphCollection extends FlowGraphCollection {
             throw new IllegalArgumentException();
         }
         DataFlowDiagramAndDataDictionary dfd = gdprResourceProvider.getTransformationManager()
-                .transform(gdprResourceProvider.getGDPRModel(), gdprResourceProvider.getContextDependentProperties());
+                .transform(gdprResourceProvider.getGDPRModel(), gdprResourceProvider.getScopeDependentAssessmentFacts());
         this.dataDictionary = dfd.dataDictionary();
         DFDTransposeFlowGraphFinder finder = new DFDTransposeFlowGraphFinder(dfd.dataDictionary(), dfd.dataFlowDiagram());
         List<DFDGDPRTransposeFlowGraph> completeFlowGraphs = finder.findTransposeFlowGraphs()
