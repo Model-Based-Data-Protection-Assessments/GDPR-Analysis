@@ -5,7 +5,6 @@ import java.util.List;
 import mdpa.gdpr.analysis.core.TransformationManager;
 import mdpa.gdpr.metamodel.GDPR.LegalAssessmentFacts;
 import mdpa.gdpr.metamodel.contextproperties.ScopeDependentAssessmentFacts;
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;

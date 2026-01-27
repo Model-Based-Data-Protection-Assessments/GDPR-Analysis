@@ -93,7 +93,7 @@ public class DFDGDPRVertex extends DFDVertex {
         return this.relatedElements.stream()
                 .filter(Processing.class::isInstance)
                 .map(Processing.class::cast)
-                .map(it -> it.getResponsible())
+                .map(Processing::getResponsible)
                 .findAny()
                 .orElseThrow();
     }

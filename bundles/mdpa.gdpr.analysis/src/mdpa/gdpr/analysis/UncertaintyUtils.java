@@ -60,27 +60,27 @@ public class UncertaintyUtils {
                         .getBehavior()
                         .getInPin()
                         .stream()
-                        .map(it -> EcoreUtil.copy(it))
+                        .map(EcoreUtil::copy)
                         .toList());
         behaviour.getOutPin()
                 .addAll(impactedElement.getReferencedElement()
                         .getBehavior()
                         .getOutPin()
                         .stream()
-                        .map(it -> EcoreUtil.copy(it))
+                        .map(EcoreUtil::copy)
                         .toList());
 
         List<Label> values = UncertaintyUtils.getAppliedLabel(scenario, source, dd);
 
         List<Pin> inputPins = behaviour.getInPin()
                 .stream()
-                .map(it -> EcoreUtil.copy(it))
+                .map(EcoreUtil::copy)
                 .toList();
         Pin outputPin = behaviour.getOutPin()
                 .stream()
                 .filter(it -> it.getEntityName()
                         .equals(targetedData.getEntityName()))
-                .map(it -> EcoreUtil.copy(it))
+                .map(EcoreUtil::copy)
                 .findAny()
                 .orElseThrow();
 
@@ -158,14 +158,14 @@ public class UncertaintyUtils {
                         .getBehavior()
                         .getInPin()
                         .stream()
-                        .map(it -> EcoreUtil.copy(it))
+                        .map(EcoreUtil::copy)
                         .toList());
         behaviour.getOutPin()
                 .addAll(impactedElement.getReferencedElement()
                         .getBehavior()
                         .getOutPin()
                         .stream()
-                        .map(it -> EcoreUtil.copy(it))
+                        .map(EcoreUtil::copy)
                         .toList());
 
         List<Assignment> assignments = new ArrayList<>();
@@ -271,15 +271,12 @@ public class UncertaintyUtils {
                 .noneMatch(matchingVertices::contains)) {
             return true;
         }
-        if (vertex.getPreviousElements()
+        return vertex.getPreviousElements()
                 .stream()
                 .filter(DFDGDPRVertex.class::isInstance)
                 .map(DFDGDPRVertex.class::cast)
                 .noneMatch(it -> it.getResponsibilityRole()
-                        .equals(vertex.getResponsibilityRole()))) {
-            return true;
-        }
-        return false;
+                        .equals(vertex.getResponsibilityRole()));
     }
 
     public static List<Label> getAppliedLabel(ContextDependentAttributeScenario scenario, ContextDependentAttributeSource source, DataDictionary dd) {

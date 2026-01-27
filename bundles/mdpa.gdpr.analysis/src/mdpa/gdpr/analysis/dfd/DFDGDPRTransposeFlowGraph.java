@@ -120,14 +120,12 @@ public class DFDGDPRTransposeFlowGraph extends DFDTransposeFlowGraph {
                         .stream()
                         .filter(DFDGDPRVertex.class::isInstance)
                         .map(DFDGDPRVertex.class::cast)
-                        .filter(it -> {
-                            return it.getOutgoingData()
-                                    .stream()
-                                    .filter(PersonalData.class::isInstance)
-                                    .map(PersonalData.class::cast)
-                                    .anyMatch(data -> data.getDataReferences()
-                                            .contains(person));
-                        })
+                        .filter(it -> it.getOutgoingData()
+                                .stream()
+                                .filter(PersonalData.class::isInstance)
+                                .map(PersonalData.class::cast)
+                                .anyMatch(data -> data.getDataReferences()
+                                        .contains(person)))
                         .findAny()
                         .orElse(currentTargetVertex);
                 Behavior replacingBehavior = UncertaintyUtils.createBehavior(impactedElement, dataDictionary, source, scenario, person);
@@ -146,7 +144,7 @@ public class DFDGDPRTransposeFlowGraph extends DFDTransposeFlowGraph {
         } else if (source.getAnnotatedElement() instanceof Data data) {
             // Insert Data Characteristic
             List<DFDGDPRVertex> targetedVertices = this.determineTargetedVertices(currentTransposeFlowGraph, scenario);
-            ;
+
             for (DFDGDPRVertex targetVertex : targetedVertices) {
                 DFDGDPRVertex currentTargetVertex = currentTransposeFlowGraph.getVertices()
                         .stream()
@@ -311,6 +309,6 @@ public class DFDGDPRTransposeFlowGraph extends DFDTransposeFlowGraph {
     }
 
     public ContextAttributeState getContextAttributeState() {
-        return contextAttributeState.get();
+        return contextAttributeState.orElseThrow();
     }
 }
