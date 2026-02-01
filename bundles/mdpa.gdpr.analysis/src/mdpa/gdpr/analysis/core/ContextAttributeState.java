@@ -49,9 +49,9 @@ public record ContextAttributeState(List<ContextDependentAttributeScenario> sele
 
     /**
      * Calculates the cartesian product between the given lists
-     * @param lists List of lists that should be used when calculating the cartesian product
+     * @param lists List of lists that should be used when calculating the Cartesian product
      * @param <T> Type of the list elements
-     * @return Returns the cartesian product of the provided lists
+     * @return Returns the Cartesian product of the provided lists
      */
     private static <T> List<List<T>> cartesianProduct(List<List<T>> lists) {
         List<List<T>> result = new ArrayList<>();

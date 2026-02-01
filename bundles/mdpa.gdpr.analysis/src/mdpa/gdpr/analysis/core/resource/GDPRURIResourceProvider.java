@@ -10,7 +10,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
- * Implementation of an {@link GDPRResourceProvider} using modelling project URIs to load the required models
+ * Implementation of an {@link GDPRResourceProvider} using modeling project URIs to load the required models
  */
 public class GDPRURIResourceProvider extends GDPRResourceProvider {
     private final URI modelURI;
