@@ -7,6 +7,7 @@ import mdpa.gdpr.analysis.dfd.DFDGDPRVertex;
 import mdpa.gdpr.metamodel.contextproperties.Expression;
 import mdpa.gdpr.metamodel.contextproperties.Scope;
 import mdpa.gdpr.metamodel.contextproperties.ScopeSet;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -64,7 +65,11 @@ public class ContextDependentAttributeScenario {
      * @return Returns true, if the scenario should be applied to the vertex. Otherwise, the method returns false
      */
     public boolean applicable(DFDGDPRVertex vertex) {
+        logger.setLevel(Level.TRACE);
         logger.trace("Determining whether " + this.name + " can be applied to " + vertex);
+        if (!vertex.getRelatedElements().contains(this.contextDependentAttributeSource.getAnnotation().getAnnotatedElement())) {
+            return false;
+        }
         if (this.resolvedUncertainty) {
             if (!this.contextDependentAttributeSource.applicable(vertex)) {
                 return false;

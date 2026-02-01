@@ -2,6 +2,8 @@ package mdpa.gdpr.analysis.core;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+
 import mdpa.gdpr.analysis.UncertaintyUtils;
 import mdpa.gdpr.analysis.dfd.DFDGDPRVertex;
 import mdpa.gdpr.metamodel.GDPR.AbstractGDPRElement;
@@ -21,6 +23,8 @@ public class ContextDependentAttributeSource {
     private final ScopeDependentAssessmentFact scopeDependentAssessmentFact;
     private final List<ContextDependentAttributeScenario> contextDependentAttributeScenarios;
 
+    private final SAFAnnotation annotation;
+    private final Optional<ScopeSet> scopeSet;
     private final List<Scope> scopes;
     private final List<ContextDependentAttributeSource> sources;
     private final boolean resolvedUncertainty;
@@ -34,9 +38,11 @@ public class ContextDependentAttributeSource {
      */
     public ContextDependentAttributeSource(SAFAnnotation safAnnotation, ScopeSet scopeSet) {
         this.name = scopeSet.getEntityName() + "@" + safAnnotation.getEntityName();
+        this.annotation = safAnnotation;
         this.annotatedElement = safAnnotation.getAnnotatedElement();
         this.scopeDependentAssessmentFact = safAnnotation.getScopeDependentAssessmentFact();
         this.contextDependentAttributeScenarios = List.of(new ContextDependentAttributeScenario(scopeSet, this));
+        this.scopeSet = Optional.of(scopeSet);
         this.scopes = scopeSet.getScope();
         this.sources = List.of();
         this.resolvedUncertainty = false;
@@ -54,11 +60,13 @@ public class ContextDependentAttributeSource {
     public ContextDependentAttributeSource(SAFAnnotation safAnnotation, List<Expression> expressions,
             List<ContextDependentAttributeSource> sources) {
         this.name = "Unknown@" + safAnnotation.getEntityName();
+        this.annotation = safAnnotation;
         this.annotatedElement = safAnnotation.getAnnotatedElement();
         this.scopeDependentAssessmentFact = safAnnotation.getScopeDependentAssessmentFact();
         this.contextDependentAttributeScenarios = expressions.stream()
                 .map(it -> new ContextDependentAttributeScenario(it, this, sources))
                 .toList();
+        this.scopeSet = Optional.empty();
         this.scopes = List.of();
         this.sources = sources;
         this.resolvedUncertainty = true;
@@ -134,6 +142,10 @@ public class ContextDependentAttributeSource {
      */
     public String getName() {
         return name;
+    }
+
+    public SAFAnnotation getAnnotation() {
+        return annotation;
     }
 
     @Override

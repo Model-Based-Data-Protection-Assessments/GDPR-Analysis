@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
 import mdpa.gdpr.analysis.dfd.DataFlowDiagramAndDataDictionary;
 import mdpa.gdpr.dfdconverter.GDPR2DFD;
 import mdpa.gdpr.metamodel.GDPR.LegalAssessmentFacts;

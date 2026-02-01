@@ -15,6 +15,7 @@ import org.dataflowanalysis.analysis.dfd.core.DFDVertex;
 import org.dataflowanalysis.dfd.datadictionary.Pin;
 import org.dataflowanalysis.dfd.dataflowdiagram.Flow;
 import org.dataflowanalysis.dfd.dataflowdiagram.Node;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 public class DFDGDPRVertex extends DFDVertex {
     private final List<AbstractGDPRElement> relatedElements;
@@ -41,7 +42,19 @@ public class DFDGDPRVertex extends DFDVertex {
         this.pinDFDVertexMap.keySet()
                 .forEach(key -> copiedPinDFDVertexMap.put(key, mapping.getOrDefault(this.pinDFDVertexMap.get(key), this.pinDFDVertexMap.get(key)
                         .copy(mapping))));
-        DFDGDPRVertex copy = new DFDGDPRVertex(this.referencedElement, copiedPinDFDVertexMap, new HashMap<>(this.pinFlowMap),
+        Map<Pin, Flow> copiedPinFlowMap = new HashMap<>();
+        this.pinFlowMap.keySet()
+                .forEach(key -> {
+                    Pin correspondingPin = copiedPinDFDVertexMap.get(key).getReferencedElement().getBehavior().getOutPin().stream()
+                            .filter(it -> it.getEntityName().equals(key.getEntityName()))
+                            .findAny()
+                            .orElseThrow();
+                    Flow flow = EcoreUtil.copy(this.pinFlowMap.get(key));
+                    flow.setSourcePin(correspondingPin);
+                    flow.setSourceNode(copiedPinDFDVertexMap.get(key).getReferencedElement());
+                    copiedPinFlowMap.put(key, flow);
+                });
+        DFDGDPRVertex copy = new DFDGDPRVertex(this.referencedElement, copiedPinDFDVertexMap, copiedPinFlowMap,
                 new ArrayList<>(this.relatedElements));
         if (!this.contextDependentAttributes.isEmpty()) {
             copy.setContextDependentAttributes(this.contextDependentAttributes);

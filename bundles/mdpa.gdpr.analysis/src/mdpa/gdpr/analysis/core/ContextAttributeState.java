@@ -1,5 +1,7 @@
 package mdpa.gdpr.analysis.core;
 
+import mdpa.gdpr.analysis.dfd.DFDGDPRVertex;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -45,6 +47,17 @@ public record ContextAttributeState(List<ContextDependentAttributeScenario> sele
         return cartesianProduct.stream()
                 .map(ContextAttributeState::new)
                 .toList();
+    }
+
+    /**
+     * Determines whether the context attribute state is able to handle the cda source at the given vertex
+     * @param source Given source of context dependent attributes
+     * @param vertex Given vertex
+     * @return Returns true, if the state handles the source at the vertex. Otherwise, the method returns false.
+     */
+    public boolean handles(ContextDependentAttributeSource source, DFDGDPRVertex vertex) {
+        return this.selectedScenarios.stream()
+                .anyMatch(it -> it.applicable(vertex));
     }
 
     /**

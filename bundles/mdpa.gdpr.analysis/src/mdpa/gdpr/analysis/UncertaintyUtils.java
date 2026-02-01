@@ -22,65 +22,46 @@ import org.dataflowanalysis.dfd.datadictionary.Label;
 import org.dataflowanalysis.dfd.datadictionary.LabelType;
 import org.dataflowanalysis.dfd.datadictionary.Pin;
 import org.dataflowanalysis.dfd.datadictionary.datadictionaryFactory;
+import org.dataflowanalysis.dfd.dataflowdiagram.Node;
+import org.dataflowanalysis.dfd.dataflowdiagram.Process;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 public class UncertaintyUtils {
     private static final Logger logger = Logger.getLogger(UncertaintyUtils.class);
 
-    public static Behavior createBehavior(DFDGDPRVertex impactedElement, DataDictionary dd, ContextDependentAttributeSource source,
+    public static Behavior createBehavior(Node element, DFDGDPRVertex impactedElement, DataDictionary dd, ContextDependentAttributeSource source,
             ContextDependentAttributeScenario scenario, Data targetedData) {
         logger.setLevel(Level.INFO);
 
-        if (impactedElement.getReferencedElement()
-                .getBehavior()
+        if (element.getBehavior()
                 .getOutPin()
                 .stream()
                 .noneMatch(it -> it.getEntityName()
                         .equals(targetedData.getEntityName()))) {
             logger.info("Scenario" + scenario.getName() + " does not impact " + impactedElement.getName());
-            return impactedElement.getReferencedElement()
+            return element
                     .getBehavior();
         }
 
-        logger.debug("Impacting element " + impactedElement.getReferencedElement()
+        logger.debug("Impacting element " + element
                 .getEntityName());
-        Behavior behaviour = datadictionaryFactory.eINSTANCE.createBehavior();
-        dd.getBehavior()
-                .add(behaviour);
+        Behavior behaviour = element.getBehavior();
 
-        if (impactedElement.getReferencedElement()
-                .getBehavior()
+        if (behaviour
                 .getOutPin()
                 .isEmpty()) {
             return behaviour;
         }
 
-        behaviour.getInPin()
-                .addAll(impactedElement.getReferencedElement()
-                        .getBehavior()
-                        .getInPin()
-                        .stream()
-                        .map(EcoreUtil::copy)
-                        .toList());
-        behaviour.getOutPin()
-                .addAll(impactedElement.getReferencedElement()
-                        .getBehavior()
-                        .getOutPin()
-                        .stream()
-                        .map(EcoreUtil::copy)
-                        .toList());
-
         List<Label> values = UncertaintyUtils.getAppliedLabel(scenario, source, dd);
 
         List<Pin> inputPins = behaviour.getInPin()
                 .stream()
-                .map(EcoreUtil::copy)
                 .toList();
         Pin outputPin = behaviour.getOutPin()
                 .stream()
                 .filter(it -> it.getEntityName()
                         .equals(targetedData.getEntityName()))
-                .map(EcoreUtil::copy)
                 .findAny()
                 .orElseThrow();
 
@@ -102,7 +83,7 @@ public class UncertaintyUtils {
             Assignment assignment = datadictionaryFactory.eINSTANCE.createAssignment();
             assignment.getInputPins()
                     .addAll(inputPins);
-            Pin dataOutputPin = impactedElement.getReferencedElement()
+            Pin dataOutputPin = element
                     .getBehavior()
                     .getOutPin()
                     .stream()
@@ -137,36 +118,13 @@ public class UncertaintyUtils {
         return behaviour;
     }
 
-    public static Behavior createBehavior(DFDGDPRVertex impactedElement, DataDictionary dd, ContextDependentAttributeSource source,
-            ContextDependentAttributeScenario scenario, NaturalPerson targetedPerson) {
+    public static Behavior createBehavior(Node element, DFDGDPRVertex impactedElement, DataDictionary dd, ContextDependentAttributeSource source,
+                                          ContextDependentAttributeScenario scenario, NaturalPerson targetedPerson) {
         logger.setLevel(Level.WARN);
-        logger.debug("Impacting element " + impactedElement.getReferencedElement()
+        logger.debug("Impacting element " + element
                 .getEntityName());
-        Behavior behaviour = datadictionaryFactory.eINSTANCE.createBehavior();
-        dd.getBehavior()
-                .add(behaviour);
 
-        if (impactedElement.getReferencedElement()
-                .getBehavior()
-                .getOutPin()
-                .isEmpty()) {
-            return behaviour;
-        }
-
-        behaviour.getInPin()
-                .addAll(impactedElement.getReferencedElement()
-                        .getBehavior()
-                        .getInPin()
-                        .stream()
-                        .map(EcoreUtil::copy)
-                        .toList());
-        behaviour.getOutPin()
-                .addAll(impactedElement.getReferencedElement()
-                        .getBehavior()
-                        .getOutPin()
-                        .stream()
-                        .map(EcoreUtil::copy)
-                        .toList());
+        Behavior behaviour = element.getBehavior();
 
         List<Assignment> assignments = new ArrayList<>();
         List<PersonalData> targetedData = impactedElement.getOutgoingData()
@@ -207,8 +165,7 @@ public class UncertaintyUtils {
                 Assignment assignment = datadictionaryFactory.eINSTANCE.createAssignment();
                 assignment.getInputPins()
                         .addAll(inputPins);
-                Pin dataOutputPin = impactedElement.getReferencedElement()
-                        .getBehavior()
+                Pin dataOutputPin = behaviour
                         .getOutPin()
                         .stream()
                         .filter(pin -> pin.getEntityName()
