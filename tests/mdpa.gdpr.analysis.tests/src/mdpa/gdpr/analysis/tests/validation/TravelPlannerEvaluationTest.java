@@ -7,23 +7,29 @@ import mdpa.gdpr.analysis.dfd.DFDGDPRFlowGraphCollection;
 import mdpa.gdpr.analysis.dfd.DFDGDPRTransposeFlowGraph;
 import mdpa.gdpr.analysis.dfd.DFDGDPRVertex;
 import org.apache.log4j.Logger;
+import org.dataflowanalysis.analysis.utils.LoggerManager;
 import org.dataflowanalysis.dfd.dataflowdiagram.Node;
 import org.junit.jupiter.api.Test;
 
-public class TrainModelEvaluation extends ValidationBase {
-    private Logger logger = Logger.getLogger(TrainModelEvaluation.class);
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-    public TrainModelEvaluation() {
-        super("default", "models/TrainModel");
+public class TravelPlannerEvaluationTest extends ValidationBase {
+    private final Logger logger = LoggerManager.getLogger(TrainModelEvaluationTest.class);
+
+    public TravelPlannerEvaluationTest() {
+        super("default", "models/TravelPlanner");
     }
 
     @Test
     public void testFlowGraphAmount() {
         DFDGDPRFlowGraphCollection flowGraphs = (DFDGDPRFlowGraphCollection) this.analysis.findFlowGraphs();
-        var alternateFlowGraphs = flowGraphs.resolveContextDependentAttributes();
+        assertEquals(1, flowGraphs.getTransposeFlowGraphs().size());
 
+        var alternateFlowGraphs = flowGraphs.resolveContextDependentAttributes();
         logger.info("Number of TFGs: " + alternateFlowGraphs.getTransposeFlowGraphs()
                 .size());
+        assertEquals(2, alternateFlowGraphs.getTransposeFlowGraphs().size());
+
         for (var tfg : alternateFlowGraphs.getTransposeFlowGraphs()) {
             var gdprTFG = (DFDGDPRTransposeFlowGraph) tfg;
             System.out.println("---- State: " + gdprTFG.getContextAttributeState() + " -----------");
@@ -40,6 +46,7 @@ public class TrainModelEvaluation extends ValidationBase {
         DFDGDPRFlowGraphCollection flowGraphs = (DFDGDPRFlowGraphCollection) this.analysis.findFlowGraphs();
         var alternateFlowGraphs = flowGraphs.resolveContextDependentAttributes();
 
+        int affectedFlowGraphCount = 0;
         for (DFDGDPRTransposeFlowGraph transposeFlowGraph : alternateFlowGraphs.getTransposeFlowGraphs()
                 .stream()
                 .filter(DFDGDPRTransposeFlowGraph.class::isInstance)
@@ -48,24 +55,31 @@ public class TrainModelEvaluation extends ValidationBase {
             List<ContextDependentAttributeScenario> impactScenarios = transposeFlowGraph.getContextAttributeState()
                     .selectedScenarios()
                     .stream()
+                    .filter(it -> !it.getName()
+                            .equals("UserNecessity"))
                     .toList();
             var impactedElements = this.getImpactedElements(transposeFlowGraph, impactScenarios);
             System.out.println("---- State: " + transposeFlowGraph.getContextAttributeState() + " -----------");
             System.out.println("---- Impacted Elements: -----");
+            if (!impactedElements.isEmpty()) {
+                affectedFlowGraphCount++;
+            }
             for (var vertex : impactedElements) {
                 var referencedElement = (Node) vertex.getReferencedElement();
                 System.out.println(referencedElement.getEntityName() + ", " + referencedElement.getId());
             }
             System.out.println();
         }
+        assertEquals(2, affectedFlowGraphCount);
     }
 
     @Test
     public void testViolations() {
-        // logger.setLevel(Level.INFO);
         DFDGDPRFlowGraphCollection flowGraphs = (DFDGDPRFlowGraphCollection) this.analysis.findFlowGraphs();
         var alternateFlowGraphs = flowGraphs.resolveContextDependentAttributes();
         alternateFlowGraphs.evaluate();
+
+        int violatingFlowGraphCount = 0;
         for (DFDGDPRTransposeFlowGraph flowGraph : alternateFlowGraphs.getTransposeFlowGraphs()
                 .stream()
                 .filter(DFDGDPRTransposeFlowGraph.class::isInstance)
@@ -90,14 +104,8 @@ public class TrainModelEvaluation extends ValidationBase {
                 logger.debug("VCs: [" + result + "]");
                 logger.debug("Responsibility: " + element.getResponsibilityRole()
                         .getEntityName());
-                // C1: Identifiable to MarketingProvider
-                if (this.hasVertexCharacteristic(element, "ThirdParty", "Marketing")
-                        && this.hasDataCharacteristic(element, "Identifiability", "True")) {
-                    return true;
-                }
-
-                // C2: Any Transparency at false
-                if (this.hasVertexCharacteristic(element, "Transparency", "False")) {
+                // C1: Not Necessary Data
+                if (this.hasDataCharacteristic(element, "Necessary", "False")) {
                     return true;
                 }
                 return false;
@@ -107,14 +115,16 @@ public class TrainModelEvaluation extends ValidationBase {
                 logger.debug("------------------------");
                 continue;
             }
-            System.out.println("---- State: " + flowGraph.getContextAttributeState() + " -----------");
-            System.out.println("---- Impacted Elements: -----");
-            for (var vertex : flowGraph.getVertices()) {
-                var referencedElement = (Node) vertex.getReferencedElement();
-                System.out.println(referencedElement.getEntityName() + ", " + referencedElement.getId());
-            }
-            System.out.println("---- Violations: " + violations);
-            System.out.println();
+            violatingFlowGraphCount++;
+            var sourcesString = flowGraph.getContextAttributeState()
+                    .selectedScenarios()
+                    .stream()
+                    .map(it -> it.getName())
+                    .collect(Collectors.joining(","));
+            logger.info("Violation in state: " + sourcesString);
+            logger.info("Violating vertices:" + violations);
+            logger.info("------------------------");
         }
+        assertEquals(1, violatingFlowGraphCount);
     }
 }

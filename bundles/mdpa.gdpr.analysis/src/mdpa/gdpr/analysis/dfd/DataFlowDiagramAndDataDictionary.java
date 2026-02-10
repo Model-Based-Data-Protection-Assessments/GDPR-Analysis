@@ -38,6 +38,12 @@ public record DataFlowDiagramAndDataDictionary(DataFlowDiagram dataFlowDiagram, 
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Saves the given {@link DataFlowDiagramAndDataDictionary} at the given file path with the given name
+     * @param filePath File path the {@link DataFlowDiagramAndDataDictionary} should be saved at
+     * @param fileName File name (without extension) that the files should have
+     */
     public void save(String filePath, String fileName) {
         ResourceSet resourceSet = new ResourceSetImpl();
         Path basePath = Path.of(filePath, fileName)

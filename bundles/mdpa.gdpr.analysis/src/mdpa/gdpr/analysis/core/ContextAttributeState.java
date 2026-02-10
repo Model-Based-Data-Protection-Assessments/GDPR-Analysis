@@ -50,14 +50,14 @@ public record ContextAttributeState(List<ContextDependentAttributeScenario> sele
     }
 
     /**
-     * Determines whether the context attribute state is able to handle the cda source at the given vertex
-     * @param source Given source of context dependent attributes
+     * Determines whether the context attribute state cannot handle the given vertex.
+     * This is the case, when all stored scenarios cannot be applied to the vertex.
      * @param vertex Given vertex
-     * @return Returns true, if the state handles the source at the vertex. Otherwise, the method returns false.
+     * @return Returns true, if the state cannot handle the vertex. Otherwise, the method returns false.
      */
-    public boolean handles(ContextDependentAttributeSource source, DFDGDPRVertex vertex) {
+    public boolean doesNotHandle(DFDGDPRVertex vertex) {
         return this.selectedScenarios.stream()
-                .anyMatch(it -> it.applicable(vertex));
+                .noneMatch(it -> it.applicable(vertex));
     }
 
     /**

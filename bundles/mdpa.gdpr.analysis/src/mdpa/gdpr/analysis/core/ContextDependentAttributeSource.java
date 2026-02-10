@@ -2,7 +2,6 @@ package mdpa.gdpr.analysis.core;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 import mdpa.gdpr.analysis.UncertaintyUtils;
 import mdpa.gdpr.analysis.dfd.DFDGDPRVertex;
@@ -24,7 +23,6 @@ public class ContextDependentAttributeSource {
     private final List<ContextDependentAttributeScenario> contextDependentAttributeScenarios;
 
     private final SAFAnnotation annotation;
-    private final Optional<ScopeSet> scopeSet;
     private final List<Scope> scopes;
     private final List<ContextDependentAttributeSource> sources;
     private final boolean resolvedUncertainty;
@@ -42,7 +40,6 @@ public class ContextDependentAttributeSource {
         this.annotatedElement = safAnnotation.getAnnotatedElement();
         this.scopeDependentAssessmentFact = safAnnotation.getScopeDependentAssessmentFact();
         this.contextDependentAttributeScenarios = List.of(new ContextDependentAttributeScenario(scopeSet, this));
-        this.scopeSet = Optional.of(scopeSet);
         this.scopes = scopeSet.getScope();
         this.sources = List.of();
         this.resolvedUncertainty = false;
@@ -66,7 +63,6 @@ public class ContextDependentAttributeSource {
         this.contextDependentAttributeScenarios = expressions.stream()
                 .map(it -> new ContextDependentAttributeScenario(it, this, sources))
                 .toList();
-        this.scopeSet = Optional.empty();
         this.scopes = List.of();
         this.sources = sources;
         this.resolvedUncertainty = true;
@@ -109,7 +105,7 @@ public class ContextDependentAttributeSource {
                     .noneMatch(it -> it.applicable(vertex));
         }
         return this.scopes.stream()
-                .anyMatch(it -> UncertaintyUtils.matchesContextDefinition(vertex, it));
+                .anyMatch(it -> UncertaintyUtils.scopeApplicable(vertex, it));
     }
 
     /**
@@ -144,6 +140,10 @@ public class ContextDependentAttributeSource {
         return name;
     }
 
+    /**
+     * Returns the {@link SAFAnnotation} that the {@link ContextDependentAttributeSource} corresponds to
+     * @return Corresponding {@link SAFAnnotation}
+     */
     public SAFAnnotation getAnnotation() {
         return annotation;
     }

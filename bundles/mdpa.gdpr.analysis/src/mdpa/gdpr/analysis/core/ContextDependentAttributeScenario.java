@@ -7,8 +7,8 @@ import mdpa.gdpr.analysis.dfd.DFDGDPRVertex;
 import mdpa.gdpr.metamodel.contextproperties.Expression;
 import mdpa.gdpr.metamodel.contextproperties.Scope;
 import mdpa.gdpr.metamodel.contextproperties.ScopeSet;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.dataflowanalysis.analysis.utils.LoggerManager;
 
 /**
  * Models a Context Dependent Attribute Scenario that applies the given list of property values.
@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
  * As a Context Dependent Attribute Scenario can occur in two scenarios we differentiate:
  */
 public class ContextDependentAttributeScenario {
-    private final Logger logger = Logger.getLogger(ContextDependentAttributeScenario.class);
+    private final Logger logger = LoggerManager.getLogger(ContextDependentAttributeScenario.class);
 
     private final String name;
 
@@ -65,9 +65,9 @@ public class ContextDependentAttributeScenario {
      * @return Returns true, if the scenario should be applied to the vertex. Otherwise, the method returns false
      */
     public boolean applicable(DFDGDPRVertex vertex) {
-        logger.setLevel(Level.TRACE);
         logger.trace("Determining whether " + this.name + " can be applied to " + vertex);
         if (!vertex.getRelatedElements().contains(this.contextDependentAttributeSource.getAnnotation().getAnnotatedElement())) {
+            logger.trace("Cannot apply " + this.name + " to vertex, as it does not have the needed elements in context!");
             return false;
         }
         if (this.resolvedUncertainty) {
@@ -76,18 +76,11 @@ public class ContextDependentAttributeScenario {
             }
             logger.trace("Context Dependent Attribute Scenario is resolved with uncertainties!");
             return this.sources.stream()
-                    .noneMatch(it -> {
-                        logger.trace("Should not match: " + it.getContextDependentAttributeScenarios()
-                                .get(0)
-                                .getName());
-                        var scenario = it.getContextDependentAttributeScenarios()
-                                .get(0);
-                        logger.trace("Result: " + scenario.applicable(vertex));
-                        return scenario.applicable(vertex);
-                    });
+                    .map(it -> it.getContextDependentAttributeScenarios().get(0))
+                    .noneMatch(it -> it.applicable(vertex));
         }
         return this.scopes.stream()
-                .anyMatch(it -> UncertaintyUtils.matchesContextDefinition(vertex, it));
+                .anyMatch(it -> UncertaintyUtils.scopeApplicable(vertex, it));
     }
 
     /**

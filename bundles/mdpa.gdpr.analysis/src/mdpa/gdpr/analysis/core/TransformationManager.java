@@ -8,6 +8,8 @@ import java.util.Optional;
 
 import mdpa.gdpr.analysis.dfd.DataFlowDiagramAndDataDictionary;
 import mdpa.gdpr.dfdconverter.GDPR2DFD;
+import mdpa.gdpr.dfdconverter.tracemodel.tracemodel.NodeTrace;
+import mdpa.gdpr.dfdconverter.tracemodel.tracemodel.TraceModel;
 import mdpa.gdpr.metamodel.GDPR.LegalAssessmentFacts;
 import mdpa.gdpr.metamodel.GDPR.Processing;
 import mdpa.gdpr.metamodel.contextproperties.Expression;
@@ -19,7 +21,6 @@ import org.dataflowanalysis.dfd.datadictionary.DataDictionary;
 import org.dataflowanalysis.dfd.datadictionary.Label;
 import org.dataflowanalysis.dfd.datadictionary.LabelType;
 import org.dataflowanalysis.dfd.datadictionary.datadictionaryFactory;
-import org.dataflowanalysis.dfd.dataflowdiagram.DataFlowDiagram;
 import org.dataflowanalysis.dfd.dataflowdiagram.Node;
 
 /**
@@ -41,7 +42,7 @@ public class TransformationManager {
     }
 
     /**
-     * Converts model to DFD and saves tracemodel
+     * Converts model to DFD and saves trace model
      * @param gdprModel Input GDPR Model
      * @param scopeDependentAssessmentFacts Input context property model
      * @return Returns the data flow diagram and data dictionary of the converted model
@@ -49,51 +50,28 @@ public class TransformationManager {
     public DataFlowDiagramAndDataDictionary transform(LegalAssessmentFacts gdprModel, ScopeDependentAssessmentFacts scopeDependentAssessmentFacts) {
         GDPR2DFD converter = new GDPR2DFD(gdprModel);
         converter.transform();
-        processTransformation(converter.getDataFlowDiagram(), gdprModel);
-        processContextDependentAttributes(scopeDependentAssessmentFacts, converter.getDataDictionary());
+        this.processTraceModel(converter.getGDPR2DFDTrace());
+        this.generateAssessmentFactLabels(scopeDependentAssessmentFacts, converter.getDataDictionary());
+        this.processContextDependentAttributes(scopeDependentAssessmentFacts);
         return new DataFlowDiagramAndDataDictionary(converter.getDataFlowDiagram(), converter.getDataDictionary());
     }
 
     /**
-     * Runs some postprocessing on the resulting DFD model for keeping track of the trace between nodes and processing
-     * elements TODO: This can be replaced with the tracemodel
-     * @param dataFlowDiagram Data flow diagram of the Transformation
-     * @param gdprModel GDPR model of the transformation
+     * Uses the information from the trace model to generate important mappings used in the analysis
+     * @param traceModel Produced trace model from the transformation
      */
-    private void processTransformation(DataFlowDiagram dataFlowDiagram, LegalAssessmentFacts gdprModel) {
-        List<Node> nodes = dataFlowDiagram.getNodes();
-        for (Node node : nodes) {
-            Processing gdprElement = gdprModel.getProcessing()
-                    .stream()
-                    .filter(it -> it.getId()
-                            .equals(node.getId()))
-                    .findAny()
-                    .orElseThrow();
-            this.addMapping(gdprElement, node);
+    private void processTraceModel(TraceModel traceModel) {
+        for (NodeTrace nodeTrace : traceModel.getNodeTraces()) {
+            this.addMapping(nodeTrace.getGdprProcessing(), nodeTrace.getDfdNode());
         }
     }
 
     /**
      * Creates the {@link ContextDependentAttributeSource}s and {@link ContextDependentAttributeScenario} for the context
-     * property model. Additionally, it creates the required labels in the data dictionary.
+     * property model
      * @param scopeDependentAssessmentFacts Context Property Model of the transformation
-     * @param dataDictionary Data Dictionary of the transformation
      */
-    private void processContextDependentAttributes(ScopeDependentAssessmentFacts scopeDependentAssessmentFacts, DataDictionary dataDictionary) {
-        for (ScopeDependentAssessmentFact scopeDependentAssessmentFact : scopeDependentAssessmentFacts.getScopeDependentAssessmentFact()) {
-            LabelType type = datadictionaryFactory.eINSTANCE.createLabelType();
-            type.setEntityName(scopeDependentAssessmentFact.getEntityName());
-            type.setId(scopeDependentAssessmentFact.getId());
-            dataDictionary.getLabelTypes()
-                    .add(type);
-            for (Expression expression : scopeDependentAssessmentFact.getExpression()) {
-                Label label = datadictionaryFactory.eINSTANCE.createLabel();
-                label.setEntityName(expression.getEntityName());
-                label.setId(expression.getId());
-                type.getLabel()
-                        .add(label);
-            }
-        }
+    private void processContextDependentAttributes(ScopeDependentAssessmentFacts scopeDependentAssessmentFacts) {
         for (SAFAnnotation safAnnotation : scopeDependentAssessmentFacts.getSafAnnotation()) {
             if (safAnnotation.getScopeSet()
                     .isEmpty()) {
@@ -112,6 +90,28 @@ public class TransformationManager {
             }
         }
         logger.info("Parsed " + this.contextDependentAttributes.size() + " CDA!");
+    }
+
+    /**
+     * Generate the required labels for the given {@link ScopeDependentAssessmentFacts} in the given {@link DataDictionary}
+     * @param scopeDependentAssessmentFacts Scope Dependent Assessment Facts used in determining the required label
+     * @param dataDictionary Destination data dictionary into which the labels are created
+     */
+    private void generateAssessmentFactLabels(ScopeDependentAssessmentFacts scopeDependentAssessmentFacts, DataDictionary dataDictionary) {
+        for (ScopeDependentAssessmentFact scopeDependentAssessmentFact : scopeDependentAssessmentFacts.getScopeDependentAssessmentFact()) {
+            LabelType type = datadictionaryFactory.eINSTANCE.createLabelType();
+            type.setEntityName(scopeDependentAssessmentFact.getEntityName());
+            type.setId(scopeDependentAssessmentFact.getId());
+            dataDictionary.getLabelTypes()
+                    .add(type);
+            for (Expression expression : scopeDependentAssessmentFact.getExpression()) {
+                Label label = datadictionaryFactory.eINSTANCE.createLabel();
+                label.setEntityName(expression.getEntityName());
+                label.setId(expression.getId());
+                type.getLabel()
+                        .add(label);
+            }
+        }
     }
 
     /**
