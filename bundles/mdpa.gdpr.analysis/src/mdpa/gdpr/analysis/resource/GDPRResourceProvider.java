@@ -1,4 +1,4 @@
-package mdpa.gdpr.analysis.core.resource;
+package mdpa.gdpr.analysis.resource;
 
 import mdpa.gdpr.analysis.core.TransformationManager;
 import mdpa.gdpr.metamodel.GDPR.GDPRPackage;

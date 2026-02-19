@@ -1,4 +1,4 @@
-package mdpa.gdpr.analysis.core.resource;
+package mdpa.gdpr.analysis.resource;
 
 import java.util.ArrayList;
 import java.util.List;

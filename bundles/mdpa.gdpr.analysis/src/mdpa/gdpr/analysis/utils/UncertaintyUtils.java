@@ -1,4 +1,4 @@
-package mdpa.gdpr.analysis;
+package mdpa.gdpr.analysis.utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,6 @@ public class UncertaintyUtils {
                                       ContextDependentAttributeScenario scenario, NaturalPerson targetedPerson) {
         logger.debug("Modifying behavior for impacted element " + element.getEntityName());
 
-        List<Assignment> assignments = new ArrayList<>();
         List<PersonalData> targetedData = impactedElement.getOutgoingData()
                 .stream()
                 .filter(PersonalData.class::isInstance)
@@ -195,6 +194,8 @@ public class UncertaintyUtils {
     public static boolean shouldReapply(List<DFDGDPRVertex> matchingVertices, DFDGDPRVertex vertex) {
         if (vertex.getPreviousElements()
                 .stream()
+                .filter(DFDGDPRVertex.class::isInstance)
+                .map(DFDGDPRVertex.class::cast)
                 .noneMatch(matchingVertices::contains)) {
             return true;
         }

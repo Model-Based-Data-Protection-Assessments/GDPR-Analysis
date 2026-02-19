@@ -3,7 +3,7 @@ package mdpa.gdpr.analysis.core;
 import java.util.Collection;
 import java.util.List;
 
-import mdpa.gdpr.analysis.UncertaintyUtils;
+import mdpa.gdpr.analysis.utils.UncertaintyUtils;
 import mdpa.gdpr.analysis.dfd.DFDGDPRVertex;
 import mdpa.gdpr.metamodel.GDPR.AbstractGDPRElement;
 import mdpa.gdpr.metamodel.contextproperties.Expression;

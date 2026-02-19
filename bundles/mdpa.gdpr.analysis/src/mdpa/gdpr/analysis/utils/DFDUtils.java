@@ -1,4 +1,4 @@
-package mdpa.gdpr.analysis;
+package mdpa.gdpr.analysis.utils;
 
 import org.dataflowanalysis.dfd.datadictionary.AbstractAssignment;
 import org.dataflowanalysis.dfd.datadictionary.Assignment;
