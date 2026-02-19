@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<contextproperties:ContextDependentProperties xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:GDPR="http://www.example.org/GDPR" xmlns:contextproperties="http://www.example.org/contextproperties" id="__uvp8P8AEe2kDemF2aGupQ">
-  <propertyannotation id="_QjU6kCyCEe-3fNnAWgzb-A" entityName="CustomerIdentifiability" property="_HkPVEAhNEe67tpwR5G7Ipg">
-    <contextannotation id="_Q8t1gCyDEe-3fNnAWgzb-A" entityName="TrainCompanyContext" propertyvalue="_MB7BUAhNEe67tpwR5G7Ipg" contextdefinition="_Nd7aciyDEe-3fNnAWgzb-A"/>
-    <contextannotation id="_hBpRsCyDEe-3fNnAWgzb-A" entityName="ThirdPartyContext" propertyvalue="_PVGM4CyCEe-3fNnAWgzb-A" contextdefinition="_ep9BkiyDEe-3fNnAWgzb-A"/>
+<contextproperties:ScopeDependentAssessmentFacts xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:GDPR="http://www.example.org/GDPR" xmlns:contextproperties="http://www.example.org/contextproperties" id="__uvp8P8AEe2kDemF2aGupQ">
+  <safAnnotation id="_QjU6kCyCEe-3fNnAWgzb-A" entityName="CustomerIdentifiability" scopeDependentAssessmentFact="_HkPVEAhNEe67tpwR5G7Ipg">
+    <scopeSet id="_Q8t1gCyDEe-3fNnAWgzb-A" entityName="TrainCompanyContext" expression="_MB7BUAhNEe67tpwR5G7Ipg" scope="_Nd7aciyDEe-3fNnAWgzb-A"/>
+    <scopeSet id="_hBpRsCyDEe-3fNnAWgzb-A" entityName="ThirdPartyContext" expression="_PVGM4CyCEe-3fNnAWgzb-A" scope="_ep9BkiyDEe-3fNnAWgzb-A"/>
     <annotatedElement xsi:type="GDPR:NaturalPerson" href="default.gdpr#_vnprDAhKEe67tpwR5G7Ipg"/>
-  </propertyannotation>
-  <propertyannotation id="_BmcKMDxJEe-7xYeJC8-49w" entityName="MarketingProcessingTransparency" property="_8hC9sTxIEe-7xYeJC8-49w">
+  </safAnnotation>
+  <safAnnotation id="_BmcKMDxJEe-7xYeJC8-49w" entityName="MarketingProcessingTransparency" scopeDependentAssessmentFact="_8hC9sTxIEe-7xYeJC8-49w">
     <annotatedElement xsi:type="GDPR:Purpose" href="default.gdpr#_yNRAxTxIEe-7xYeJC8-49w"/>
-  </propertyannotation>
-  <property id="_HkPVEAhNEe67tpwR5G7Ipg" entityName="Identifiability">
-    <propertyvalue id="_MB7BUAhNEe67tpwR5G7Ipg" entityName="True"/>
-    <propertyvalue id="_PVGM4CyCEe-3fNnAWgzb-A" entityName="False"/>
-  </property>
-  <property id="_8hC9sTxIEe-7xYeJC8-49w" entityName="Transparency">
-    <propertyvalue id="_-gMK8DxIEe-7xYeJC8-49w" entityName="True"/>
-    <propertyvalue id="__pTIEDxIEe-7xYeJC8-49w" entityName="False"/>
-  </property>
-  <contextdefinition id="_Nd7aciyDEe-3fNnAWgzb-A" entityName="TrainCompanyContext">
-    <gdprElements id="_Y9z8cTxNEe-aJKhk6DSkcA" entityName="TrainCompanyElement">
-      <gdprElement xsi:type="GDPR:Controller" href="default.gdpr#_UvHiUQhKEe67tpwR5G7Ipg"/>
-    </gdprElements>
-  </contextdefinition>
-  <contextdefinition id="_ep9BkiyDEe-3fNnAWgzb-A" entityName="ThridPartyContext">
-    <gdprElements id="_cWuZATxNEe-aJKhk6DSkcA" entityName="StatisticsProviderElement">
-      <gdprElement xsi:type="GDPR:ThirdParty" href="default.gdpr#_tAgprghKEe67tpwR5G7Ipg"/>
-    </gdprElements>
-  </contextdefinition>
-</contextproperties:ContextDependentProperties>
+  </safAnnotation>
+  <scopeDependentAssessmentFact id="_HkPVEAhNEe67tpwR5G7Ipg" entityName="Identifiability">
+    <expression id="_PVGM4CyCEe-3fNnAWgzb-A" entityName="False"/>
+    <expression id="_MB7BUAhNEe67tpwR5G7Ipg" entityName="True"/>
+  </scopeDependentAssessmentFact>
+  <scopeDependentAssessmentFact id="_8hC9sTxIEe-7xYeJC8-49w" entityName="Transparency">
+    <expression id="_-gMK8DxIEe-7xYeJC8-49w" entityName="True"/>
+    <expression id="__pTIEDxIEe-7xYeJC8-49w" entityName="False"/>
+  </scopeDependentAssessmentFact>
+  <scope id="_Nd7aciyDEe-3fNnAWgzb-A" entityName="TrainCompanyContext">
+    <lafScopeElements id="_Y9z8cTxNEe-aJKhk6DSkcA" entityName="TrainCompanyElement">
+      <lafElement xsi:type="GDPR:Controller" href="default.gdpr#_UvHiUQhKEe67tpwR5G7Ipg"/>
+    </lafScopeElements>
+  </scope>
+  <scope id="_ep9BkiyDEe-3fNnAWgzb-A" entityName="ThridPartyContext">
+    <lafScopeElements id="_cWuZATxNEe-aJKhk6DSkcA" entityName="StatisticsProviderElement">
+      <lafElement xsi:type="GDPR:ThirdParty" href="default.gdpr#_tAgprghKEe67tpwR5G7Ipg"/>
+    </lafScopeElements>
+  </scope>
+</contextproperties:ScopeDependentAssessmentFacts>

@@ -7,14 +7,12 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import mdpa.gdpr.analysis.core.ContextDependentAttributeSource;
-import mdpa.gdpr.analysis.core.resource.GDPRResourceProvider;
+import mdpa.gdpr.analysis.resource.DataFlowDiagramAndDataDictionary;
+import mdpa.gdpr.analysis.resource.GDPRResourceProvider;
 import mdpa.gdpr.metamodel.GDPR.AbstractGDPRElement;
-import mdpa.gdpr.metamodel.GDPR.Collecting;
 import mdpa.gdpr.metamodel.GDPR.PersonalData;
+import mdpa.gdpr.metamodel.GDPR.Processing;
 import mdpa.gdpr.metamodel.GDPR.Role;
-import mdpa.gdpr.metamodel.GDPR.Storing;
-import mdpa.gdpr.metamodel.GDPR.Transferring;
-import mdpa.gdpr.metamodel.GDPR.Usage;
 import org.apache.log4j.Logger;
 import org.dataflowanalysis.analysis.core.AbstractTransposeFlowGraph;
 import org.dataflowanalysis.analysis.core.FlowGraphCollection;
@@ -25,13 +23,28 @@ import org.dataflowanalysis.analysis.resource.ResourceProvider;
 import org.dataflowanalysis.dfd.datadictionary.DataDictionary;
 import org.dataflowanalysis.dfd.datadictionary.Pin;
 
+/**
+ * Models a collection of {@link DFDGDPRTransposeFlowGraph}s for use with the
+ * {@link mdpa.gdpr.analysis.GDPRLegalAssessmentAnalysis}
+ */
 public class DFDGDPRFlowGraphCollection extends FlowGraphCollection {
     private final Logger logger = Logger.getLogger(DFDGDPRFlowGraphCollection.class);
+    private DataDictionary dataDictionary;
 
+    /**
+     * Creates a new {@link DFDGDPRFlowGraphCollection} using the provided resource provider
+     * @param resourceProvider {@link ResourceProvider} that provides the necessary models
+     */
     public DFDGDPRFlowGraphCollection(ResourceProvider resourceProvider) {
         super(resourceProvider);
     }
 
+    /**
+     * Creates a new {@link DFDGDPRFlowGraphCollection} with the given list of transpose flow graphs and a given resource
+     * provider
+     * @param transposeFlowGraphs List of {@link DFDGDPRTransposeFlowGraph}s that are stored in the flow graph collection
+     * @param resourceProvider {@link ResourceProvider} that has the relevant model elements loaded
+     */
     public DFDGDPRFlowGraphCollection(List<DFDGDPRTransposeFlowGraph> transposeFlowGraphs, ResourceProvider resourceProvider) {
         super(transposeFlowGraphs, resourceProvider);
     }
@@ -43,31 +56,58 @@ public class DFDGDPRFlowGraphCollection extends FlowGraphCollection {
             throw new IllegalArgumentException();
         }
         DataFlowDiagramAndDataDictionary dfd = gdprResourceProvider.getTransformationManager()
-                .transform(gdprResourceProvider.getModel(), gdprResourceProvider.getContextDependentProperties());
+                .transform(gdprResourceProvider.getGDPRModel(), gdprResourceProvider.getScopeDependentAssessmentFacts());
+        this.dataDictionary = dfd.dataDictionary();
         DFDTransposeFlowGraphFinder finder = new DFDTransposeFlowGraphFinder(dfd.dataDictionary(), dfd.dataFlowDiagram());
         List<DFDGDPRTransposeFlowGraph> completeFlowGraphs = finder.findTransposeFlowGraphs()
                 .stream()
                 .map(it -> this.transformFlowGraph((DFDTransposeFlowGraph) it, dfd.dataDictionary()))
                 .toList();
-        List<DFDGDPRTransposeFlowGraph> result = new ArrayList<>(completeFlowGraphs);
-        /*
-         * result.addAll(completeFlowGraphs.stream() .map(it -> this.getPartialTransposeFlowGraphs(it, dfd.dataDictionary()))
-         * .flatMap(List::stream) .toList());
-         */
-        return result;
+        return new ArrayList<>(completeFlowGraphs);
     }
 
-    private DFDGDPRTransposeFlowGraph transformFlowGraph(DFDTransposeFlowGraph transposeFlowGraph, DataDictionary dd) {
+    /**
+     * Finds the partial responsibility flow graphs for the contained flow graphs and creates a new
+     * {@link DFDGDPRFlowGraphCollection} containing the previous {@link DFDGDPRTransposeFlowGraph} with the additional
+     * partial responsibility flow graphs
+     * @return Returns a new {@link DFDGDPRFlowGraphCollection} containing additional partial responsibility flow graphs
+     */
+    public DFDGDPRFlowGraphCollection findResponsibilityFlowGraphs() {
+        List<DFDGDPRTransposeFlowGraph> completeFlowGraphs = this.getTransposeFlowGraphs()
+                .stream()
+                .filter(DFDGDPRTransposeFlowGraph.class::isInstance)
+                .map(DFDGDPRTransposeFlowGraph.class::cast)
+                .toList();
+        List<DFDGDPRTransposeFlowGraph> flowGraphs = new ArrayList<>(completeFlowGraphs);
+        flowGraphs.addAll(completeFlowGraphs.stream()
+                .map(this::getPartialTransposeFlowGraphs)
+                .flatMap(List::stream)
+                .toList());
+        return new DFDGDPRFlowGraphCollection(flowGraphs, this.resourceProvider);
+    }
+
+    /**
+     * Transforms the given DFD-based {@link DFDTransposeFlowGraph} to an {@link DFDGDPRTransposeFlowGraph}
+     * @param transposeFlowGraph Given {@link DFDTransposeFlowGraph}
+     * @param dataDictionary Data dictionary containing the labels for CDAs
+     * @return Returns the corresponding {@link DFDGDPRTransposeFlowGraph}
+     */
+    private DFDGDPRTransposeFlowGraph transformFlowGraph(DFDTransposeFlowGraph transposeFlowGraph, DataDictionary dataDictionary) {
         Map<DFDVertex, DFDGDPRVertex> mapping = new IdentityHashMap<>();
         transposeFlowGraph.getVertices()
                 .stream()
                 .map(DFDVertex.class::cast)
                 .forEach(vertex -> mapping.put(vertex, this.getDFDGDPRVertex(vertex, new IdentityHashMap<>())));
         return new DFDGDPRTransposeFlowGraph(mapping.get((DFDVertex) transposeFlowGraph.getSink()),
-                this.determineContextDependentAttributes(transposeFlowGraph, mapping.values()), dd);
+                this.determineContextDependentAttributes(mapping.values()), dataDictionary);
     }
 
-    private List<DFDGDPRTransposeFlowGraph> getPartialTransposeFlowGraphs(DFDGDPRTransposeFlowGraph transposeFlowGraph, DataDictionary dd) {
+    /**
+     * Determines the list of partial responsibility flow graphs for the given {@link DFDGDPRTransposeFlowGraph}
+     * @param transposeFlowGraph Given {@link DFDGDPRTransposeFlowGraph}
+     * @return Returns the list of responsibility transpose flow graphs for the input {@link DFDGDPRTransposeFlowGraph}
+     */
+    private List<DFDGDPRTransposeFlowGraph> getPartialTransposeFlowGraphs(DFDGDPRTransposeFlowGraph transposeFlowGraph) {
         List<DFDGDPRTransposeFlowGraph> result = new ArrayList<>();
         Map<Role, List<DFDGDPRVertex>> roleMap = new HashMap<>();
         transposeFlowGraph.getVertices()
@@ -96,27 +136,37 @@ public class DFDGDPRFlowGraphCollection extends FlowGraphCollection {
                     .filter(it -> !previousElements.contains(it))
                     .toList();
             for (DFDGDPRVertex sink : sinks) {
-                Map<DFDVertex, DFDVertex> mapping = new HashMap<>();
-                result.add(new DFDGDPRTransposeFlowGraph(this.getMappingForSink(sink, roleVertices, mapping),
-                        new ArrayList<>(transposeFlowGraph.getContextDependentAttributeSources()), dd));
+                result.add(new DFDGDPRTransposeFlowGraph(this.getMappingForSink(sink, roleVertices),
+                        new ArrayList<>(transposeFlowGraph.getContextDependentAttributeSources()), this.dataDictionary));
             }
         }
         return result;
     }
 
-    private DFDGDPRVertex getMappingForSink(DFDGDPRVertex sink, List<DFDGDPRVertex> roleVertices, Map<DFDVertex, DFDVertex> mapping) {
+    /**
+     * Determines the {@link DFDGDPRVertex} that denotes the sink of the partial responsibility transpose flow graph
+     * @param sink {@link DFDGDPRVertex} that is the current sink
+     * @param roleVertices List of {@link DFDGDPRVertex} that denote the beginnings of each responsibility segment
+     * @return Returns the {@link DFDGDPRVertex} sink of the partial responsibility TFG
+     */
+    private DFDGDPRVertex getMappingForSink(DFDGDPRVertex sink, List<DFDGDPRVertex> roleVertices) {
         Map<Pin, DFDVertex> pinVertexMap = new HashMap<>();
         sink.getPinDFDVertexMap()
                 .entrySet()
                 .stream()
+                .filter(it -> it.getValue() instanceof DFDGDPRVertex)
                 .filter(it -> roleVertices.contains(it.getValue()))
-                .forEach(it -> {
-                    pinVertexMap.put(it.getKey(), this.getMappingForSink((DFDGDPRVertex) it.getValue(), roleVertices, mapping));
-                });
+                .forEach(it -> pinVertexMap.put(it.getKey(), this.getMappingForSink((DFDGDPRVertex) it.getValue(), roleVertices)));
         return new DFDGDPRVertex(sink.getReferencedElement(), pinVertexMap, new HashMap<>(sink.getPinFlowMap()),
                 new ArrayList<>(sink.getRelatedElements()));
     }
 
+    /**
+     * Creates the {@link DFDGDPRVertex} for a corresponding {@link DFDVertex} and a given mapping
+     * @param vertex Given {@link DFDVertex}
+     * @param mapping Mapping between {@link DFDVertex}
+     * @return Returns the corresponding {@link DFDGDPRVertex} of the {@link DFDVertex}
+     */
     private DFDGDPRVertex getDFDGDPRVertex(DFDVertex vertex, Map<DFDVertex, DFDVertex> mapping) {
         if (!(this.resourceProvider instanceof GDPRResourceProvider gdprResourceProvider)) {
             this.logger.error("Resource provider is not a GDPR resource provider!");
@@ -136,96 +186,45 @@ public class DFDGDPRFlowGraphCollection extends FlowGraphCollection {
         return new DFDGDPRVertex(vertex.getReferencedElement(), copiedPinDFDVertexMap, new HashMap<>(vertex.getPinFlowMap()), relatedElements);
     }
 
+    /**
+     * Determines the relevant elements for the given {@link AbstractGDPRElement}
+     * @param gdprElement Given {@link AbstractGDPRElement}
+     * @return Related elements for the given {@link AbstractGDPRElement}
+     */
     private List<AbstractGDPRElement> determineRelatedElements(AbstractGDPRElement gdprElement) {
         List<AbstractGDPRElement> result = new ArrayList<>();
         result.add(gdprElement);
-        if (gdprElement instanceof Collecting collecting) {
-            result.addAll(collecting.getInputData());
-            result.addAll(collecting.getInputData()
+        if (gdprElement instanceof Processing processing) {
+            result.addAll(processing.getInputData());
+            result.addAll(processing.getInputData()
                     .stream()
                     .filter(PersonalData.class::isInstance)
                     .map(PersonalData.class::cast)
                     .map(PersonalData::getDataReferences)
                     .flatMap(List::stream)
                     .toList());
-            result.addAll(collecting.getOutputData());
-            result.addAll(collecting.getOutputData()
+            result.addAll(processing.getOutputData());
+            result.addAll(processing.getOutputData()
                     .stream()
                     .filter(PersonalData.class::isInstance)
                     .map(PersonalData.class::cast)
                     .map(PersonalData::getDataReferences)
                     .flatMap(List::stream)
                     .toList());
-            result.addAll(collecting.getPurpose());
-            result.addAll(collecting.getOnTheBasisOf());
-            result.add(collecting.getResponsible());
-        } else if (gdprElement instanceof Usage usage) {
-            result.addAll(usage.getInputData());
-            result.addAll(usage.getInputData()
-                    .stream()
-                    .filter(PersonalData.class::isInstance)
-                    .map(PersonalData.class::cast)
-                    .map(PersonalData::getDataReferences)
-                    .flatMap(List::stream)
-                    .toList());
-            result.addAll(usage.getOutputData());
-            result.addAll(usage.getOutputData()
-                    .stream()
-                    .filter(PersonalData.class::isInstance)
-                    .map(PersonalData.class::cast)
-                    .map(PersonalData::getDataReferences)
-                    .flatMap(List::stream)
-                    .toList());
-            result.addAll(usage.getPurpose());
-            result.addAll(usage.getOnTheBasisOf());
-            result.add(usage.getResponsible());
-        } else if (gdprElement instanceof Transferring transferring) {
-            result.addAll(transferring.getInputData());
-            result.addAll(transferring.getInputData()
-                    .stream()
-                    .filter(PersonalData.class::isInstance)
-                    .map(PersonalData.class::cast)
-                    .map(PersonalData::getDataReferences)
-                    .flatMap(List::stream)
-                    .toList());
-            result.addAll(transferring.getOutputData());
-            result.addAll(transferring.getOutputData()
-                    .stream()
-                    .filter(PersonalData.class::isInstance)
-                    .map(PersonalData.class::cast)
-                    .map(PersonalData::getDataReferences)
-                    .flatMap(List::stream)
-                    .toList());
-            result.addAll(transferring.getPurpose());
-            result.addAll(transferring.getOnTheBasisOf());
-            result.add(transferring.getResponsible());
-
-        } else if (gdprElement instanceof Storing storing) {
-            result.addAll(storing.getInputData());
-            result.addAll(storing.getInputData()
-                    .stream()
-                    .filter(PersonalData.class::isInstance)
-                    .map(PersonalData.class::cast)
-                    .map(PersonalData::getDataReferences)
-                    .flatMap(List::stream)
-                    .toList());
-            result.addAll(storing.getOutputData());
-            result.addAll(storing.getOutputData()
-                    .stream()
-                    .filter(PersonalData.class::isInstance)
-                    .map(PersonalData.class::cast)
-                    .map(PersonalData::getDataReferences)
-                    .flatMap(List::stream)
-                    .toList());
-            result.addAll(storing.getPurpose());
-            result.addAll(storing.getOnTheBasisOf());
-            result.add(storing.getResponsible());
+            result.addAll(processing.getPurpose());
+            result.addAll(processing.getOnTheBasisOf());
+            result.add(processing.getResponsible());
         }
         return result;
     }
 
-    private List<ContextDependentAttributeSource> determineContextDependentAttributes(DFDTransposeFlowGraph transposeFlowGraph,
-            Collection<DFDGDPRVertex> vertices) {
+    /**
+     * Determines the context dependent attribute sources for the given collection of vertices using the
+     * {@link mdpa.gdpr.analysis.core.TransformationManager}
+     * @param vertices List of vertices of which the {@link ContextDependentAttributeSource}s should be determined
+     * @return List of {@link ContextDependentAttributeSource} that are applicable to the given list of vertices
+     */
+    private List<ContextDependentAttributeSource> determineContextDependentAttributes(Collection<DFDGDPRVertex> vertices) {
         if (!(this.resourceProvider instanceof GDPRResourceProvider gdprResourceProvider)) {
             this.logger.error("Resource provider is not a GDPR resource provider!");
             throw new IllegalArgumentException();
@@ -237,6 +236,12 @@ public class DFDGDPRFlowGraphCollection extends FlowGraphCollection {
                 .toList();
     }
 
+    /**
+     * Returns the flow graph collection that contains the final flow graph with resolved context dependent attributes.
+     * <p/>
+     * Note: This will create a new instance of the {@link DFDGDPRFlowGraphCollection}
+     * @return Returns a new {@link DFDGDPRFlowGraphCollection} containing the resolved {@link DFDGDPRTransposeFlowGraph}s
+     */
     public DFDGDPRFlowGraphCollection resolveContextDependentAttributes() {
         List<DFDGDPRTransposeFlowGraph> resultingTransposeFlowGraphs = this.getTransposeFlowGraphs()
                 .stream()

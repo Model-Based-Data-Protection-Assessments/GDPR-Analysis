@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="ASCII"?>
+<datadictionary:DataDictionary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:datadictionary="http://dataflowanalysis.org/dfd/datadictionary" id="_K9LupAZqEfGCL-VEgCBfBQ">
+  <labelTypes id="_K9LuvQZqEfGCL-VEgCBfBQ" entityName="ProcessingType">
+    <label id="_K9Lu1QZqEfGCL-VEgCBfBQ" entityName="Collecting"/>
+    <label id="_K9Lu1gZqEfGCL-VEgCBfBQ" entityName="Storing"/>
+    <label id="_K9Lu1wZqEfGCL-VEgCBfBQ" entityName="Usage"/>
+    <label id="_K9Lu2AZqEfGCL-VEgCBfBQ" entityName="Transferring"/>
+  </labelTypes>
+  <labelTypes id="_K9LuvgZqEfGCL-VEgCBfBQ" entityName="Data">
+    <label id="_huDTFoGmEe-as-PKi6C5xQ" entityName="Flight"/>
+    <label id="_lJgtVoGmEe-as-PKi6C5xQ" entityName="Query"/>
+    <label id="_-x-8VoGmEe-as-PKi6C5xQ" entityName="Booking Confirmation"/>
+  </labelTypes>
+  <labelTypes id="_K9LuvwZqEfGCL-VEgCBfBQ" entityName="PersonalData">
+    <label id="_dUUSt4GmEe-as-PKi6C5xQ" entityName="CCD"/>
+  </labelTypes>
+  <labelTypes id="_K9LuwAZqEfGCL-VEgCBfBQ" entityName="Obligation"/>
+  <labelTypes id="_K9LuwQZqEfGCL-VEgCBfBQ" entityName="Consent">
+    <label id="_eXJMO4GnEe-as-PKi6C5xQ" entityName="Query Processing"/>
+    <label id="_vv1Qm4O7Ee-2Pr3C-PuC6g" entityName="Book flight for User"/>
+  </labelTypes>
+  <labelTypes id="_K9LuwgZqEfGCL-VEgCBfBQ" entityName="Contract">
+    <label id="_pBzYGYGnEe-as-PKi6C5xQ" entityName="Booking Contract"/>
+  </labelTypes>
+  <labelTypes id="_K9LuwwZqEfGCL-VEgCBfBQ" entityName="PublicAuthority"/>
+  <labelTypes id="_K9LuxAZqEfGCL-VEgCBfBQ" entityName="NaturalPerson">
+    <label id="_qGk5vYGlEe-as-PKi6C5xQ" entityName="User"/>
+  </labelTypes>
+  <labelTypes id="_K9LuxQZqEfGCL-VEgCBfBQ" entityName="Controller">
+    <label id="_waOCDoGlEe-as-PKi6C5xQ" entityName="Travel Agency"/>
+  </labelTypes>
+  <labelTypes id="_K9LuxgZqEfGCL-VEgCBfBQ" entityName="ThirdParty">
+    <label id="_62wSX4GlEe-as-PKi6C5xQ" entityName="Airline"/>
+  </labelTypes>
+  <labelTypes id="_K9LuxwZqEfGCL-VEgCBfBQ" entityName="Purposes">
+    <label id="_IKPFJYGnEe-as-PKi6C5xQ" entityName="Find Flights"/>
+    <label id="_LdiB5YGnEe-as-PKi6C5xQ" entityName="Book Flight"/>
+    <label id="_NXMSNYGnEe-as-PKi6C5xQ" entityName="Manage CCD"/>
+  </labelTypes>
+  <labelTypes id="__s5P8IGnEe-as-PKi6C5xQ" entityName="Necessary">
+    <label id="_EdcN0IGoEe-as-PKi6C5xQ" entityName="True"/>
+    <label id="_Fc6GwIGoEe-as-PKi6C5xQ" entityName="False"/>
+  </labelTypes>
+  <behavior id="_K9LupgZqEfGCL-VEgCBfBQ" entityName="Look for Flights Behavior">
+    <outPin id="_K9Lu2QZqEfGCL-VEgCBfBQ" entityName="Query"/>
+    <assignment xsi:type="datadictionary:ForwardingAssignment" id="_K9MVtgZqEfGCL-VEgCBfBQ" entityName="Dummy" outputPin="_K9Lu2QZqEfGCL-VEgCBfBQ"/>
+  </behavior>
+  <behavior id="_K9LuqAZqEfGCL-VEgCBfBQ" entityName="Request Flights From Airline Behavior">
+    <inPin id="_K9Lu2gZqEfGCL-VEgCBfBQ" entityName="Query"/>
+    <outPin id="_K9Lu3AZqEfGCL-VEgCBfBQ" entityName="Query"/>
+    <assignment xsi:type="datadictionary:ForwardingAssignment" id="_K9MVtwZqEfGCL-VEgCBfBQ" entityName="Dummy" outputPin="_K9Lu3AZqEfGCL-VEgCBfBQ" inputPins="_K9Lu2gZqEfGCL-VEgCBfBQ"/>
+  </behavior>
+  <behavior id="_K9LuqgZqEfGCL-VEgCBfBQ" entityName="Read Flight DB Behavior">
+    <inPin id="_K9Lu3QZqEfGCL-VEgCBfBQ" entityName="Query"/>
+    <outPin id="_K9Lu3wZqEfGCL-VEgCBfBQ" entityName="Flight"/>
+    <assignment xsi:type="datadictionary:ForwardingAssignment" id="_K9MVuAZqEfGCL-VEgCBfBQ" entityName="Dummy" outputPin="_K9Lu3wZqEfGCL-VEgCBfBQ" inputPins="_K9Lu3QZqEfGCL-VEgCBfBQ"/>
+  </behavior>
+  <behavior id="_K9LurAZqEfGCL-VEgCBfBQ" entityName="Return Flights From Airline Behavior">
+    <inPin id="_K9Lu4AZqEfGCL-VEgCBfBQ" entityName="Flight"/>
+    <outPin id="_K9Lu4gZqEfGCL-VEgCBfBQ" entityName="Flight"/>
+    <assignment xsi:type="datadictionary:ForwardingAssignment" id="_K9MVuQZqEfGCL-VEgCBfBQ" entityName="Dummy" outputPin="_K9Lu4gZqEfGCL-VEgCBfBQ" inputPins="_K9Lu4AZqEfGCL-VEgCBfBQ"/>
+  </behavior>
+  <behavior id="_K9LurgZqEfGCL-VEgCBfBQ" entityName="Return Flights Behavior">
+    <inPin id="_K9Lu4wZqEfGCL-VEgCBfBQ" entityName="Flight"/>
+    <outPin id="_K9Lu5QZqEfGCL-VEgCBfBQ" entityName="Flight"/>
+    <assignment xsi:type="datadictionary:ForwardingAssignment" id="_K9MVugZqEfGCL-VEgCBfBQ" entityName="Dummy" outputPin="_K9Lu5QZqEfGCL-VEgCBfBQ" inputPins="_K9Lu4wZqEfGCL-VEgCBfBQ"/>
+  </behavior>
+  <behavior id="_K9LusAZqEfGCL-VEgCBfBQ" entityName="Collect CCD Behavior">
+    <outPin id="_K9Lu6AZqEfGCL-VEgCBfBQ" entityName="CCD"/>
+    <assignment xsi:type="datadictionary:ForwardingAssignment" id="_K9MVuwZqEfGCL-VEgCBfBQ" entityName="Dummy" outputPin="_K9Lu6AZqEfGCL-VEgCBfBQ"/>
+  </behavior>
+  <behavior id="_K9LusgZqEfGCL-VEgCBfBQ" entityName="Book Flight Behavior">
+    <inPin id="_K9Lu5gZqEfGCL-VEgCBfBQ" entityName="Flight"/>
+    <inPin id="_K9Lu6QZqEfGCL-VEgCBfBQ" entityName="CCD"/>
+    <outPin id="_K9Lu6wZqEfGCL-VEgCBfBQ" entityName="Flight"/>
+    <outPin id="_K9Lu7gZqEfGCL-VEgCBfBQ" entityName="CCD"/>
+    <assignment xsi:type="datadictionary:ForwardingAssignment" id="_K9MVvAZqEfGCL-VEgCBfBQ" entityName="Dummy" outputPin="_K9Lu6wZqEfGCL-VEgCBfBQ" inputPins="_K9Lu5gZqEfGCL-VEgCBfBQ _K9Lu6QZqEfGCL-VEgCBfBQ"/>
+    <assignment xsi:type="datadictionary:ForwardingAssignment" id="_K9MVvQZqEfGCL-VEgCBfBQ" entityName="Dummy" outputPin="_K9Lu7gZqEfGCL-VEgCBfBQ" inputPins="_K9Lu5gZqEfGCL-VEgCBfBQ _K9Lu6QZqEfGCL-VEgCBfBQ"/>
+    <assignment xsi:type="datadictionary:ForwardingAssignment" id="_K9MVvgZqEfGCL-VEgCBfBQ" entityName="Dummy" outputPin="_K9Lu6wZqEfGCL-VEgCBfBQ" inputPins="_K9Lu5gZqEfGCL-VEgCBfBQ _K9Lu6QZqEfGCL-VEgCBfBQ"/>
+    <assignment xsi:type="datadictionary:ForwardingAssignment" id="_K9MVvwZqEfGCL-VEgCBfBQ" entityName="Dummy" outputPin="_K9Lu7gZqEfGCL-VEgCBfBQ" inputPins="_K9Lu5gZqEfGCL-VEgCBfBQ _K9Lu6QZqEfGCL-VEgCBfBQ"/>
+  </behavior>
+  <behavior id="_K9LutAZqEfGCL-VEgCBfBQ" entityName="Ask Airline to Book Flight Behavior">
+    <inPin id="_K9Lu7AZqEfGCL-VEgCBfBQ" entityName="Flight"/>
+    <inPin id="_K9Lu7wZqEfGCL-VEgCBfBQ" entityName="CCD"/>
+    <outPin id="_K9Lu8QZqEfGCL-VEgCBfBQ" entityName="Flight"/>
+    <outPin id="_K9Lu9AZqEfGCL-VEgCBfBQ" entityName="CCD"/>
+    <assignment xsi:type="datadictionary:ForwardingAssignment" id="_K9MVwAZqEfGCL-VEgCBfBQ" entityName="Dummy" outputPin="_K9Lu8QZqEfGCL-VEgCBfBQ" inputPins="_K9Lu7AZqEfGCL-VEgCBfBQ _K9Lu7wZqEfGCL-VEgCBfBQ"/>
+    <assignment xsi:type="datadictionary:ForwardingAssignment" id="_K9MVwQZqEfGCL-VEgCBfBQ" entityName="Dummy" outputPin="_K9Lu9AZqEfGCL-VEgCBfBQ" inputPins="_K9Lu7AZqEfGCL-VEgCBfBQ _K9Lu7wZqEfGCL-VEgCBfBQ"/>
+    <assignment xsi:type="datadictionary:ForwardingAssignment" id="_K9MVwgZqEfGCL-VEgCBfBQ" entityName="Dummy" outputPin="_K9Lu8QZqEfGCL-VEgCBfBQ" inputPins="_K9Lu7AZqEfGCL-VEgCBfBQ _K9Lu7wZqEfGCL-VEgCBfBQ"/>
+    <assignment xsi:type="datadictionary:ForwardingAssignment" id="_K9MVwwZqEfGCL-VEgCBfBQ" entityName="Dummy" outputPin="_K9Lu9AZqEfGCL-VEgCBfBQ" inputPins="_K9Lu7AZqEfGCL-VEgCBfBQ _K9Lu7wZqEfGCL-VEgCBfBQ"/>
+  </behavior>
+  <behavior id="_K9LutgZqEfGCL-VEgCBfBQ" entityName="Book Flight Behavior">
+    <inPin id="_K9Lu8gZqEfGCL-VEgCBfBQ" entityName="Flight"/>
+    <inPin id="_K9Lu9QZqEfGCL-VEgCBfBQ" entityName="CCD"/>
+    <outPin id="_K9Lu9wZqEfGCL-VEgCBfBQ" entityName="Booking Confirmation"/>
+    <assignment xsi:type="datadictionary:ForwardingAssignment" id="_K9MVxAZqEfGCL-VEgCBfBQ" entityName="Dummy" outputPin="_K9Lu9wZqEfGCL-VEgCBfBQ" inputPins="_K9Lu8gZqEfGCL-VEgCBfBQ _K9Lu9QZqEfGCL-VEgCBfBQ"/>
+  </behavior>
+  <behavior id="_K9LuuAZqEfGCL-VEgCBfBQ" entityName="Return Booking Confirmation Behavior">
+    <inPin id="_K9Lu-AZqEfGCL-VEgCBfBQ" entityName="Booking Confirmation"/>
+    <outPin id="_K9MVsAZqEfGCL-VEgCBfBQ" entityName="Booking Confirmation"/>
+    <assignment xsi:type="datadictionary:ForwardingAssignment" id="_K9MVxQZqEfGCL-VEgCBfBQ" entityName="Dummy" outputPin="_K9MVsAZqEfGCL-VEgCBfBQ" inputPins="_K9Lu-AZqEfGCL-VEgCBfBQ"/>
+  </behavior>
+  <behavior id="_K9LuugZqEfGCL-VEgCBfBQ" entityName="Return Booked Flight Behavior">
+    <inPin id="_K9MVsQZqEfGCL-VEgCBfBQ" entityName="Booking Confirmation"/>
+    <outPin id="_K9MVswZqEfGCL-VEgCBfBQ" entityName="Booking Confirmation"/>
+    <assignment xsi:type="datadictionary:ForwardingAssignment" id="_K9MVxgZqEfGCL-VEgCBfBQ" entityName="Dummy" outputPin="_K9MVswZqEfGCL-VEgCBfBQ" inputPins="_K9MVsQZqEfGCL-VEgCBfBQ"/>
+  </behavior>
+  <behavior id="_K9LuvAZqEfGCL-VEgCBfBQ" entityName="Store Booked Flight Behavior">
+    <inPin id="_K9MVtAZqEfGCL-VEgCBfBQ" entityName="Booking Confirmation"/>
+  </behavior>
+</datadictionary:DataDictionary>

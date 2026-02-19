@@ -1,31 +1,42 @@
 package mdpa.gdpr.analysis.core;
 
+import mdpa.gdpr.analysis.dfd.DFDGDPRVertex;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ContextAttributeState {
-    private final List<ContextDependentAttributeScenario> selectedScenarios;
-
+/**
+ * This class models a state for a {@link mdpa.gdpr.analysis.dfd.DFDGDPRTransposeFlowGraph} that has selected the stored
+ * {@link ContextDependentAttributeScenario}
+ */
+public record ContextAttributeState(List<ContextDependentAttributeScenario> selectedScenarios) {
+    /**
+     * Creates a new {@link ContextAttributeState} using the given list of selected
+     * {@link ContextDependentAttributeScenario}
+     * @param selectedScenarios List of selected {@link ContextDependentAttributeScenario}
+     */
     public ContextAttributeState(List<ContextDependentAttributeScenario> selectedScenarios) {
         this.selectedScenarios = new ArrayList<>(selectedScenarios);
     }
 
-    public ContextAttributeState(ContextDependentAttributeScenario... selectedScenarios) {
-        this(List.of(selectedScenarios));
-    }
-
-    public List<ContextDependentAttributeSource> getContextAttributeSources() {
-        return this.selectedScenarios.stream()
-                .map(ContextDependentAttributeScenario::getContextDependentAttributeSource)
-                .toList();
-    }
-
-    public List<ContextDependentAttributeScenario> getSelectedScenarios() {
+    /**
+     * Returns the selected {@link ContextDependentAttributeScenario} that are selected by the {@link ContextAttributeState}
+     * @return Returns selected {@link ContextDependentAttributeScenario}
+     */
+    @Override
+    public List<ContextDependentAttributeScenario> selectedScenarios() {
         return Collections.unmodifiableList(this.selectedScenarios);
     }
 
+    /**
+     * Create all possible {@link ContextAttributeState} that are possible to create from the given list of
+     * {@link ContextDependentAttributeSource}
+     * @param contextDependentAttributeSources Given list of {@link ContextDependentAttributeSource} that are used in
+     * finding all {@link ContextAttributeState}
+     * @return Returns a list of all possible {@link ContextAttributeState}
+     */
     public static List<ContextAttributeState> createAllContextAttributeStates(
             List<ContextDependentAttributeSource> contextDependentAttributeSources) {
         List<List<ContextDependentAttributeScenario>> scenarios = new ArrayList<>();
@@ -38,6 +49,23 @@ public class ContextAttributeState {
                 .toList();
     }
 
+    /**
+     * Determines whether the context attribute state cannot handle the given vertex.
+     * This is the case, when all stored scenarios cannot be applied to the vertex.
+     * @param vertex Given vertex
+     * @return Returns true, if the state cannot handle the vertex. Otherwise, the method returns false.
+     */
+    public boolean doesNotHandle(DFDGDPRVertex vertex) {
+        return this.selectedScenarios.stream()
+                .noneMatch(it -> it.applicable(vertex));
+    }
+
+    /**
+     * Calculates the cartesian product between the given lists
+     * @param lists List of lists that should be used when calculating the Cartesian product
+     * @param <T> Type of the list elements
+     * @return Returns the Cartesian product of the provided lists
+     */
     private static <T> List<List<T>> cartesianProduct(List<List<T>> lists) {
         List<List<T>> result = new ArrayList<>();
         if (lists == null || lists.isEmpty()) {
@@ -63,7 +91,7 @@ public class ContextAttributeState {
     @Override
     public String toString() {
         String scenarios = this.selectedScenarios.stream()
-                .map(it -> it.getName())
+                .map(ContextDependentAttributeScenario::getName)
                 .collect(Collectors.joining(","));
         return "[" + scenarios + "]";
     }

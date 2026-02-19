@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<contextproperties:ContextDependentProperties xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:GDPR="http://www.example.org/GDPR" xmlns:contextproperties="http://www.example.org/contextproperties" id="_BpGsUIFYEe-Da6upBYblLw">
-  <propertyannotation id="_GhcF4IGoEe-as-PKi6C5xQ" entityName="DataNecessity" property="__s5P8IGnEe-as-PKi6C5xQ">
-    <contextannotation id="_gUaUsIGoEe-as-PKi6C5xQ" entityName="UserNecessity" propertyvalue="_EdcN0IGoEe-as-PKi6C5xQ" contextdefinition="_TNoEooGoEe-as-PKi6C5xQ"/>
+<contextproperties:ScopeDependentAssessmentFacts xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:GDPR="http://www.example.org/GDPR" xmlns:contextproperties="http://www.example.org/contextproperties" id="_BpGsUIFYEe-Da6upBYblLw">
+  <safAnnotation id="_GhcF4IGoEe-as-PKi6C5xQ" entityName="DataNecessity" scopeDependentAssessmentFact="__s5P8IGnEe-as-PKi6C5xQ">
+    <scopeSet id="_gUaUsIGoEe-as-PKi6C5xQ" entityName="UserNecessity" expression="_EdcN0IGoEe-as-PKi6C5xQ" scope="_TNoEooGoEe-as-PKi6C5xQ"/>
     <annotatedElement xsi:type="GDPR:PersonalData" href="default.gdpr#_dUUSt4GmEe-as-PKi6C5xQ"/>
-  </propertyannotation>
-  <property id="__s5P8IGnEe-as-PKi6C5xQ" entityName="Necessary">
-    <propertyvalue id="_EdcN0IGoEe-as-PKi6C5xQ" entityName="True"/>
-    <propertyvalue id="_Fc6GwIGoEe-as-PKi6C5xQ" entityName="False"/>
-  </property>
-  <contextdefinition id="_TNoEooGoEe-as-PKi6C5xQ" entityName="UserNecessity">
-    <gdprElements id="_Ly8gkYO9Ee-2Pr3C-PuC6g" entityName="TravelAgencyContext" negated="true">
-      <gdprElement xsi:type="GDPR:Controller" href="default.gdpr#_waOCDoGlEe-as-PKi6C5xQ"/>
-    </gdprElements>
-  </contextdefinition>
-</contextproperties:ContextDependentProperties>
+  </safAnnotation>
+  <scopeDependentAssessmentFact id="__s5P8IGnEe-as-PKi6C5xQ" entityName="Necessary">
+    <expression id="_EdcN0IGoEe-as-PKi6C5xQ" entityName="True"/>
+    <expression id="_Fc6GwIGoEe-as-PKi6C5xQ" entityName="False"/>
+  </scopeDependentAssessmentFact>
+  <scope id="_TNoEooGoEe-as-PKi6C5xQ" entityName="UserNecessity">
+    <lafScopeElements id="_Ly8gkYO9Ee-2Pr3C-PuC6g" entityName="TravelAgencyContext" negated="true">
+      <lafElement xsi:type="GDPR:Controller" href="default.gdpr#_waOCDoGlEe-as-PKi6C5xQ"/>
+    </lafScopeElements>
+  </scope>
+</contextproperties:ScopeDependentAssessmentFacts>

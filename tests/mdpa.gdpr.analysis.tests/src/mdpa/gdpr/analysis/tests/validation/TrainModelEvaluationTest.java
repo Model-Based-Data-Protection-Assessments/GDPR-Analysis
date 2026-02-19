@@ -1,29 +1,35 @@
 package mdpa.gdpr.analysis.tests.validation;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import mdpa.gdpr.analysis.core.ContextDependentAttributeScenario;
 import mdpa.gdpr.analysis.dfd.DFDGDPRFlowGraphCollection;
 import mdpa.gdpr.analysis.dfd.DFDGDPRTransposeFlowGraph;
 import mdpa.gdpr.analysis.dfd.DFDGDPRVertex;
 import org.apache.log4j.Logger;
+import org.dataflowanalysis.analysis.utils.LoggerManager;
 import org.dataflowanalysis.dfd.dataflowdiagram.Node;
 import org.junit.jupiter.api.Test;
 
-public class TravelPlannerEvaluation extends ValidationBase {
-    private Logger logger = Logger.getLogger(TravelPlannerEvaluation.class);
+import java.util.List;
+import java.util.stream.Collectors;
 
-    public TravelPlannerEvaluation() {
-        super("default", "models/TravelPlanner");
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class TrainModelEvaluationTest extends ValidationBase {
+    private Logger logger = LoggerManager.getLogger(TrainModelEvaluationTest.class);
+
+    public TrainModelEvaluationTest() {
+        super("default", "models/TrainModel");
     }
 
     @Test
     public void testFlowGraphAmount() {
         DFDGDPRFlowGraphCollection flowGraphs = (DFDGDPRFlowGraphCollection) this.analysis.findFlowGraphs();
+        assertEquals(3, flowGraphs.getTransposeFlowGraphs().size());
         var alternateFlowGraphs = flowGraphs.resolveContextDependentAttributes();
 
         logger.info("Number of TFGs: " + alternateFlowGraphs.getTransposeFlowGraphs()
                 .size());
+        assertEquals(6, alternateFlowGraphs.getTransposeFlowGraphs().size());
         for (var tfg : alternateFlowGraphs.getTransposeFlowGraphs()) {
             var gdprTFG = (DFDGDPRTransposeFlowGraph) tfg;
             System.out.println("---- State: " + gdprTFG.getContextAttributeState() + " -----------");
@@ -40,34 +46,38 @@ public class TravelPlannerEvaluation extends ValidationBase {
         DFDGDPRFlowGraphCollection flowGraphs = (DFDGDPRFlowGraphCollection) this.analysis.findFlowGraphs();
         var alternateFlowGraphs = flowGraphs.resolveContextDependentAttributes();
 
+        int affectedFlowGraphCount = 0;
         for (DFDGDPRTransposeFlowGraph transposeFlowGraph : alternateFlowGraphs.getTransposeFlowGraphs()
                 .stream()
                 .filter(DFDGDPRTransposeFlowGraph.class::isInstance)
                 .map(DFDGDPRTransposeFlowGraph.class::cast)
                 .toList()) {
             List<ContextDependentAttributeScenario> impactScenarios = transposeFlowGraph.getContextAttributeState()
-                    .getSelectedScenarios()
+                    .selectedScenarios()
                     .stream()
-                    .filter(it -> !it.getName()
-                            .equals("UserNecessity"))
                     .toList();
             var impactedElements = this.getImpactedElements(transposeFlowGraph, impactScenarios);
             System.out.println("---- State: " + transposeFlowGraph.getContextAttributeState() + " -----------");
             System.out.println("---- Impacted Elements: -----");
+            if (!impactedElements.isEmpty()) {
+                affectedFlowGraphCount++;
+            }
             for (var vertex : impactedElements) {
                 var referencedElement = (Node) vertex.getReferencedElement();
                 System.out.println(referencedElement.getEntityName() + ", " + referencedElement.getId());
             }
             System.out.println();
         }
+        assertEquals(6, affectedFlowGraphCount);
     }
 
     @Test
     public void testViolations() {
-        // logger.setLevel(Level.INFO);
         DFDGDPRFlowGraphCollection flowGraphs = (DFDGDPRFlowGraphCollection) this.analysis.findFlowGraphs();
         var alternateFlowGraphs = flowGraphs.resolveContextDependentAttributes();
         alternateFlowGraphs.evaluate();
+
+        int violatingFlowGraphCount = 0;
         for (DFDGDPRTransposeFlowGraph flowGraph : alternateFlowGraphs.getTransposeFlowGraphs()
                 .stream()
                 .filter(DFDGDPRTransposeFlowGraph.class::isInstance)
@@ -92,8 +102,14 @@ public class TravelPlannerEvaluation extends ValidationBase {
                 logger.debug("VCs: [" + result + "]");
                 logger.debug("Responsibility: " + element.getResponsibilityRole()
                         .getEntityName());
-                // C1: Not Necessary Data
-                if (this.hasDataCharacteristic(element, "Necessary", "False")) {
+                // C1: Identifiable to MarketingProvider
+                if (this.hasVertexCharacteristic(element, "ThirdParty", "Marketing")
+                        && this.hasDataCharacteristic(element, "Identifiability", "True")) {
+                    return true;
+                }
+
+                // C2: Any Transparency at false
+                if (this.hasVertexCharacteristic(element, "Transparency", "False")) {
                     return true;
                 }
                 return false;
@@ -103,14 +119,16 @@ public class TravelPlannerEvaluation extends ValidationBase {
                 logger.debug("------------------------");
                 continue;
             }
-            var sourcesString = flowGraph.getContextAttributeState()
-                    .getSelectedScenarios()
-                    .stream()
-                    .map(it -> it.getName())
-                    .collect(Collectors.joining(","));
-            logger.info("Violation in state: " + sourcesString);
-            logger.info("Violating vertices:" + violations);
-            logger.info("------------------------");
+            violatingFlowGraphCount++;
+            System.out.println("---- State: " + flowGraph.getContextAttributeState() + " -----------");
+            System.out.println("---- Impacted Elements: -----");
+            for (var vertex : flowGraph.getVertices()) {
+                var referencedElement = (Node) vertex.getReferencedElement();
+                System.out.println(referencedElement.getEntityName() + ", " + referencedElement.getId());
+            }
+            System.out.println("---- Violations: " + violations);
+            System.out.println();
         }
+        assertEquals(3, violatingFlowGraphCount);
     }
 }
